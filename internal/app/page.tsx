@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, startTransition } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { fireCornerConfetti } from "@/lib/confetti.utils";
+import IntroAnimation from "@/components/IntroAnimation";
 
 // Full logo with "Project X" text
 function Logo({ className = "h-8", variant = "full" }: { className?: string; variant?: "full" | "icon" }) {
@@ -34,24 +35,56 @@ function Logo({ className = "h-8", variant = "full" }: { className?: string; var
 
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // Check if intro should be shown (once per session)
+  useEffect(() => {
+    const hasSeenIntro = sessionStorage.getItem("pxv-intro-seen");
+    if (hasSeenIntro) {
+      startTransition(() => {
+        setShowIntro(false);
+        setIsLoaded(true);
+      });
+    }
+  }, []);
+
+  // Theme detection
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDark(true);
+      startTransition(() => {
+        setIsDark(true);
+      });
     }
   }, []);
 
-  // Fire confetti celebration on page load (e.g., after redirect)
-  useEffect(() => {
-    // Small delay to ensure page is fully rendered
-    const timer = setTimeout(() => {
+  // Handle intro completion
+  const handleIntroComplete = useCallback(() => {
+    sessionStorage.setItem("pxv-intro-seen", "true");
+    setShowIntro(false);
+    setIsLoaded(true);
+    // Fire confetti after intro completes
+    setTimeout(() => {
       fireCornerConfetti();
-    }, 300);
-
-    return () => clearTimeout(timer);
+    }, 500);
   }, []);
+
+  // Keyboard shortcut to skip intro
+  useEffect(() => {
+    if (!showIntro) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
+        e.preventDefault();
+        handleIntroComplete();
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showIntro, handleIntroComplete]);
 
   const toggleTheme = () => {
     setIsDark((prev) => {
@@ -62,7 +95,21 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${isDark ? "dark" : ""}`}>
+    <>
+      {/* Intro Animation */}
+      <AnimatePresence mode="wait">
+        {showIntro && (
+          <IntroAnimation onComplete={handleIntroComplete} />
+        )}
+      </AnimatePresence>
+
+      {/* Main Content */}
+      <motion.div 
+        className={`min-h-screen transition-colors duration-500 ${isDark ? "dark" : ""}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
       {/* Navbar */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
@@ -395,6 +442,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+      </motion.div>
+    </>
   );
 }
