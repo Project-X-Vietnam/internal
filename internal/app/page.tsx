@@ -63,21 +63,21 @@ const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center text-white overflow-hidden pointer-events-none"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden pointer-events-none"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <div className="relative z-10 text-center max-w-2xl mx-auto px-6">
+      <div className="relative z-10 text-center max-w-3xl mx-auto px-6">
         <motion.h1
-          className="text-3xl md:text-4xl font-bold leading-tight mb-4"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-foreground tracking-tight"
           variants={titleVariants}
         >
-          Thank you for choosing to be a part of Project X 2026 Team.
+          Thank you for choosing to be a part of <span className="text-gradient-animated">Project X 2026 Team</span>.
         </motion.h1>
         <motion.p
-          className="text-xl md:text-2xl text-white/70"
+          className="text-xl md:text-2xl text-muted-foreground font-medium"
           variants={subtitleVariants}
         >
           We’re genuinely glad you’re here.
@@ -175,7 +175,7 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center text-white overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -183,14 +183,14 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
     >
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <div className="mb-10">
-          <motion.p
-            className="text-lg md:text-xl font-medium text-white/80 mb-4"
+          <motion.p 
+            className="text-primary text-sm md:text-base font-bold uppercase tracking-widest mb-6"
             variants={labelVariants}
           >
             Before we move forward…
           </motion.p>
-          <motion.div
-            className="text-3xl md:text-4xl font-bold leading-tight"
+          <motion.div 
+            className="text-3xl md:text-5xl font-bold leading-tight text-foreground"
             variants={questionVariants}
           >
             <Typewriter
@@ -206,37 +206,19 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
         >
           <textarea
             rows={3}
-            className="w-full p-4 text-base text-white bg-white/5 border border-white/20 rounded-xl resize-none placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 transition-shadow"
+            className="w-full p-6 text-lg text-foreground bg-slate-50/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl resize-none placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
             placeholder="Share your thoughts with us..."
             value={thoughts}
             onChange={(e) => setThoughts(e.target.value)}
           />
           <button
             onClick={handleSubmit}
-            className="btn btn-outline px-8 py-3 mt-6 text-lg bg-white/10 border-white/20 text-white backdrop-blur-lg hover:bg-white/20 hover:border-white/40 hover:translate-y-[-2px]"
+            className="btn btn-primary px-10 py-4 mt-8 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl hover:translate-y-[-2px] hover:scale-105 transition-all duration-300"
           >
             Continue →
           </button>
         </motion.div>
       </div>
-      <style jsx>{`
-        .btn-feeling {
-          background-color: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          padding: 12px 24px;
-          border-radius: 999px;
-          font-size: 1rem;
-          font-weight: 500;
-          color: white;
-          transition: all 0.2s ease-in-out;
-          backdrop-filter: blur(10px);
-        }
-        .btn-feeling:hover {
-          background-color: rgba(255, 255, 255, 0.2);
-          border-color: rgba(255, 255, 255, 0.4);
-          transform: translateY(-2px);
-        }
-      `}</style>
     </motion.div>
   );
 };
@@ -354,7 +336,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className={isDark ? "dark" : ""}>
       {/* Persistent Background Pattern for Intro/Welcome/InteractiveQuestion */}
       <AnimatePresence>
         {(showIntro || showWelcome || showInteractiveQuestion) && (
@@ -405,7 +387,7 @@ export default function Home() {
 
       {/* Main Content */}
       <motion.div 
-        className={`min-h-screen transition-colors duration-500 ${isDark ? "dark" : ""}`}
+        className="min-h-screen transition-colors duration-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -917,6 +899,6 @@ export default function Home() {
         </div>
       </footer>
       </motion.div>
-    </>
+    </div>
   );
 }

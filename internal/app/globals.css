@@ -395,13 +395,14 @@ body {
 .text-gradient-animated {
   background-image: linear-gradient(
     to right,
-    hsl(var(--primary)),
-    hsl(var(--pxv-cyan)),
-    hsl(var(--primary))
+    #0E56FA,
+    #17CAFA,
+    #0E56FA
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
   animation: gradient-x 4s ease-in-out infinite;
 }
