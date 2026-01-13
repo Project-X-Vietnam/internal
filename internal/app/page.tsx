@@ -1,11 +1,245 @@
 "use client";
 
 import { useState, useEffect, useCallback, startTransition } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { fireCornerConfetti } from "@/lib/confetti.utils";
 import IntroAnimation from "@/components/IntroAnimation";
+import { Typewriter } from "@/components/ui/typewriter-text";
+import Timeline from "@/components/ui/timeline-component";
+import { ProductCard } from "@/components/ui/cards-1";
+import { GridPattern } from "@/components/ui/grid-pattern";
+import { cn } from "@/lib/utils";
+
+const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
+  // Automatically transition after a delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onComplete();
+    }, 5000); // Increased to 5s to accommodate the new delay
+
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        // No staggerChildren, we control timing manually
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const titleVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const subtitleVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 2, // 2-second delay after the component appears
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center text-white overflow-hidden pointer-events-none"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      <div className="relative z-10 text-center max-w-2xl mx-auto px-6">
+        <motion.h1
+          className="text-3xl md:text-4xl font-bold leading-tight mb-4"
+          variants={titleVariants}
+        >
+          Thank you for choosing to be a part of Project X 2026 Team.
+        </motion.h1>
+        <motion.p
+          className="text-xl md:text-2xl text-white/70"
+          variants={subtitleVariants}
+        >
+          We’re genuinely glad you’re here.
+        </motion.p>
+      </div>
+    </motion.div>
+  );
+};
+
+const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
+  const [thoughts, setThoughts] = useState("");
+
+  const handleSubmit = () => {
+    // Navigate immediately for better UX
+    onComplete();
+
+    // Fire-and-forget submission to Google Sheets
+    // This runs in the background while the user moves to the next screen
+    const submitData = async () => {
+      // Updated URL from your latest deployment
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbxw_Qo_PFjq5S5uPImbhncQ4rVLoCU2LQE3_qRLsnbOo-Pha324w-AWnXRRbJIVfIvS/exec";
+
+      const formData = new FormData();
+      formData.append("thoughts", thoughts);
+
+      console.log("Submitting to Google Sheets (background)...", { thoughts });
+
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors",
+        });
+        console.log("Submission sent (opaque response expected)");
+      } catch (error) {
+        console.error("Error submitting to Google Sheet:", error);
+      }
+    };
+
+    submitData();
+  };
+
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        // No stagger, we control timing manually in children
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const labelVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 1.0, // 1s delay before "Before we move forward"
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const questionVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: 1.5, // Fade in container slightly before typing starts
+        duration: 0.5,
+      }
+    }
+  };
+
+  const inputVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 5, // Reduced delay to appear right after typing
+        duration: 0.4, // Faster fade-in
+        ease: "easeOut",
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center text-white overflow-hidden"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+        <div className="mb-10">
+          <motion.p
+            className="text-lg md:text-xl font-medium text-white/80 mb-4"
+            variants={labelVariants}
+          >
+            Before we move forward…
+          </motion.p>
+          <motion.div
+            className="text-3xl md:text-4xl font-bold leading-tight"
+            variants={questionVariants}
+          >
+            <Typewriter
+              text="How are you feeling about this upcoming path?"
+              delay={1500}
+              speed={80}
+            />
+          </motion.div>
+        </div>
+        <motion.div
+          className="w-full max-w-xl mx-auto text-center"
+          variants={inputVariants}
+        >
+          <textarea
+            rows={3}
+            className="w-full p-4 text-base text-white bg-white/5 border border-white/20 rounded-xl resize-none placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 transition-shadow"
+            placeholder="Share your thoughts with us..."
+            value={thoughts}
+            onChange={(e) => setThoughts(e.target.value)}
+          />
+          <button
+            onClick={handleSubmit}
+            className="btn btn-outline px-8 py-3 mt-6 text-lg bg-white/10 border-white/20 text-white backdrop-blur-lg hover:bg-white/20 hover:border-white/40 hover:translate-y-[-2px]"
+          >
+            Continue →
+          </button>
+        </motion.div>
+      </div>
+      <style jsx>{`
+        .btn-feeling {
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          padding: 12px 24px;
+          border-radius: 999px;
+          font-size: 1rem;
+          font-weight: 500;
+          color: white;
+          transition: all 0.2s ease-in-out;
+          backdrop-filter: blur(10px);
+        }
+        .btn-feeling:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.4);
+          transform: translateY(-2px);
+        }
+      `}</style>
+    </motion.div>
+  );
+};
 
 // Full logo with "Project X" text
 function Logo({ className = "h-8", variant = "full" }: { className?: string; variant?: "full" | "icon" }) {
@@ -36,7 +270,14 @@ function Logo({ className = "h-8", variant = "full" }: { className?: string; var
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [showInteractiveQuestion, setShowInteractiveQuestion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showMemberHubPopup, setShowMemberHubPopup] = useState(false);
+
+  const openMemberHubPopup = () => setShowMemberHubPopup(true);
+  const closeMemberHubPopup = () => setShowMemberHubPopup(false);
+
 
   // Check if intro should be shown (once per session)
   useEffect(() => {
@@ -45,6 +286,10 @@ export default function Home() {
       startTransition(() => {
         setShowIntro(false);
         setIsLoaded(true);
+        // Fire confetti immediately if intro is skipped
+        setTimeout(() => {
+          fireCornerConfetti();
+        }, 500);
       });
     }
   }, []);
@@ -62,8 +307,18 @@ export default function Home() {
 
   // Handle intro completion
   const handleIntroComplete = useCallback(() => {
-    sessionStorage.setItem("pxv-intro-seen", "true");
     setShowIntro(false);
+    setShowWelcome(true);
+  }, []);
+
+  const handleWelcomeComplete = useCallback(() => {
+    setShowWelcome(false);
+    setShowInteractiveQuestion(true);
+  }, []);
+
+  const handleQuestionComplete = useCallback(() => {
+    sessionStorage.setItem("pxv-intro-seen", "true");
+    setShowInteractiveQuestion(false);
     setIsLoaded(true);
     // Fire confetti after intro completes
     setTimeout(() => {
@@ -73,18 +328,22 @@ export default function Home() {
 
   // Keyboard shortcut to skip intro
   useEffect(() => {
-    if (!showIntro) return;
-    
+    if (!showIntro && !showWelcome) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
         e.preventDefault();
-        handleIntroComplete();
+        if (showIntro) {
+          handleIntroComplete();
+        } else if (showWelcome) {
+          handleWelcomeComplete();
+        }
       }
     };
-    
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showIntro, handleIntroComplete]);
+  }, [showIntro, showWelcome, handleIntroComplete, handleWelcomeComplete]);
 
   const toggleTheme = () => {
     setIsDark((prev) => {
@@ -96,12 +355,53 @@ export default function Home() {
 
   return (
     <>
+      {/* Persistent Background Pattern for Intro/Welcome/InteractiveQuestion */}
+      <AnimatePresence>
+        {(showIntro || showWelcome || showInteractiveQuestion) && (
+          <motion.div
+            className="fixed inset-0 z-40 overflow-hidden bg-background"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <GridPattern
+              squares={[
+                [4, 4],
+                [5, 1],
+                [8, 2],
+                [5, 3],
+                [5, 5],
+                [10, 10],
+                [12, 15],
+                [15, 10],
+                [10, 15],
+                [15, 10],
+                [10, 15],
+                [15, 10],
+              ]}
+              className={cn(
+                "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
+                "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
+              )}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Intro Animation */}
       <AnimatePresence mode="wait">
         {showIntro && (
           <IntroAnimation onComplete={handleIntroComplete} />
         )}
+        {showWelcome && (
+          <WelcomeMessage onComplete={handleWelcomeComplete} />
+        )}
+        {showInteractiveQuestion && (
+          <InteractiveQuestion onComplete={handleQuestionComplete} />
+        )}
       </AnimatePresence>
+
 
       {/* Main Content */}
       <motion.div 
@@ -234,211 +534,385 @@ export default function Home() {
             className="text-center max-w-4xl mx-auto"
           >
             <h1 className={`heading-hero mb-6 ${isDark ? "text-white" : "text-pxv-dark"}`}>
-              Building the Future of{" "}
-              <span className="text-gradient-animated">Vietnam&apos;s Tech</span>{" "}
-              Ecosystem
+              <span>Building the Future of </span>
+              <span className="text-gradient-animated">Vietnam Tech Ecosystem.</span>
             </h1>
             <p className={`body-large max-w-2xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
-              Join a community of innovators, entrepreneurs, and tech leaders shaping the next generation of Vietnamese startups and digital transformation.
+              You now become member of a community of innovators, entrepreneurs, and tech leaders shaping the next generation of Vietnamese startups and digital transformation.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn btn-primary px-8 py-4 text-base group">
-                Apply Now
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
-              <button
-                className={`btn px-8 py-4 text-base border ${
-                  isDark
-                    ? "border-white/20 text-white hover:bg-white/10"
-                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                Learn More
-              </button>
+            {/* CTA Buttons - Removed */}
+          </motion.div>        </div>
+       </section>
+
+      {/* Founder's Message Section */}
+      <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="grid md:grid-cols-5 gap-12 md:gap-16 items-center"
+          >
+            <div className="md:col-span-2 relative aspect-square md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/assets/liam-lee.png"
+                alt="Liam Lee, President of Project X Vietnam"
+                layout="fill"
+                objectFit="cover"
+                className="transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            </div>
+            <div className="md:col-span-3 text-left">
+              <h2 className={`heading-section mb-6 ${isDark ? "text-white" : "text-pxv-dark"}`}>
+                A Message from Our President
+              </h2>
+              <div className={`prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify`}>
+                <p>
+                  Welcome to the next chapter of your journey. At Project X, we're not just building projects; we're building people. We believe in the power of Vietnamese talent to shape the future of technology, and we're thrilled to have you with us.
+                </p>
+                <p>
+                  This is a place for you to be bold, to experiment, and to grow. We provide the challenges and the support system; you bring the passion and the drive. Together, we will create a lasting impact on Vietnam's tech ecosystem and beyond.
+                </p>
+              </div>
+              <div className="mt-8">
+                <p className={`font-bold text-lg ${isDark ? "text-white" : "text-pxv-dark"}`}>Liam Lee</p>
+                <p className={`${isDark ? "text-white/60" : "text-slate-500"}`}>President, Project X Vietnam</p>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className={`section-padding ${isDark ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
+      {/* PJX MTP Timeline Section */}
+      <section className={`py-20 md:py-28 ${isDark ? "bg-[#020818]" : "bg-white"}`}>
+        <div className="max-w-4xl mx-auto px-6 md:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-center mb-8"
           >
-            <p className="section-label mb-4">What We Offer</p>
-            <h2 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
-              Comprehensive Support for Your Journey
-            </h2>
+            <h2 className="section-label mb-4">PJX MTP</h2>
+            <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>Our Journey</h3>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
+          <Timeline
+            items={[
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ),
-                title: "Mentorship",
-                description: "Connect with industry leaders and experienced entrepreneurs who guide your growth.",
+                date: "Jan 17",
+                title: "1st All-hands Meeting",
+                description: "Kick off the year by aligning on our vision, goals, and roadmap for the upcoming season."
               },
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                ),
-                title: "Community",
-                description: "Join a vibrant network of like-minded individuals passionate about innovation.",
+                date: "Jan 18 - Jan 28",
+                title: "Department Meeting & Training",
+                description: "Deep dive into specialized training sessions and departmental planning to prepare for execution."
               },
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                title: "Resources",
-                description: "Access exclusive tools, workshops, and resources to accelerate your success.",
+                date: "Feb 19 - Mar 13",
+                title: "Summer Fellowship Program Recruitment",
+                description: "Launch our nationwide search for the most promising young talents to join the Summer Fellowship."
               },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`group p-6 rounded-xl text-center transition-all duration-300 ${
-                  isDark
-                    ? "bg-white/5 hover:bg-white/10 border border-white/10"
-                    : "bg-white hover:bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md"
-                }`}
-              >
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 ${
-                    isDark ? "bg-primary/20 text-primary" : "bg-primary/10 text-primary"
-                  }`}
-                >
-                  {feature.icon}
-                </div>
-                <h3 className={`font-semibold text-lg mb-2 ${isDark ? "text-white" : "text-pxv-dark"}`}>
-                  {feature.title}
-                </h3>
-                <p className={`text-sm ${isDark ? "text-white/60" : "text-slate-600"}`}>
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+              {
+                date: "Mar 20 - Mar 22",
+                title: "SFP Round 1 Activities",
+                description: "Engage candidates in initial challenges to assess their potential and cultural fit."
+              },
+              {
+                date: "Apr 4 - Apr 11",
+                title: "SFP Round 2 Activities",
+                description: "Conduct in-depth assessments and group activities to identify the top performers."
+              },
+              {
+                date: "Jun 12 - Jun 27",
+                title: "SFP Application & Interview",
+                description: "Finalize the selection process with comprehensive interviews for shortlisted candidates."
+              },
+              {
+                date: "Jul 1",
+                title: "Fellow Final List",
+                description: "Announce the official cohort of Summer Fellows who will embark on this transformative journey."
+              },
+              {
+                date: "Jul 9 - Aug 22",
+                title: "Summer Fellowship Program",
+                description: "Execute the core 6-week intensive program focused on innovation, leadership, and impact."
+              },
+            ]}
+          />
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className={`section-padding ${isDark ? "bg-[#020818]" : "bg-white"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { value: "500+", label: "Members" },
-              { value: "50+", label: "Mentors" },
-              { value: "100+", label: "Events" },
-              { value: "$2M+", label: "Funding Raised" },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-gradient mb-2">
-                  {stat.value}
-                </div>
-                <div className={`text-sm font-medium ${isDark ? "text-white/60" : "text-slate-600"}`}>
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-cta py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-radial-primary opacity-50" />
+    {/* Member Journey Section */}
+    <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
         <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="section-label mb-4">Member Journey</h2>
+          <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
+            How You’ll Grow With Us
+          </h3>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Finding your footing",
+              category: "Phase 1",
+              description: "Observing, asking questions, and learning how things work.",
+              image: "/assets/pjx5.jpg",
+              href: "#"
+            },
+            {
+              title: "Trying & learning",
+              category: "Phase 2",
+              description: "Taking small ownership, making mistakes, and getting feedback.",
+              image: "/assets/pjx6.jpg",
+              href: "#"
+            },
+            {
+              title: "Contributing with confidence",
+              category: "Phase 3",
+              description: "Owning parts of the work, helping others, and seeing your impact.",
+              image: "/assets/pjx7.jpg",
+              href: "#"
+            },
+          ].map((phase, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="h-full"
+            >
+              <ProductCard
+                imageUrl={phase.image}
+                title={phase.title}
+                category={phase.category}
+                description={phase.description}
+                href={phase.href}
+                className="h-full"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+     {/* Working Culture Section */}
+      <section className="py-20 md:py-28 bg-white dark:bg-[#020818] transition-colors duration-500">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-label mb-4">Working Culture</h2>
+            <h3 className="heading-section text-pxv-dark dark:text-white transition-colors duration-500">
+              What We Value
+            </h3>
+          </motion.div>
+
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[
+        {
+          title: "Eager to learn",
+          category: "Growth Mindset",
+          description: "We do fast and learn hard",
+          image: "/assets/pjx1.jpg",
+          href: "#"
+        },
+        {
+          title: "Innovative",
+          category: "Creativity",
+          description: "We are not settle for mediocre",
+          image: "/assets/pjx2.jpg",
+          href: "#"
+        },
+        {
+          title: "Supportive",
+          category: "Teamwork",
+          description: "We hustle but together",
+          image: "/assets/pjx3.jpg",
+          href: "#"
+        },
+        {
+          title: "Resilient",
+          category: "Perseverance",
+          description: "We push it through chaos",
+          image: "/assets/pjx4.jpg",
+          href: "#"
+        },
+      ].map((value, index) => (
+        <motion.div
+          key={index}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto px-6 md:px-8 text-center relative z-10"
+          transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
+          viewport={{ once: true, amount: 0.5 }}
         >
-          <h2 className="heading-section text-white mb-6">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="body-large text-white/70 mb-10 max-w-2xl mx-auto">
-            Join Project X Vietnam today and become part of a community that&apos;s shaping the future of technology in Vietnam.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn bg-white text-primary hover:bg-white/90 px-8 py-4 text-base font-semibold group">
-              Apply Now
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-            <button className="btn border border-white/30 text-white hover:bg-white/10 px-8 py-4 text-base">
-              Contact Us
-            </button>
-          </div>
+          <ProductCard
+            imageUrl={value.image}
+            title={value.title}
+            category={value.category}
+            description={value.description}
+            href={value.href}
+            className="h-full"
+          />
         </motion.div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
+
+     {/* Ready Section */}
+<section className={`py-20 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
+  <div className="container mx-auto px-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true, amount: 0.5 }}
+      className="text-center mb-8"
+    >
+      <h2 className="text-3xl font-bold">
+        Right now, how do you feel about starting this journey?
+      </h2>
+    </motion.div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      viewport={{ once: true, amount: 0.5 }}
+      className="flex justify-center gap-4"
+    >
+      <button
+        className="btn btn-primary px-8 py-3 text-base"
+        onClick={openMemberHubPopup}
+      >
+        I’m ready
+      </button>
+      <button
+        className="btn btn-outline px-8 py-3 text-base"
+        onClick={openMemberHubPopup}
+      >
+        I’m super ready
+      </button>
+    </motion.div>
+  </div>
+</section>
+
+{/* Member Hub Popup */}
+<AnimatePresence>
+  {showMemberHubPopup && (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      onClick={closeMemberHubPopup}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`relative p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center ${
+          isDark ? "bg-[#0A0F1A] border border-white/10" : "bg-white"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3
+          className={`text-2xl font-bold mb-4 ${
+            isDark ? "text-white" : "text-pxv-dark"
+          }`}
+        >
+          Filling here to join our family
+        </h3>
+        <a
+          href="https://docs.google.com/spreadsheets/d/1kImFje3miKjdJnlpRIleFkO_4hZRXszvVK1OkoDScEk/edit?gid=0#gid=0"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-primary px-8 py-3 text-base w-full inline-block"
+        >
+          Member Info Hub
+        </a>
+        <button
+          onClick={closeMemberHubPopup}
+          className={`absolute top-3 right-3 p-2 rounded-full transition-colors ${
+            isDark
+              ? "text-white/50 hover:bg-white/10"
+              : "text-slate-500 hover:bg-slate-100"
+          }`}
+          aria-label="Close popup"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
 
       {/* Footer */}
       <footer className={`py-12 border-t ${isDark ? "bg-[#020818] border-white/10" : "bg-white border-slate-100"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <Link href="/" className="block">
-              <Logo className="h-10 w-auto" />
-            </Link>
-            <p className={`text-sm ${isDark ? "text-white/40" : "text-slate-400"}`}>
-              © 2025 Project X Vietnam. All rights reserved.
-            </p>
-            <div className="flex items-center gap-4">
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className={`p-2 rounded-lg transition-colors ${
-                  isDark
-                    ? "bg-white/10 hover:bg-primary/20 text-white/60 hover:text-primary"
-                    : "bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary"
-                }`}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-          </a>
-          <a
-                href="mailto:info.projectxvietnam@gmail.com"
-                aria-label="Email"
-                className={`p-2 rounded-lg transition-colors ${
-                  isDark
-                    ? "bg-white/10 hover:bg-primary/20 text-white/60 hover:text-primary"
-                    : "bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary"
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </a>
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-1">
+              <Logo className="h-12 w-auto mb-4" />
+              <p className={`text-sm ${isDark ? "text-white/50" : "text-slate-500"}`}>
+                Building the future of Vietnam's Tech Ecosystem.
+              </p>
             </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:col-span-3">
+              <div>
+                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>About</h3>
+                <ul className="space-y-3">
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Our Mission</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Team</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Careers</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>Programs</h3>
+                <ul className="space-y-3">
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Fellowship</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Workshops</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Community</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>Connect</h3>
+                <ul className="space-y-3">
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Facebook</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>LinkedIn</a></li>
+                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Contact Us</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className={`mt-8 pt-8 border-t ${isDark ? "border-white/10" : "border-slate-100"} text-center text-sm ${isDark ? "text-white/40" : "text-slate-400"}`}>
+            © {new Date().getFullYear()} Project X Vietnam. All rights reserved.
           </div>
         </div>
       </footer>

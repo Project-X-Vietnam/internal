@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ============================================
    PROJECT X VIETNAM — DESIGN SYSTEM
@@ -129,80 +131,117 @@
 
 :root {
   /* Primary: #0E56FA - Vibrant Blue */
-  --primary: 222 96% 52%;
-  --primary-foreground: 0 0% 100%;
-  
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+
   /* Secondary: #17CAFA - Bright Cyan */
-  --secondary: 193 96% 54%;
-  --secondary-foreground: 242 97% 6%;
-  
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+
   /* Custom PXV tokens */
   --pxv-cyan: 193 96% 54%;
   --pxv-blue: 222 96% 52%;
   --pxv-dark: 242 97% 6%;
   --pxv-light: 222 40% 98%;
-  
+
   /* Accent - Blend of primary and secondary */
-  --accent: 207 96% 53%;
-  --accent-foreground: 0 0% 100%;
-  
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+
   /* Base colors */
-  --background: 0 0% 100%;
-  --foreground: 242 97% 6%;
-  
+
   /* Card */
-  --card: 0 0% 100%;
-  --card-foreground: 242 97% 6%;
-  
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+
   /* Muted */
-  --muted: 222 20% 96%;
-  --muted-foreground: 222 10% 45%;
-  
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+
   /* Destructive */
-  --destructive: 0 84.2% 60.2%;
+  --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: 0 0% 100%;
-  
+
   /* Border & Input */
-  --border: 222 13% 91%;
-  --input: 222 13% 91%;
-  --ring: 222 96% 52%;
-  
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
   /* Radius */
-  --radius: 0.75rem;
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
   /* Dark mode overrides */
-  --background: 242 97% 6%;
-  --foreground: 0 0% 98%;
-  
-  --card: 242 80% 10%;
-  --card-foreground: 0 0% 98%;
-  
-  --muted: 242 15% 15%;
-  --muted-foreground: 222 10% 60%;
-  
-  --destructive: 0 63% 31%;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+
+  --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: 0 0% 98%;
-  
-  --border: 242 15% 20%;
-  --input: 242 15% 20%;
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     --background: 242 97% 6%;
     --foreground: 0 0% 98%;
-    
+
     --card: 242 80% 10%;
     --card-foreground: 0 0% 98%;
-    
+
     --muted: 242 15% 15%;
     --muted-foreground: 222 10% 60%;
-    
+
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
-    
+
     --border: 242 15% 20%;
     --input: 242 15% 20%;
   }
@@ -211,70 +250,6 @@
 /* ============================================
    2. TAILWIND THEME CONFIGURATION
    ============================================ */
-
-@theme inline {
-  /* Fonts - SF Pro Display (Primary), Plus Jakarta Sans (Secondary/Fallback) */
-  --font-sans: "SF Pro Display", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-display: "SF Pro Display", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Plus Jakarta Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
-  
-  /* Colors - Using CSS variables */
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  
-  /* PXV Brand Colors */
-  --color-pxv-cyan: hsl(var(--pxv-cyan));
-  --color-pxv-blue: hsl(var(--pxv-blue));
-  --color-pxv-dark: hsl(var(--pxv-dark));
-  --color-pxv-light: hsl(var(--pxv-light));
-  
-  /* Dark mode specific colors */
-  --color-dark-navy: #020818;
-  --color-dark-navy-alt: #0a0f1a;
-  
-  /* Radius */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 12px);
-  
-  /* Animations */
-  --animate-fade-in: fade-in 0.6s ease-out forwards;
-  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
-  --animate-scale-in: scale-in 0.5s ease-out forwards;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-float-delayed: float 6s ease-in-out 2s infinite;
-  --animate-float-slow: float 8s ease-in-out infinite;
-  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
-  --animate-gradient-x: gradient-x 3s ease infinite;
-  --animate-gradient-y: gradient-y 3s ease infinite;
-  --animate-bounce-subtle: bounce-subtle 2s ease-in-out infinite;
-  --animate-spin-slow: spin 8s linear infinite;
-}
 
 /* ============================================
    3. KEYFRAME ANIMATIONS
@@ -421,15 +396,14 @@ body {
   background-image: linear-gradient(
     to right,
     hsl(var(--primary)),
-    hsl(var(--accent)),
-    hsl(var(--secondary)),
+    hsl(var(--pxv-cyan)),
     hsl(var(--primary))
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  animation: gradient-x 3s ease infinite;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-x 4s ease-in-out infinite;
 }
 
 /* Background Gradients */
@@ -583,22 +557,22 @@ body {
 }
 
 .btn-primary {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 }
 
 .btn-primary:hover {
-  background-color: hsla(var(--primary) / 0.9);
+  background-color: color-mix(in srgb, var(--primary), transparent 10%);
   transform: scale(1.02);
 }
 
 .btn-outline {
   background-color: transparent;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid var(--border);
 }
 
 .btn-outline:hover {
-  background-color: hsla(var(--muted) / 0.5);
+  background-color: color-mix(in srgb, var(--muted), transparent 50%);
 }
 
 /* Input base */
@@ -701,5 +675,27 @@ body {
 @media (min-width: 768px) {
   .body-large {
     font-size: 1.125rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@theme inline {
+  @keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    }
   }
 }
