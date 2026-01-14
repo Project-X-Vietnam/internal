@@ -86,24 +86,22 @@ export const Highlight = ({
       initial={{
         backgroundSize: "0% 100%",
       }}
-      whileInView={{
+      animate={{
         backgroundSize: "100% 100%",
+        color: "#ffffff",
       }}
       transition={{
         duration: 1.5,
         ease: "easeInOut",
-        delay: 0.2,
+        delay: 2.0,
       }}
-      viewport={{ once: true, amount: 0.5 }}
       style={{
         backgroundRepeat: "no-repeat",
         backgroundPosition: "left center",
         display: "inline",
+        backgroundImage: "linear-gradient(to right, #0E56FA, #0E56FA)",
       }}
-      className={cn(
-        `relative inline-block pb-1 px-1 rounded-lg bg-gradient-to-r from-pxv-cyan/50 to-pxv-blue/50 dark:from-pxv-cyan/30 dark:to-pxv-blue/30`,
-        className
-      )}
+      className={cn(`relative inline-block pb-1 px-1 rounded-lg`, className)}
     >
       {children}
     </motion.span>

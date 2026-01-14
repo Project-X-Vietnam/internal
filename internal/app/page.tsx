@@ -11,7 +11,10 @@ import Timeline from "@/components/ui/timeline-component";
 import { ProductCard } from "@/components/ui/cards-1";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { AuroraBackground } from "@/components/ui/aurora-background";
+import { Highlight } from "@/components/ui/hero-highlight";
+import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { cn } from "@/lib/utils";
+import { Heading3Icon } from "lucide-react";
 
 const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
   // Automatically transition after a delay
@@ -431,8 +434,8 @@ export default function Home() {
               <span>Building the Future of </span>
               <span className="text-gradient-animated">Vietnam Tech Ecosystem</span>
             </h1>
-            <p className={`body-large max-w-2xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
-              You now become member of a community of innovators, entrepreneurs, and tech leaders shaping the next generation of Vietnamese startups and digital transformation.
+            <p className={`body-large max-w-3xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
+              You now become member of a <Highlight className="ml-1 mr-1">community of innovators, entrepreneurs, and tech leaders</Highlight> shaping the next generation of Vietnamese startups and digital transformation.
             </p>
 
             {/* CTA Buttons - Removed */}
@@ -442,37 +445,46 @@ export default function Home() {
 
       {/* Founder's Message Section */}
       <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <div className="max-w-4xl mx-auto px-6 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
-            className="grid md:grid-cols-5 gap-12 md:gap-16 items-center"
+            className="text-center"
           >
-            <div className="md:col-span-2 relative aspect-square md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/assets/liam-lee.png"
-                alt="Liam Lee, President of Project X Vietnam"
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-500 hover:scale-105"
+            <h2 className="section-label mb-4 text-[#0E56FA]">
+              From Our President
+            </h2>
+            <h3 className={`heading-section mb-8 ${isDark ? "text-white" : "text-pxv-dark"}`}>
+              To the next generation of Project X
+            </h3>
+
+            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl mb-10">
+              <HeroVideoDialog
+                className="block dark:hidden"
+                animationStyle="from-center"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                thumbnailAlt="Hero Video"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <HeroVideoDialog
+                className="hidden dark:block"
+                animationStyle="from-center"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                thumbnailAlt="Hero Video"
+              />
             </div>
-            <div className="md:col-span-3 text-left">
-              <h2 className={`heading-section mb-6 ${isDark ? "text-white" : "text-pxv-dark"}`}>
-                A Message from Our President
-              </h2>
-              <div className={`prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify`}>
-                <p>
-                  Welcome to the next chapter of your journey. At Project X, we're not just building projects; we're building people. We believe in the power of Vietnamese talent to shape the future of technology, and we're thrilled to have you with us.
-                </p>
-                <p>
-                  This is a place for you to be bold, to experiment, and to grow. We provide the challenges and the support system; you bring the passion and the drive. Together, we will create a lasting impact on Vietnam's tech ecosystem and beyond.
-                </p>
-              </div>
-              <div className="mt-8">
+
+            <div className={`prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify`}>
+              <p>
+                Welcome to the next chapter of your journey. At Project X, we're not just building projects; we're building people. We believe in the power of Vietnamese talent to shape the future of technology, and we're thrilled to have you with us.
+              </p>
+              <p>
+                This is a place for you to be bold, to experiment, and to grow. We provide the challenges and the support system; you bring the passion and the drive. Together, we will create a lasting impact on Vietnam's tech ecosystem and beyond.
+              </p>
+              <div className="mt-8 text-center">
                 <p className={`font-bold text-lg ${isDark ? "text-white" : "text-pxv-dark"}`}>Liam Lee</p>
                 <p className={`${isDark ? "text-white/60" : "text-slate-500"}`}>President, Project X Vietnam</p>
               </div>
@@ -481,7 +493,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PJX MTP Timeline Section */}
+      {/* PJX Masterplan Section */}
       <section className={`py-20 md:py-28 ${isDark ? "bg-[#020818]" : "bg-white"}`}>
         <div className="max-w-4xl mx-auto px-6 md:px-8">
           <motion.div
@@ -491,8 +503,8 @@ export default function Home() {
             viewport={{ once: true, amount: 0.5 }}
             className="text-center mb-8"
           >
-            <h2 className="section-label mb-4">PJX MTP</h2>
-            <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>Our Journey</h3>
+            <h2 className="section-label mb-4 text-[#0E56FA]">Project X Masterplan</h2>
+            <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>Our journey together</h3>
           </motion.div>
 
           <Timeline
@@ -552,7 +564,7 @@ export default function Home() {
           viewport={{ once: true, amount: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="section-label mb-4">Member Journey</h2>
+          <h2 className="section-label mb-4 text-[#0E56FA]">Member Journey</h2>
           <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
             How You’ll Grow With Us
           </h3>
@@ -614,7 +626,7 @@ export default function Home() {
             viewport={{ once: true, amount: 0.5 }}
             className="text-center mb-16"
           >
-            <h2 className="section-label mb-4">Working Culture</h2>
+            <h2 className="section-label mb-4 text-[#0E56FA]">Working Culture</h2>
             <h3 className="heading-section text-pxv-dark dark:text-white transition-colors duration-500">
               What We Value
             </h3>
@@ -673,41 +685,41 @@ export default function Home() {
 </section>
 
      {/* Ready Section */}
-<section className={`py-20 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
-  <div className="container mx-auto px-4">
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="text-center mb-8"
-    >
-      <h2 className="text-3xl font-bold">
-        Right now, how do you feel about starting this journey?
-      </h2>
-    </motion.div>
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="flex justify-center gap-4"
-    >
-      <button
-        className="btn btn-primary px-8 py-3 text-base"
-        onClick={openMemberHubPopup}
-      >
-        I’m ready
-      </button>
-      <button
-        className="btn btn-outline px-8 py-3 text-base"
-        onClick={openMemberHubPopup}
-      >
-        I’m super ready
-      </button>
-    </motion.div>
-  </div>
-</section>
+    <section className="py-20 bg-gradient-cta text-white">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-center mb-8"
+        >
+          <h2 className="text-3xl font-bold text-white">
+            Right now, how do you feel about starting this journey?
+          </h2>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={{ once: true, amount: 0.5 }}
+          className="flex justify-center gap-4"
+        >
+          <button
+            className="btn bg-white text-[#0E56FA] hover:bg-slate-100 border-none px-8 py-3 text-base"
+            onClick={openMemberHubPopup}
+          >
+            I’m ready
+          </button>
+          <button
+            className="btn btn-outline border-white text-white hover:bg-white/10 px-8 py-3 text-base"
+            onClick={openMemberHubPopup}
+          >
+            I’m super ready
+          </button>
+        </motion.div>
+      </div>
+    </section>
 
 {/* Member Hub Popup */}
 <AnimatePresence>
@@ -727,30 +739,46 @@ export default function Home() {
         onClick={(e) => e.stopPropagation()}
       >
         <h3
-          className={`text-2xl font-bold mb-4 ${
+          className={`text-xl font-bold mb-4 ${
             isDark ? "text-white" : "text-pxv-dark"
           }`}
         >
           Filling here to join our family
         </h3>
-        <a
-          href="https://docs.google.com/spreadsheets/d/1kImFje3miKjdJnlpRIleFkO_4hZRXszvVK1OkoDScEk/edit?gid=0#gid=0"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary px-8 py-3 text-base w-full inline-block"
-        >
-          Member Info Hub
-        </a>
-        <button
-          onClick={handleMemberHubFinish}
-          className={`btn btn-outline px-8 py-3 text-base w-full mt-4 ${
-            isDark
-              ? "border-white/20 text-white hover:bg-white/10"
-              : "border-slate-200 text-slate-600 hover:bg-slate-50"
-          }`}
-        >
-          I have finished
-        </button>
+        
+        <p className={`text-sm mb-6 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+          Please complete the registration form, then confirm below to proceed.
+        </p>
+
+        <div className="flex flex-col gap-3">
+          <a
+            href="https://docs.google.com/spreadsheets/d/1kImFje3miKjdJnlpRIleFkO_4hZRXszvVK1OkoDScEk/edit?gid=0#gid=0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group btn bg-[#0E56FA] hover:bg-[#0E56FA]/90 text-white px-8 py-3.5 text-base w-full flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <span>Member Info Hub</span>
+            <svg className="w-4 h-4 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+
+          <button
+            onClick={handleMemberHubFinish}
+            className={`group btn px-8 py-3.5 text-base w-full flex items-center justify-center gap-2 border transition-all duration-200 ${
+              isDark
+                ? "border-white/10 text-slate-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50/50 hover:text-blue-600"
+            }`}
+          >
+            <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+              <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+            <span>I have finished</span>
+          </button>
+        </div>
       </motion.div>
     </div>
   )}
@@ -769,7 +797,7 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
-        className={`relative p-6 md:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center overflow-hidden ${
+        className={`relative p-6 md:p-8 pt-12 rounded-3xl shadow-2xl max-w-sm w-full text-center overflow-hidden ${
           isDark ? "bg-[#0A0F1A] border border-white/10" : "bg-white"
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -777,17 +805,6 @@ export default function Home() {
         {/* Background decorative elements */}
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pxv-cyan/10 rounded-full blur-3xl pointer-events-none" />
-
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
-          className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-tr from-primary to-pxv-cyan flex items-center justify-center text-white shadow-lg shadow-primary/20 ring-4 ring-white dark:ring-white/5"
-        >
-          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-          </svg>
-        </motion.div>
 
         <h3 className={`text-3xl font-bold mb-6 tracking-tight leading-tight ${isDark ? "text-white" : "text-pxv-dark"}`}>
           <span className="text-gradient-animated">
@@ -797,23 +814,35 @@ export default function Home() {
 
         <div className="space-y-4">
           <div className={`p-1 rounded-2xl bg-gradient-to-br from-primary/20 via-pxv-cyan/20 to-primary/20`}>
-            <div className={`p-4 rounded-xl backdrop-blur-sm ${isDark ? "bg-black/40" : "bg-white/60"}`}>
-              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+            <div className={`p-6 rounded-xl backdrop-blur-sm ${isDark ? "bg-black/40" : "bg-white/60"}`}>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-4">
                 Made with ❤️ by Ops Team
               </p>
-              <div className="flex items-center justify-center gap-4">
-                <div className="flex flex-col items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${isDark ? "bg-white/10" : "bg-slate-100"}`}>
-                    <span className="text-lg">G</span>
+              <div className="flex items-center justify-center gap-6">
+                <div className="flex flex-col items-center group">
+                  <div className="relative w-16 h-16 mb-3 transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                      src="/assets/giang.jpg"
+                      alt="Giangle"
+                      fill
+                      className="rounded-full object-cover border-2 border-white dark:border-white/10 shadow-md"
+                    />
                   </div>
-                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-pxv-dark"}`}>Giangle</span>
+                  <span className={`text-sm font-semibold ${isDark ? "text-white" : "text-pxv-dark"}`}>Giangle</span>
                 </div>
-                <div className={`h-8 w-px ${isDark ? "bg-white/10" : "bg-slate-200"}`} />
-                <div className="flex flex-col items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${isDark ? "bg-white/10" : "bg-slate-100"}`}>
-                    <span className="text-lg">M</span>
+                
+                <div className={`h-12 w-px ${isDark ? "bg-white/10" : "bg-slate-200"}`} />
+                
+                <div className="flex flex-col items-center group">
+                  <div className="relative w-16 h-16 mb-3 transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                      src="/assets/thu.jpg"
+                      alt="Minhthu"
+                      fill
+                      className="rounded-full object-cover border-2 border-white dark:border-white/10 shadow-md"
+                    />
                   </div>
-                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-pxv-dark"}`}>Minhthu</span>
+                  <span className={`text-sm font-semibold ${isDark ? "text-white" : "text-pxv-dark"}`}>Minhthu</span>
                 </div>
               </div>
             </div>
