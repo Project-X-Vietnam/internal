@@ -32,7 +32,7 @@ interface ConfettiOptions {
   /** Array of color hex strings */
   colors?: string[];
   /** Array of shape types */
-  shapes?: Array<'circle' | 'square'>;
+  shapes?: Array<'circle' | 'square' | 'heart'>;
   /** Size multiplier */
   scalar?: number;
   /** Canvas z-index */
@@ -54,7 +54,7 @@ interface Particle {
   angle2D: number;
   tiltAngle: number;
   color: RGB;
-  shape: 'circle' | 'square';
+  shape: 'circle' | 'square' | 'heart';
   tick: number;
   totalTicks: number;
   decay: number;
@@ -166,20 +166,22 @@ function drawEllipse(
  * @param opts - Configuration options for the particle
  * @returns Particle object with physics properties
  */
-function createParticle(opts: {
+interface CreateParticleOptions {
   x: number;
   y: number;
   angle: number;
   spread: number;
   startVelocity: number;
   color: RGB;
-  shape: 'circle' | 'square';
+  shape: 'circle' | 'square' | 'heart';
   ticks: number;
   decay: number;
   gravity: number;
   drift: number;
   scalar: number;
-}): Particle {
+}
+
+function createParticle(opts: CreateParticleOptions): Particle {
   const radAngle = opts.angle * (Math.PI / 180);
   const radSpread = opts.spread * (Math.PI / 180);
 
@@ -292,6 +294,29 @@ function updateAndRenderParticle(
         2 * Math.PI,
       );
     }
+  } else if (particle.shape === 'heart') {
+    // Heart shape
+    const r = particle.scalar * 5; // Base size for heart
+    const hx = particle.x;
+    const hy = particle.y;
+    
+    // Create a heart path
+    context.save();
+    context.translate(hx, hy);
+    context.rotate((Math.PI / 10) * particle.wobble);
+    context.scale(r / 5, r / 5); // Scale based on particle size
+    
+    context.beginPath();
+    // Heart drawing logic: cubic bezier curves
+    // Starting at top center
+    context.moveTo(0, -1);
+    // Left lobe
+    context.bezierCurveTo(-2, -3, -4, -1, 0, 3);
+    // Right lobe
+    context.bezierCurveTo(4, -1, 2, -3, 0, -1);
+    
+    context.fill();
+    context.restore();
   } else {
     // Square shape
     context.moveTo(Math.floor(particle.x), Math.floor(particle.y));

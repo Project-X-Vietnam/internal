@@ -1,11 +1,246 @@
 "use client";
 
 import { useState, useEffect, useCallback, startTransition } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { fireCornerConfetti } from "@/lib/confetti.utils";
 import IntroAnimation from "@/components/IntroAnimation";
+import { Typewriter } from "@/components/ui/typewriter-text";
+import Timeline from "@/components/ui/timeline-component";
+import { ProductCard } from "@/components/ui/cards-1";
+import { GridPattern } from "@/components/ui/grid-pattern";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { Highlight } from "@/components/ui/hero-highlight";
+import HeroVideoDialog from "@/components/ui/hero-video-dialog";
+import { cn } from "@/lib/utils";
+import { Heading3Icon } from "lucide-react";
+
+const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
+  // Automatically transition after a delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onComplete();
+    }, 5000); // Increased to 5s to accommodate the new delay
+
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        // No staggerChildren, we control timing manually
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const titleVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const subtitleVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 2, // 2-second delay after the component appears
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden pointer-events-none"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      <div className="relative z-10 text-center max-w-3xl mx-auto px-6">
+        <motion.h1
+          className="text-4xl md:text-3xl lg:text-6xl font-bold leading-tight mb-6 text-foreground tracking-tight"
+          variants={titleVariants}
+        >
+          Thank you for choosing to be a part of <span className="text-gradient-animated">Project X 2026 Team</span>
+        </motion.h1>
+        <motion.p
+          className="text-xl md:text-xl text-muted-foreground font-medium"
+          variants={subtitleVariants}
+        >
+          We’re genuinely glad you’re here
+        </motion.p>
+      </div>
+    </motion.div>
+  );
+};
+
+const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
+  const [thoughts, setThoughts] = useState("");
+  const [showSecondPart, setShowSecondPart] = useState(false);
+
+  const handleSubmit = () => {
+    // Navigate immediately for better UX
+    onComplete();
+
+    // Fire-and-forget submission to Google Sheets
+    // This runs in the background while the user moves to the next screen
+    const submitData = async () => {
+      // Updated URL from your latest deployment
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbxw_Qo_PFjq5S5uPImbhncQ4rVLoCU2LQE3_qRLsnbOo-Pha324w-AWnXRRbJIVfIvS/exec";
+
+      const formData = new FormData();
+      formData.append("thoughts", thoughts);
+
+      console.log("Submitting to Google Sheets (background)...", { thoughts });
+
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors",
+        });
+        console.log("Submission sent (opaque response expected)");
+      } catch (error) {
+        console.error("Error submitting to Google Sheet:", error);
+      }
+    };
+
+    submitData();
+  };
+
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        // No stagger, we control timing manually in children
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const labelVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 1.0, // 1s delay before "Before we move forward"
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const questionVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: 1.5, // Fade in container slightly before typing starts
+        duration: 0.5,
+      }
+    }
+  };
+
+  const inputVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 5, // Reduced delay to appear right after typing
+        duration: 0.4, // Faster fade-in
+        ease: "easeOut",
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+        <div className="mb-10">
+          <motion.p 
+            className="text-primary text-xl md:text-xl text-muted-foreground font-medium tracking-widest mb-6"
+            variants={labelVariants}
+          >
+            Before we move forward…
+          </motion.p>
+
+          <motion.div 
+            className="text-3xl md:text-5xl font-bold leading-tight text-foreground max-w-3xl mx-auto"
+            variants={questionVariants}
+          >
+            <Typewriter
+              text="How are you feeling about this "
+              delay={1500}
+              speed={80}
+              cursor=""
+              onFinished={() => setShowSecondPart(true)}
+              hideCursorOnFinish={true}
+            />
+            {showSecondPart && (
+              <span className="text-gradient-animated">
+                <Typewriter
+                  text="upcoming path?"
+                  delay={0}
+                  speed={80}
+                  cursor="|"
+                />
+              </span>
+            )}
+          </motion.div>
+        </div>
+        <motion.div
+          className="w-full max-w-xl mx-auto text-center"
+          variants={inputVariants}
+        >
+          <textarea
+            rows={3}
+            className="w-full p-6 text-lg text-foreground bg-slate-50/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl resize-none placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
+            placeholder="Share your thoughts with us..."
+            value={thoughts}
+            onChange={(e) => setThoughts(e.target.value)}
+          />
+          <button
+            onClick={handleSubmit}
+            className="btn btn-primary px-10 py-4 mt-8 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl hover:translate-y-[-2px] hover:scale-105 transition-all duration-300"
+          >
+            Continue →
+          </button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
 
 // Full logo with "Project X" text
 function Logo({ className = "h-8", variant = "full" }: { className?: string; variant?: "full" | "icon" }) {
@@ -36,7 +271,22 @@ function Logo({ className = "h-8", variant = "full" }: { className?: string; var
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [showInteractiveQuestion, setShowInteractiveQuestion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showMemberHubPopup, setShowMemberHubPopup] = useState(false);
+  const [showThankYouPopup, setShowThankYouPopup] = useState(false);
+
+  const openMemberHubPopup = () => setShowMemberHubPopup(true);
+  const closeMemberHubPopup = () => setShowMemberHubPopup(false);
+  const closeThankYouPopup = () => setShowThankYouPopup(false);
+
+  const handleMemberHubFinish = () => {
+    setShowMemberHubPopup(false);
+    setShowThankYouPopup(true);
+    fireCornerConfetti();
+  };
+
 
   // Check if intro should be shown (once per session)
   useEffect(() => {
@@ -45,6 +295,10 @@ export default function Home() {
       startTransition(() => {
         setShowIntro(false);
         setIsLoaded(true);
+        // Fire confetti immediately if intro is skipped
+        setTimeout(() => {
+          fireCornerConfetti();
+        }, 500);
       });
     }
   }, []);
@@ -62,8 +316,18 @@ export default function Home() {
 
   // Handle intro completion
   const handleIntroComplete = useCallback(() => {
-    sessionStorage.setItem("pxv-intro-seen", "true");
     setShowIntro(false);
+    setShowWelcome(true);
+  }, []);
+
+  const handleWelcomeComplete = useCallback(() => {
+    setShowWelcome(false);
+    setShowInteractiveQuestion(true);
+  }, []);
+
+  const handleQuestionComplete = useCallback(() => {
+    sessionStorage.setItem("pxv-intro-seen", "true");
+    setShowInteractiveQuestion(false);
     setIsLoaded(true);
     // Fire confetti after intro completes
     setTimeout(() => {
@@ -73,18 +337,22 @@ export default function Home() {
 
   // Keyboard shortcut to skip intro
   useEffect(() => {
-    if (!showIntro) return;
-    
+    if (!showIntro && !showWelcome) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
         e.preventDefault();
-        handleIntroComplete();
+        if (showIntro) {
+          handleIntroComplete();
+        } else if (showWelcome) {
+          handleWelcomeComplete();
+        }
       }
     };
-    
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showIntro, handleIntroComplete]);
+  }, [showIntro, showWelcome, handleIntroComplete, handleWelcomeComplete]);
 
   const toggleTheme = () => {
     setIsDark((prev) => {
@@ -95,137 +363,66 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className={isDark ? "dark" : ""}>
+      {/* Persistent Background Pattern for Intro/Welcome/InteractiveQuestion */}
+      <AnimatePresence>
+        {(showIntro || showWelcome || showInteractiveQuestion) && (
+          <motion.div
+            className="fixed inset-0 z-40 overflow-hidden bg-background"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <GridPattern
+              squares={[
+                [4, 4],
+                [5, 1],
+                [8, 2],
+                [5, 3],
+                [5, 5],
+                [10, 10],
+                [12, 15],
+                [15, 10],
+                [10, 15],
+                [15, 10],
+                [10, 15],
+                [15, 10],
+              ]}
+              className={cn(
+                "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
+                "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
+              )}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Intro Animation */}
       <AnimatePresence mode="wait">
         {showIntro && (
           <IntroAnimation onComplete={handleIntroComplete} />
         )}
+        {showWelcome && (
+          <WelcomeMessage onComplete={handleWelcomeComplete} />
+        )}
+        {showInteractiveQuestion && (
+          <InteractiveQuestion onComplete={handleQuestionComplete} />
+        )}
       </AnimatePresence>
+
 
       {/* Main Content */}
       <motion.div 
-        className={`min-h-screen transition-colors duration-500 ${isDark ? "dark" : ""}`}
+        className="min-h-screen transition-colors duration-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-      {/* Navbar */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
-          isDark
-            ? "bg-[#020818]/80 border-white/10"
-            : "bg-white/70 border-slate-100/50"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
-          <Link href="/" className="group">
-            <Logo className="h-12 w-auto transition-transform group-hover:scale-[1.02]" />
-          </Link>
-          <div className="flex items-center gap-6">
-            <a
-              href="#"
-              className={`text-sm font-medium transition-colors ${
-                isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"
-              }`}
-            >
-              About
-            </a>
-            <a
-              href="#"
-              className={`text-sm font-medium transition-colors ${
-                isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"
-              }`}
-            >
-              Programs
-            </a>
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-              className={`p-2 rounded-lg transition-colors ${
-                isDark
-                  ? "bg-white/10 hover:bg-primary/20 text-white"
-                  : "bg-slate-100 hover:bg-primary/10 text-slate-600"
-              }`}
-            >
-              {isDark ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-            <button className="btn btn-primary px-6 py-2.5 text-sm">
-              Get Started
-            </button>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
-      <section
-        className={`min-h-screen pt-32 md:pt-40 pb-20 relative overflow-hidden ${
-          isDark ? "bg-[#020818]" : "bg-gradient-hero-light"
-        }`}
-      >
-        {/* Background Decorations */}
-        {isDark && (
-          <>
-            <div className="absolute inset-0 bg-gradient-hero-dark" />
-            <motion.div
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl bg-primary/20"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            <motion.div
-              className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl bg-pxv-cyan/20"
-              animate={{
-                scale: [1.2, 1, 1.2],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 2,
-              }}
-            />
-          </>
-        )}
-
+      <AuroraBackground className="min-h-screen pt-32 md:pt-40 pb-20 relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10">
-          {/* Status Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex justify-center mb-8"
-          >
-            <span
-              className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border backdrop-blur-sm ${
-                isDark
-                  ? "bg-primary/10 border-primary/30"
-                  : "bg-gradient-to-r from-primary/5 via-pxv-cyan/5 to-primary/5 border-primary/15"
-              }`}
-            >
-              <span className="relative flex h-2 w-2 flex-shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span className="text-sm font-medium text-primary">Now Accepting Applications</span>
-            </span>
-          </motion.div>
-
           {/* Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -234,215 +431,520 @@ export default function Home() {
             className="text-center max-w-4xl mx-auto"
           >
             <h1 className={`heading-hero mb-6 ${isDark ? "text-white" : "text-pxv-dark"}`}>
-              Building the Future of{" "}
-              <span className="text-gradient-animated">Vietnam&apos;s Tech</span>{" "}
-              Ecosystem
+              <span>Building the Future of </span>
+              <span className="text-gradient-animated">Vietnam Tech Ecosystem</span>
             </h1>
-            <p className={`body-large max-w-2xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
-              Join a community of innovators, entrepreneurs, and tech leaders shaping the next generation of Vietnamese startups and digital transformation.
+            <p className={`body-large max-w-3xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
+              You now become member of a <Highlight className="ml-1 mr-1">community of innovators, entrepreneurs, and tech leaders</Highlight> shaping the next generation of Vietnamese startups and digital transformation.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn btn-primary px-8 py-4 text-base group">
-                Apply Now
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
-              <button
-                className={`btn px-8 py-4 text-base border ${
-                  isDark
-                    ? "border-white/20 text-white hover:bg-white/10"
-                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                Learn More
-              </button>
-            </div>
+            {/* CTA Buttons - Removed */}
           </motion.div>
         </div>
-      </section>
+      </AuroraBackground>
 
-      {/* Features Section */}
-      <section className={`section-padding ${isDark ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
+      {/* Founder's Message Section */}
+      <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
+        <div className="max-w-4xl mx-auto px-6 md:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="text-center"
           >
-            <p className="section-label mb-4">What We Offer</p>
-            <h2 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
-              Comprehensive Support for Your Journey
+            <h2 className="section-label mb-4 text-[#0E56FA]">
+              From Our President
             </h2>
+            <h3 className={`heading-section mb-8 ${isDark ? "text-white" : "text-pxv-dark"}`}>
+              To the next generation of Project X
+            </h3>
+
+            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl mb-10">
+              <HeroVideoDialog
+                className="block dark:hidden"
+                animationStyle="from-center"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                thumbnailAlt="Hero Video"
+              />
+              <HeroVideoDialog
+                className="hidden dark:block"
+                animationStyle="from-center"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                thumbnailAlt="Hero Video"
+              />
+            </div>
+
+            <div className={`prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify`}>
+              <p>
+                Welcome to the next chapter of your journey. At Project X, we're not just building projects; we're building people. We believe in the power of Vietnamese talent to shape the future of technology, and we're thrilled to have you with us.
+              </p>
+              <p>
+                This is a place for you to be bold, to experiment, and to grow. We provide the challenges and the support system; you bring the passion and the drive. Together, we will create a lasting impact on Vietnam's tech ecosystem and beyond.
+              </p>
+              <div className="mt-8 text-center">
+                <p className={`font-bold text-lg ${isDark ? "text-white" : "text-pxv-dark"}`}>Liam Lee</p>
+                <p className={`${isDark ? "text-white/60" : "text-slate-500"}`}>President, Project X Vietnam</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* PJX Masterplan Section */}
+      <section className={`py-20 md:py-28 ${isDark ? "bg-[#020818]" : "bg-white"}`}>
+        <div className="max-w-4xl mx-auto px-6 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-center mb-8"
+          >
+            <h2 className="section-label mb-4 text-[#0E56FA]">Project X Masterplan</h2>
+            <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>Our journey together</h3>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
+          <Timeline
+            items={[
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ),
-                title: "Mentorship",
-                description: "Connect with industry leaders and experienced entrepreneurs who guide your growth.",
+                date: "Jan 17",
+                title: "1st All-hands Meeting",
+                description: "Kick off the year by aligning on our vision, goals, and roadmap for the upcoming season."
               },
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                ),
-                title: "Community",
-                description: "Join a vibrant network of like-minded individuals passionate about innovation.",
+                date: "Jan 18 - Jan 28",
+                title: "Department Meeting & Training",
+                description: "Deep dive into specialized training sessions and departmental planning to prepare for execution."
               },
               {
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                title: "Resources",
-                description: "Access exclusive tools, workshops, and resources to accelerate your success.",
+                date: "Feb 19 - Mar 13",
+                title: "Summer Fellowship Program Recruitment",
+                description: "Launch our nationwide search for the most promising young talents to join the Summer Fellowship."
               },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`group p-6 rounded-xl text-center transition-all duration-300 ${
-                  isDark
-                    ? "bg-white/5 hover:bg-white/10 border border-white/10"
-                    : "bg-white hover:bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md"
-                }`}
-              >
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 ${
-                    isDark ? "bg-primary/20 text-primary" : "bg-primary/10 text-primary"
-                  }`}
-                >
-                  {feature.icon}
-                </div>
-                <h3 className={`font-semibold text-lg mb-2 ${isDark ? "text-white" : "text-pxv-dark"}`}>
-                  {feature.title}
-                </h3>
-                <p className={`text-sm ${isDark ? "text-white/60" : "text-slate-600"}`}>
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+              {
+                date: "Mar 20 - Mar 22",
+                title: "SFP Round 1 Activities",
+                description: "Engage candidates in initial challenges to assess their potential and cultural fit."
+              },
+              {
+                date: "Apr 4 - Apr 11",
+                title: "SFP Round 2 Activities",
+                description: "Conduct in-depth assessments and group activities to identify the top performers."
+              },
+              {
+                date: "Jun 12 - Jun 27",
+                title: "SFP Application & Interview",
+                description: "Finalize the selection process with comprehensive interviews for shortlisted candidates."
+              },
+              {
+                date: "Jul 1",
+                title: "Fellow Final List",
+                description: "Announce the official cohort of Summer Fellows who will embark on this transformative journey."
+              },
+              {
+                date: "Jul 9 - Aug 22",
+                title: "Summer Fellowship Program",
+                description: "Execute the core 6-week intensive program focused on innovation, leadership, and impact."
+              },
+            ]}
+          />
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className={`section-padding ${isDark ? "bg-[#020818]" : "bg-white"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { value: "500+", label: "Members" },
-              { value: "50+", label: "Mentors" },
-              { value: "100+", label: "Events" },
-              { value: "$2M+", label: "Funding Raised" },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-gradient mb-2">
-                  {stat.value}
-                </div>
-                <div className={`text-sm font-medium ${isDark ? "text-white/60" : "text-slate-600"}`}>
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-cta py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-radial-primary opacity-50" />
+    {/* Member Journey Section */}
+    <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto px-6 md:px-8 text-center relative z-10"
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-center mb-16"
         >
-          <h2 className="heading-section text-white mb-6">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="body-large text-white/70 mb-10 max-w-2xl mx-auto">
-            Join Project X Vietnam today and become part of a community that&apos;s shaping the future of technology in Vietnam.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn bg-white text-primary hover:bg-white/90 px-8 py-4 text-base font-semibold group">
-              Apply Now
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-            <button className="btn border border-white/30 text-white hover:bg-white/10 px-8 py-4 text-base">
-              Contact Us
-            </button>
-          </div>
+          <h2 className="section-label mb-4 text-[#0E56FA]">Member Journey</h2>
+          <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
+            How You’ll Grow With Us
+          </h3>
         </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Finding your footing",
+              category: "Phase 1",
+              description: "Observing, asking questions, and learning how things work.",
+              image: "/assets/pjx5.jpg",
+              href: "#"
+            },
+            {
+              title: "Trying & learning",
+              category: "Phase 2",
+              description: "Taking small ownership, making mistakes, and getting feedback.",
+              image: "/assets/pjx6.jpg",
+              href: "#"
+            },
+            {
+              title: "Contributing with confidence",
+              category: "Phase 3",
+              description: "Owning parts of the work, helping others, and seeing your impact.",
+              image: "/assets/pjx7.jpg",
+              href: "#"
+            },
+          ].map((phase, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="h-full"
+            >
+              <ProductCard
+                imageUrl={phase.image}
+                title={phase.title}
+                category={phase.category}
+                description={phase.description}
+                href={phase.href}
+                className="h-full"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+     {/* Working Culture Section */}
+      <section className="py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white dark:from-[#020818] dark:to-[#030d24] transition-colors duration-500 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-center mb-20"
+          >
+            <h2 className="section-label mb-4 text-[#0E56FA]">Working Culture</h2>
+            <h3 className="heading-section text-pxv-dark dark:text-white transition-colors duration-500 mb-6">
+              What We Value
+            </h3>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Our core principles that drive everything we do together
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
+            {[
+              {
+                title: "Eager to learn",
+                category: "Growth Mindset",
+                description: "We move fast and learn hard. Every challenge is an opportunity to grow, and we embrace the discomfort that comes with stretching beyond our limits.",
+                image: "/assets/pjx1.jpg",
+                icon: "🚀"
+              },
+              {
+                title: "Innovative",
+                category: "Creativity",
+                description: "We refuse to settle for mediocre. Creativity isn't just encouraged—it's expected. We push boundaries and challenge the status quo.",
+                image: "/assets/pjx2.jpg",
+                icon: "💡"
+              },
+              {
+                title: "Supportive",
+                category: "Teamwork",
+                description: "We hustle, but we hustle together. No one gets left behind. We lift each other up and celebrate wins as a team.",
+                image: "/assets/pjx3.jpg",
+                icon: "🤝"
+              },
+              {
+                title: "Resilient",
+                category: "Perseverance",
+                description: "We push through chaos with grace. When things get tough, we get tougher. Setbacks are just setups for comebacks.",
+                image: "/assets/pjx4.jpg",
+                icon: "💪"
+              },
+            ].map((value, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.15 }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="group relative"
+              >
+                <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
+                  {/* Large image with overlay */}
+                  <div className="aspect-[16/10] overflow-hidden relative">
+                    <img
+                      src={value.image}
+                      alt={value.title}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    
+                    {/* Floating icon badge */}
+                    <div className="absolute top-6 left-6 h-14 w-14 rounded-2xl bg-white/90 dark:bg-black/50 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
+                      {value.icon}
+                    </div>
+                    
+                    {/* Category badge */}
+                    <div className="absolute bottom-6 left-6">
+                      <span className="inline-block px-4 py-1.5 rounded-full bg-primary/90 text-white text-xs font-bold uppercase tracking-wider">
+                        {value.category}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Content area */}
+                  <div className="p-8">
+                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-300">
+                      {value.title}
+                    </h3>
+                    <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {value.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className={`py-12 border-t ${isDark ? "bg-[#020818] border-white/10" : "bg-white border-slate-100"}`}>
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <Link href="/" className="block">
-              <Logo className="h-10 w-auto" />
-            </Link>
-            <p className={`text-sm ${isDark ? "text-white/40" : "text-slate-400"}`}>
-              © 2025 Project X Vietnam. All rights reserved.
-            </p>
-            <div className="flex items-center gap-4">
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className={`p-2 rounded-lg transition-colors ${
-                  isDark
-                    ? "bg-white/10 hover:bg-primary/20 text-white/60 hover:text-primary"
-                    : "bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary"
-                }`}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-          </a>
+     {/* Ready Section - Optimized CTA */}
+    <section className="relative py-28 md:py-36 bg-gradient-cta text-white overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="container relative mx-auto px-6 md:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Eyebrow text for context */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-blue-200 text-sm md:text-base font-medium tracking-wide uppercase mb-6"
+          >
+            One step away from something amazing
+          </motion.p>
+          
+          {/* Main headline - larger, more impactful */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+          >
+            Ready to start this journey{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+              together?
+            </span>
+          </motion.h2>
+          
+          {/* Supporting copy - value reinforcement */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-lg md:text-xl text-blue-100/80 mb-10 max-w-xl mx-auto"
+          >
+            You're now part of something extraordinary. Let's get you set up and ready to make an impact.
+          </motion.p>
+          
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="flex flex-wrap justify-center gap-4"
+          >
+            <button
+              onClick={openMemberHubPopup}
+              className="px-10 py-4 text-lg font-bold text-[#0E56FA] bg-white rounded-full shadow-xl hover:shadow-white/20 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
+            >
+              I'm ready
+            </button>
+            <button
+              onClick={openMemberHubPopup}
+              className="px-10 py-4 text-lg font-bold text-white border-2 border-white/80 rounded-full hover:bg-white/10 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
+            >
+              I'm super ready
+            </button>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+
+{/* Member Hub Popup */}
+<AnimatePresence>
+  {showMemberHubPopup && (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      onClick={closeMemberHubPopup}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`relative p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center ${
+          isDark ? "bg-[#0A0F1A] border border-white/10" : "bg-white"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3
+          className={`text-xl font-bold mb-4 ${
+            isDark ? "text-white" : "text-pxv-dark"
+          }`}
+        >
+          Filling here to join our family
+        </h3>
+        
+        <p className={`text-sm mb-6 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+          Please complete the registration form, then confirm below to proceed.
+        </p>
+
+        <div className="flex flex-col gap-3">
           <a
-                href="mailto:info.projectxvietnam@gmail.com"
-                aria-label="Email"
-                className={`p-2 rounded-lg transition-colors ${
-                  isDark
-                    ? "bg-white/10 hover:bg-primary/20 text-white/60 hover:text-primary"
-                    : "bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary"
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </a>
+            href="https://docs.google.com/spreadsheets/d/1kImFje3miKjdJnlpRIleFkO_4hZRXszvVK1OkoDScEk/edit?gid=0#gid=0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group btn bg-[#0E56FA] hover:bg-[#0E56FA]/90 text-white px-8 py-3.5 text-base w-full flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <span>Member Info Hub</span>
+            <svg className="w-4 h-4 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+
+          <button
+            onClick={handleMemberHubFinish}
+            className={`group btn px-8 py-3.5 text-base w-full flex items-center justify-center gap-2 border transition-all duration-200 ${
+              isDark
+                ? "border-white/10 text-slate-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50/50 hover:text-blue-600"
+            }`}
+          >
+            <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+              <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+            <span>I have finished</span>
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
+
+{/* Thank You Popup */}
+<AnimatePresence>
+  {showThankYouPopup && (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+
+      onClick={closeThankYouPopup}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+        className={`relative p-6 md:p-8 pt-12 rounded-3xl shadow-2xl max-w-sm w-full text-center overflow-hidden ${
+          isDark ? "bg-[#0A0F1A] border border-white/10" : "bg-white"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Background decorative elements */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pxv-cyan/10 rounded-full blur-3xl pointer-events-none" />
+
+        <h3 className={`text-3xl font-bold mb-6 tracking-tight leading-tight ${isDark ? "text-white" : "text-pxv-dark"}`}>
+          <span className="text-gradient-animated">
+            Lets build and grind together!
+          </span>
+        </h3>
+
+        <div className="space-y-4">
+          <div className={`p-1 rounded-2xl bg-gradient-to-br from-primary/20 via-pxv-cyan/20 to-primary/20`}>
+            <div className={`p-6 rounded-xl backdrop-blur-sm ${isDark ? "bg-black/40" : "bg-white/60"}`}>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-4">
+                Made with ❤️ by Ops Head
+              </p>
+              <div className="flex items-center justify-center gap-6">
+                <div className="flex flex-col items-center group">
+                  <div className="relative w-16 h-16 mb-3 transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                      src="/assets/giang.jpg"
+                      alt="Giangle"
+                      fill
+                      className="rounded-full object-cover border-2 border-white dark:border-white/10 shadow-md"
+                    />
+                  </div>
+                  <span className={`text-sm font-semibold ${isDark ? "text-white" : "text-pxv-dark"}`}>Giangle</span>
+                </div>
+                
+                <div className={`h-12 w-px ${isDark ? "bg-white/10" : "bg-slate-200"}`} />
+                
+                <div className="flex flex-col items-center group">
+                  <div className="relative w-16 h-16 mb-3 transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                      src="/assets/thu.jpg"
+                      alt="Minhthu"
+                      fill
+                      className="rounded-full object-cover border-2 border-white dark:border-white/10 shadow-md"
+                    />
+                  </div>
+                  <span className={`text-sm font-semibold ${isDark ? "text-white" : "text-pxv-dark"}`}>Minhthu</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div className="pt-2">
+            <p className={`text-sm leading-relaxed ${isDark ? "text-white/70" : "text-slate-600"}`}>
+              Want to learn more about our mission?
+              <a 
+                href="https://www.projectxvietnam.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block mt-1 font-medium text-primary hover:text-primary/80 hover:underline transition-all"
+              >
+                projectxvietnam.org
+              </a>
+            </p>
+          </div>
         </div>
-      </footer>
+
+        <button
+          onClick={closeThankYouPopup}
+          className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+            isDark
+              ? "text-white/30 hover:bg-white/10 hover:text-white"
+              : "text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          }`}
+          aria-label="Close"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </motion.div>
-    </>
+    </div>
+  )}
+</AnimatePresence>
+
+      </motion.div>
+    </div>
   );
 }
