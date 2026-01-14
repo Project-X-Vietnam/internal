@@ -28,7 +28,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
       <div
         ref={ref}
         className={cn(
-          "group relative block overflow-hidden rounded-2xl border border-border/50 bg-card text-card-foreground transition-all duration-300 ease-out hover:shadow-lg hover:scale-[1.02] dark:hover:border-primary/20",
+          "group relative block overflow-hidden rounded-2xl bg-card text-card-foreground border-2 border-slate-100 dark:border-white/10 transition-all duration-300 ease-out hover:shadow-lg hover:scale-[1.02]",
           className
         )}
         {...props}
