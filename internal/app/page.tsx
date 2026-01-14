@@ -10,6 +10,7 @@ import { Typewriter } from "@/components/ui/typewriter-text";
 import Timeline from "@/components/ui/timeline-component";
 import { ProductCard } from "@/components/ui/cards-1";
 import { GridPattern } from "@/components/ui/grid-pattern";
+import { AuroraBackground } from "@/components/ui/aurora-background";
 import { cn } from "@/lib/utils";
 
 const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
@@ -417,43 +418,7 @@ export default function Home() {
       >
 
       {/* Hero Section */}
-      <section
-        className={`min-h-screen pt-32 md:pt-40 pb-20 relative overflow-hidden ${
-          isDark ? "bg-[#020818]" : "bg-gradient-hero-light"
-        }`}
-      >
-        {/* Background Decorations */}
-        {isDark && (
-          <>
-            <div className="absolute inset-0 bg-gradient-hero-dark" />
-            <motion.div
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl bg-primary/20"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            <motion.div
-              className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl bg-pxv-cyan/20"
-              animate={{
-                scale: [1.2, 1, 1.2],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 2,
-              }}
-            />
-          </>
-        )}
-
+      <AuroraBackground className="min-h-screen pt-32 md:pt-40 pb-20 relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10">
           {/* Hero Content */}
           <motion.div
@@ -464,15 +429,16 @@ export default function Home() {
           >
             <h1 className={`heading-hero mb-6 ${isDark ? "text-white" : "text-pxv-dark"}`}>
               <span>Building the Future of </span>
-              <span className="text-gradient-animated">Vietnam Tech Ecosystem.</span>
+              <span className="text-gradient-animated">Vietnam Tech Ecosystem</span>
             </h1>
             <p className={`body-large max-w-2xl mx-auto mb-10 ${isDark ? "text-white/60" : "text-slate-600"}`}>
               You now become member of a community of innovators, entrepreneurs, and tech leaders shaping the next generation of Vietnamese startups and digital transformation.
             </p>
 
             {/* CTA Buttons - Removed */}
-          </motion.div>        </div>
-       </section>
+          </motion.div>
+        </div>
+      </AuroraBackground>
 
       {/* Founder's Message Section */}
       <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
