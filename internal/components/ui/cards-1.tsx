@@ -1,7 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Heart } from "lucide-react";
+import { fireConfetti } from "@/lib/confetti.utils";
 
 // Define the props for the component
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,6 +20,24 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
     const handleSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
+      
+      // Fire heart confetti
+      const rect = (e.target as HTMLElement).getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+      
+      fireConfetti({
+        particleCount: 20,
+        spread: 70,
+        origin: { x, y },
+        colors: ['#FF0000', '#FF69B4', '#FFC0CB', '#FF1493'],
+        shapes: ['heart'],
+        scalar: 1.5,
+        startVelocity: 30,
+        gravity: 0.8,
+        ticks: 150
+      });
+
       if (onSave) {
         onSave();
       }
@@ -58,11 +77,11 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
         <Button
           variant="secondary"
           size="icon"
-          className="absolute top-4 right-4 h-9 w-9 rounded-full opacity-0 translate-y-2 backdrop-blur-md bg-white/80 dark:bg-black/50 hover:bg-primary hover:text-primary-foreground transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 shadow-sm"
+          className="absolute top-4 right-4 h-9 w-9 rounded-full opacity-0 translate-y-2 backdrop-blur-md bg-white/80 dark:bg-black/50 hover:bg-rose-50 hover:text-rose-500 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 shadow-sm"
           onClick={handleSaveClick}
-          aria-label="Save item"
+          aria-label="Like item"
         >
-          <Bookmark className="h-4 w-4" />
+          <Heart className="h-4 w-4" />
         </Button>
       </div>
     );
