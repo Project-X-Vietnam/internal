@@ -617,107 +617,170 @@ export default function Home() {
     </section>
 
      {/* Working Culture Section */}
-      <section className="py-20 md:py-28 bg-white dark:bg-[#020818] transition-colors duration-500">
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
+      <section className="py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white dark:from-[#020818] dark:to-[#030d24] transition-colors duration-500 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
             <h2 className="section-label mb-4 text-[#0E56FA]">Working Culture</h2>
-            <h3 className="heading-section text-pxv-dark dark:text-white transition-colors duration-500">
+            <h3 className="heading-section text-pxv-dark dark:text-white transition-colors duration-500 mb-6">
               What We Value
             </h3>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Our core principles that drive everything we do together
+            </p>
           </motion.div>
 
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {[
-        {
-          title: "Eager to learn",
-          category: "Growth Mindset",
-          description: "We do fast and learn hard",
-          image: "/assets/pjx1.jpg",
-          href: "#"
-        },
-        {
-          title: "Innovative",
-          category: "Creativity",
-          description: "We are not settle for mediocre",
-          image: "/assets/pjx2.jpg",
-          href: "#"
-        },
-        {
-          title: "Supportive",
-          category: "Teamwork",
-          description: "We hustle but together",
-          image: "/assets/pjx3.jpg",
-          href: "#"
-        },
-        {
-          title: "Resilient",
-          category: "Perseverance",
-          description: "We push it through chaos",
-          image: "/assets/pjx4.jpg",
-          href: "#"
-        },
-      ].map((value, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
-          viewport={{ once: true, amount: 0.5 }}
-        >
-          <ProductCard
-            imageUrl={value.image}
-            title={value.title}
-            category={value.category}
-            description={value.description}
-            href={value.href}
-            className="h-full"
-          />
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</section>
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
+            {[
+              {
+                title: "Eager to learn",
+                category: "Growth Mindset",
+                description: "We move fast and learn hard. Every challenge is an opportunity to grow, and we embrace the discomfort that comes with stretching beyond our limits.",
+                image: "/assets/pjx1.jpg",
+                icon: "🚀"
+              },
+              {
+                title: "Innovative",
+                category: "Creativity",
+                description: "We refuse to settle for mediocre. Creativity isn't just encouraged—it's expected. We push boundaries and challenge the status quo.",
+                image: "/assets/pjx2.jpg",
+                icon: "💡"
+              },
+              {
+                title: "Supportive",
+                category: "Teamwork",
+                description: "We hustle, but we hustle together. No one gets left behind. We lift each other up and celebrate wins as a team.",
+                image: "/assets/pjx3.jpg",
+                icon: "🤝"
+              },
+              {
+                title: "Resilient",
+                category: "Perseverance",
+                description: "We push through chaos with grace. When things get tough, we get tougher. Setbacks are just setups for comebacks.",
+                image: "/assets/pjx4.jpg",
+                icon: "💪"
+              },
+            ].map((value, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.15 }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="group relative"
+              >
+                <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
+                  {/* Large image with overlay */}
+                  <div className="aspect-[16/10] overflow-hidden relative">
+                    <img
+                      src={value.image}
+                      alt={value.title}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    
+                    {/* Floating icon badge */}
+                    <div className="absolute top-6 left-6 h-14 w-14 rounded-2xl bg-white/90 dark:bg-black/50 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
+                      {value.icon}
+                    </div>
+                    
+                    {/* Category badge */}
+                    <div className="absolute bottom-6 left-6">
+                      <span className="inline-block px-4 py-1.5 rounded-full bg-primary/90 text-white text-xs font-bold uppercase tracking-wider">
+                        {value.category}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Content area */}
+                  <div className="p-8">
+                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-300">
+                      {value.title}
+                    </h3>
+                    <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {value.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-     {/* Ready Section */}
-    <section className="py-20 bg-gradient-cta text-white">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-8"
-        >
-          <h2 className="text-3xl font-bold text-white">
-            Right now, how do you feel about starting this journey?
-          </h2>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true, amount: 0.5 }}
-          className="flex justify-center gap-4"
-        >
-          <button
-            className="btn bg-white text-[#0E56FA] hover:bg-slate-100 border-none px-8 py-3 text-base"
-            onClick={openMemberHubPopup}
+     {/* Ready Section - Optimized CTA */}
+    <section className="relative py-28 md:py-36 bg-gradient-cta text-white overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="container relative mx-auto px-6 md:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Eyebrow text for context */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-blue-200 text-sm md:text-base font-medium tracking-wide uppercase mb-6"
           >
-            I’m ready
-          </button>
-          <button
-            className="btn btn-outline border-white text-white hover:bg-white/10 px-8 py-3 text-base"
-            onClick={openMemberHubPopup}
+            One step away from something amazing
+          </motion.p>
+          
+          {/* Main headline - larger, more impactful */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
           >
-            I’m super ready
-          </button>
-        </motion.div>
+            Ready to start this journey{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+              together?
+            </span>
+          </motion.h2>
+          
+          {/* Supporting copy - value reinforcement */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="text-lg md:text-xl text-blue-100/80 mb-10 max-w-xl mx-auto"
+          >
+            You're now part of something extraordinary. Let's get you set up and ready to make an impact.
+          </motion.p>
+          
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="flex flex-wrap justify-center gap-4"
+          >
+            <button
+              onClick={openMemberHubPopup}
+              className="px-10 py-4 text-lg font-bold text-[#0E56FA] bg-white rounded-full shadow-xl hover:shadow-white/20 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
+            >
+              I'm ready
+            </button>
+            <button
+              onClick={openMemberHubPopup}
+              className="px-10 py-4 text-lg font-bold text-white border-2 border-white/80 rounded-full hover:bg-white/10 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
+            >
+              I'm super ready
+            </button>
+          </motion.div>
+        </div>
       </div>
     </section>
 
@@ -788,7 +851,7 @@ export default function Home() {
 <AnimatePresence>
   {showThankYouPopup && (
     <div
-      className="fixed inset-0 flex items-start justify-center pt-20 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
 
       onClick={closeThankYouPopup}
     >

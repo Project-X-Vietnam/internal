@@ -21,8 +21,8 @@ interface TimelineProps {
 export default function Timeline({ items, className }: TimelineProps) {
   return (
     <div className={cn("relative max-w-3xl mx-auto py-12 md:py-16 px-6 md:px-8", className)}>
-      {/* Vertical line */}
-      <div className="absolute left-[26px] md:left-[34px] top-0 h-full w-[2px] bg-slate-200 dark:bg-white/10" />
+      {/* Vertical line - centered with the 16px dot: padding (24px/32px) + half dot (8px) - half line (1px) */}
+      <div className="absolute left-[31px] md:left-[39px] top-0 h-full w-[2px] bg-slate-200 dark:bg-white/10" />
 
       <div className="space-y-12">
         {items.map((item, idx) => (
