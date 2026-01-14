@@ -816,7 +816,7 @@ export default function Home() {
           <div className={`p-1 rounded-2xl bg-gradient-to-br from-primary/20 via-pxv-cyan/20 to-primary/20`}>
             <div className={`p-6 rounded-xl backdrop-blur-sm ${isDark ? "bg-black/40" : "bg-white/60"}`}>
               <p className="text-xs font-bold uppercase tracking-widest text-primary mb-4">
-                Made with ❤️ by Ops Team
+                Made with ❤️ by Ops Head
               </p>
               <div className="flex items-center justify-center gap-6">
                 <div className="flex flex-col items-center group">
