@@ -71,16 +71,16 @@ const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
     >
       <div className="relative z-10 text-center max-w-3xl mx-auto px-6">
         <motion.h1
-          className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-foreground tracking-tight"
+          className="text-4xl md:text-3xl lg:text-6xl font-bold leading-tight mb-6 text-foreground tracking-tight"
           variants={titleVariants}
         >
-          Thank you for choosing to be a part of <span className="text-gradient-animated">Project X 2026 Team</span>.
+          Thank you for choosing to be a part of <span className="text-gradient-animated">Project X 2026 Team</span>
         </motion.h1>
         <motion.p
-          className="text-xl md:text-2xl text-muted-foreground font-medium"
+          className="text-xl md:text-xl text-muted-foreground font-medium"
           variants={subtitleVariants}
         >
-          We’re genuinely glad you’re here.
+          We’re genuinely glad you’re here
         </motion.p>
       </div>
     </motion.div>
@@ -89,6 +89,7 @@ const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
 
 const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
   const [thoughts, setThoughts] = useState("");
+  const [showSecondPart, setShowSecondPart] = useState(false);
 
   const handleSubmit = () => {
     // Navigate immediately for better UX
@@ -184,20 +185,34 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <div className="mb-10">
           <motion.p 
-            className="text-primary text-sm md:text-base font-bold uppercase tracking-widest mb-6"
+            className="text-primary text-xl md:text-xl text-muted-foreground font-medium tracking-widest mb-6"
             variants={labelVariants}
           >
             Before we move forward…
           </motion.p>
+
           <motion.div 
-            className="text-3xl md:text-5xl font-bold leading-tight text-foreground"
+            className="text-3xl md:text-5xl font-bold leading-tight text-foreground max-w-3xl mx-auto"
             variants={questionVariants}
           >
             <Typewriter
-              text="How are you feeling about this upcoming path?"
+              text="How are you feeling about this "
               delay={1500}
               speed={80}
+              cursor=""
+              onFinished={() => setShowSecondPart(true)}
+              hideCursorOnFinish={true}
             />
+            {showSecondPart && (
+              <span className="text-gradient-animated">
+                <Typewriter
+                  text="upcoming path?"
+                  delay={0}
+                  speed={80}
+                  cursor="|"
+                />
+              </span>
+            )}
           </motion.div>
         </div>
         <motion.div
@@ -221,7 +236,7 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
       </div>
     </motion.div>
   );
-};
+}
 
 // Full logo with "Project X" text
 function Logo({ className = "h-8", variant = "full" }: { className?: string; variant?: "full" | "icon" }) {
@@ -256,9 +271,17 @@ export default function Home() {
   const [showInteractiveQuestion, setShowInteractiveQuestion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showMemberHubPopup, setShowMemberHubPopup] = useState(false);
+  const [showThankYouPopup, setShowThankYouPopup] = useState(false);
 
   const openMemberHubPopup = () => setShowMemberHubPopup(true);
   const closeMemberHubPopup = () => setShowMemberHubPopup(false);
+  const closeThankYouPopup = () => setShowThankYouPopup(false);
+
+  const handleMemberHubFinish = () => {
+    setShowMemberHubPopup(false);
+    setShowThankYouPopup(true);
+    fireCornerConfetti();
+  };
 
 
   // Check if intro should be shown (once per session)
@@ -392,60 +415,6 @@ export default function Home() {
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-      {/* Navbar */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
-          isDark
-            ? "bg-[#020818]/80 border-white/10"
-            : "bg-white/70 border-slate-100/50"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
-          <Link href="/" className="group">
-            <Logo className="h-12 w-auto transition-transform group-hover:scale-[1.02]" />
-          </Link>
-          <div className="flex items-center gap-6">
-            <a
-              href="#"
-              className={`text-sm font-medium transition-colors ${
-                isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"
-              }`}
-            >
-              About
-            </a>
-            <a
-              href="#"
-              className={`text-sm font-medium transition-colors ${
-                isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"
-              }`}
-            >
-              Programs
-            </a>
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-              className={`p-2 rounded-lg transition-colors ${
-                isDark
-                  ? "bg-white/10 hover:bg-primary/20 text-white"
-                  : "bg-slate-100 hover:bg-primary/10 text-slate-600"
-              }`}
-            >
-              {isDark ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-            <button className="btn btn-primary px-6 py-2.5 text-sm">
-              Get Started
-            </button>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section
@@ -486,28 +455,6 @@ export default function Home() {
         )}
 
         <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10">
-          {/* Status Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex justify-center mb-8"
-          >
-            <span
-              className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border backdrop-blur-sm ${
-                isDark
-                  ? "bg-primary/10 border-primary/30"
-                  : "bg-gradient-to-r from-primary/5 via-pxv-cyan/5 to-primary/5 border-primary/15"
-              }`}
-            >
-              <span className="relative flex h-2 w-2 flex-shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span className="text-sm font-medium text-primary">Now Accepting Applications</span>
-            </span>
-          </motion.div>
-
           {/* Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -829,26 +776,109 @@ export default function Home() {
           Member Info Hub
         </a>
         <button
-          onClick={closeMemberHubPopup}
-          className={`absolute top-3 right-3 p-2 rounded-full transition-colors ${
+          onClick={handleMemberHubFinish}
+          className={`btn btn-outline px-8 py-3 text-base w-full mt-4 ${
             isDark
-              ? "text-white/50 hover:bg-white/10"
-              : "text-slate-500 hover:bg-slate-100"
+              ? "border-white/20 text-white hover:bg-white/10"
+              : "border-slate-200 text-slate-600 hover:bg-slate-50"
           }`}
-          aria-label="Close popup"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
+          I have finished
+        </button>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
+
+{/* Thank You Popup */}
+<AnimatePresence>
+  {showThankYouPopup && (
+    <div
+      className="fixed inset-0 flex items-start justify-center pt-20 bg-black/60 backdrop-blur-sm"
+
+      onClick={closeThankYouPopup}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+        className={`relative p-6 md:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center overflow-hidden ${
+          isDark ? "bg-[#0A0F1A] border border-white/10" : "bg-white"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Background decorative elements */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pxv-cyan/10 rounded-full blur-3xl pointer-events-none" />
+
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
+          className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-tr from-primary to-pxv-cyan flex items-center justify-center text-white shadow-lg shadow-primary/20 ring-4 ring-white dark:ring-white/5"
+        >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </motion.div>
+
+        <h3 className={`text-3xl font-bold mb-6 tracking-tight leading-tight ${isDark ? "text-white" : "text-pxv-dark"}`}>
+          <span className="text-gradient-animated">
+            Lets build and grind together!
+          </span>
+        </h3>
+
+        <div className="space-y-4">
+          <div className={`p-1 rounded-2xl bg-gradient-to-br from-primary/20 via-pxv-cyan/20 to-primary/20`}>
+            <div className={`p-4 rounded-xl backdrop-blur-sm ${isDark ? "bg-black/40" : "bg-white/60"}`}>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+                Made with ❤️ by Ops Team
+              </p>
+              <div className="flex items-center justify-center gap-4">
+                <div className="flex flex-col items-center">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${isDark ? "bg-white/10" : "bg-slate-100"}`}>
+                    <span className="text-lg">G</span>
+                  </div>
+                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-pxv-dark"}`}>Giangle</span>
+                </div>
+                <div className={`h-8 w-px ${isDark ? "bg-white/10" : "bg-slate-200"}`} />
+                <div className="flex flex-col items-center">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${isDark ? "bg-white/10" : "bg-slate-100"}`}>
+                    <span className="text-lg">M</span>
+                  </div>
+                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-pxv-dark"}`}>Minhthu</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <p className={`text-sm leading-relaxed ${isDark ? "text-white/70" : "text-slate-600"}`}>
+              Want to learn more about our mission?
+              <a 
+                href="https://www.projectxvietnam.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block mt-1 font-medium text-primary hover:text-primary/80 hover:underline transition-all"
+              >
+                projectxvietnam.org
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={closeThankYouPopup}
+          className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+            isDark
+              ? "text-white/30 hover:bg-white/10 hover:text-white"
+              : "text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          }`}
+          aria-label="Close"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </motion.div>
@@ -856,48 +886,6 @@ export default function Home() {
   )}
 </AnimatePresence>
 
-      {/* Footer */}
-      <footer className={`py-12 border-t ${isDark ? "bg-[#020818] border-white/10" : "bg-white border-slate-100"}`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
-              <Logo className="h-12 w-auto mb-4" />
-              <p className={`text-sm ${isDark ? "text-white/50" : "text-slate-500"}`}>
-                Building the future of Vietnam's Tech Ecosystem.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:col-span-3">
-              <div>
-                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>About</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Our Mission</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Team</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Careers</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>Programs</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Fellowship</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Workshops</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Community</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className={`font-semibold mb-4 ${isDark ? "text-white" : "text-slate-800"}`}>Connect</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Facebook</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>LinkedIn</a></li>
-                  <li><a href="#" className={`text-sm ${isDark ? "text-white/60 hover:text-primary" : "text-slate-600 hover:text-primary"}`}>Contact Us</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className={`mt-8 pt-8 border-t ${isDark ? "border-white/10" : "border-slate-100"} text-center text-sm ${isDark ? "text-white/40" : "text-slate-400"}`}>
-            © {new Date().getFullYear()} Project X Vietnam. All rights reserved.
-          </div>
-        </div>
-      </footer>
       </motion.div>
     </div>
   );
