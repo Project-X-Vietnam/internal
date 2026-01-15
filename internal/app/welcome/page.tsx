@@ -75,16 +75,10 @@ export default function WelcomePage() {
         </div>
       </AuroraBackground>
 
-      {/* Founder's Message Section */}
+      {/* Founder's Message Section - No animation for immediate visibility */}
       <section className={`py-20 md:py-28 ${isDark ? "bg-[#0A0F1A]" : "bg-slate-50"}`}>
         <div className="max-w-4xl mx-auto px-6 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="text-center"
-          >
+          <div className="text-center">
             <h2 className="section-label mb-4 text-[#0E56FA]">
               From Our President
             </h2>
@@ -220,7 +214,7 @@ export default function WelcomePage() {
                 <p className={`${isDark ? "text-white/60" : "text-slate-500"}`}>President, Project X Vietnam</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
