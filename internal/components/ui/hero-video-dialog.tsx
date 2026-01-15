@@ -45,17 +45,18 @@ export default function HeroVideoDialog({
           alt={thumbnailAlt}
           className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-75"
         />
-        <div className="absolute inset-0 flex items-center justify-center group-hover:scale-100 scale-[0.9] transition-all duration-200 ease-out rounded-2xl">
-          <div className="bg-primary/10 flex items-center justify-center rounded-full backdrop-blur-md size-28">
+        <div className="absolute inset-0 flex items-center justify-center group-hover:scale-100 scale-[0.9] transition-all duration-300 ease-out rounded-2xl">
+          {/* Outer pulsing ring */}
+          <div className="absolute size-32 rounded-full bg-white/20 animate-ping opacity-20" />
+          <div className="absolute size-36 rounded-full bg-white/10 animate-pulse" />
+          
+          {/* Main button container */}
+          <div className="relative bg-white/20 flex items-center justify-center rounded-full backdrop-blur-xl size-28 border border-white/30 shadow-2xl group-hover:bg-white/30 transition-all duration-300">
             <div
-              className={`flex items-center justify-center bg-gradient-to-b from-primary/30 to-primary shadow-md rounded-full size-20 transition-all ease-out duration-200 relative group-hover:scale-[1.2] scale-100`}
+              className="flex items-center justify-center bg-white rounded-full size-20 transition-all ease-out duration-300 relative group-hover:scale-110 shadow-xl"
             >
               <Play
-                className="size-8 text-white fill-white group-hover:scale-105 scale-100 transition-transform duration-200 ease-out"
-                style={{
-                  filter:
-                    "drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))",
-                }}
+                className="size-8 text-primary fill-primary ml-1 group-hover:scale-110 transition-transform duration-300 ease-out"
               />
             </div>
           </div>

@@ -225,14 +225,19 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
         >
           <textarea
             rows={3}
-            className="w-full p-6 text-lg text-foreground bg-slate-50/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl resize-none placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
+            className="w-full p-6 text-lg text-foreground bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl resize-none placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
             placeholder="Share your thoughts with us..."
             value={thoughts}
             onChange={(e) => setThoughts(e.target.value)}
           />
           <button
             onClick={handleSubmit}
-            className="btn btn-primary px-10 py-4 mt-8 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl hover:translate-y-[-2px] hover:scale-105 transition-all duration-300"
+            disabled={!thoughts.trim()}
+            className={`px-10 py-4 mt-8 text-lg font-semibold rounded-full transition-all duration-300 ${
+              thoughts.trim()
+                ? "bg-white text-slate-900 shadow-lg hover:shadow-xl hover:translate-y-[-2px] hover:scale-105 cursor-pointer"
+                : "bg-white/50 text-slate-400 cursor-not-allowed"
+            }`}
           >
             Continue →
           </button>
@@ -460,31 +465,130 @@ export default function Home() {
               To the next generation of Project X
             </h3>
 
+            <div className={`font-display prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify mb-8 space-y-4`}>
+              <p>
+                Hi everyone,
+              </p>
+              <p>
+                I'm <strong>Liam Lee</strong>, President of Project X Vietnam. I'm excited to have you with us this year.
+              </p>
+              <div className="relative my-6 pl-5 pr-5 py-4 border-l-4 border-primary/70 bg-primary/5 dark:bg-primary/10 rounded-r-lg">
+                <p className="mb-3">
+                  Through years of participating, working, and learning across different organizations like Project X Vietnam, I've come to believe that <strong>the first touchpoint in any journey is one of the most important moments</strong> you'll experience.
+                </p>
+                <p className="mb-0 text-slate-600 dark:text-slate-300">
+                  It's the moment where you start forming beliefs about the community you've entered. It's where you begin to sense whether this is a place you can <em>trust</em>, whether you can <em>speak honestly</em>, whether your <em>effort will matter</em>, and whether <em>growth is actually possible</em> here.
+                </p>
+              </div>
+              <p>
+                That's why our core team wanted to make this onboarding moment <strong>intentional</strong>. We didn't want it to feel transactional, rushed, or purely informational. As a tech organization, we believe technology should not only scale processes — but also <strong>create meaning, reflection, and connection</strong>.
+              </p>
+              <p>
+                <em><strong>This page, and this message, are part of that intention.</strong></em>
+              </p>
+              <p>
+                Before going further, I invite you to watch a short video - <em>one of my favorite</em>.
+              </p>
+              <p>
+                It's a short but powerful snippet from <em>someone</em> whose journey has fueled my passion for technology — and strengthened my belief in <strong>the incredible potential of young people</strong>.
+              </p>
+            </div>
+
             <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl mb-10">
               <HeroVideoDialog
                 className="block dark:hidden"
                 animationStyle="from-center"
-                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-                thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                videoSrc="https://www.youtube.com/embed/QYAnJ_QyCQg?si=xiNp_U9FpHsoYnyG"
+                thumbnailSrc="/assets/thumbnail.png"
                 thumbnailAlt="Hero Video"
               />
               <HeroVideoDialog
                 className="hidden dark:block"
                 animationStyle="from-center"
-                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-                thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                videoSrc="https://www.youtube.com/embed/QYAnJ_QyCQg?si=xiNp_U9FpHsoYnyG"
+                thumbnailSrc="/assets/thumbnail.png"
                 thumbnailAlt="Hero Video"
               />
             </div>
 
-            <div className={`prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify`}>
+            <div className={`font-display prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify space-y-4`}>
               <p>
-                Welcome to the next chapter of your journey. At Project X, we're not just building projects; we're building people. We believe in the power of Vietnamese talent to shape the future of technology, and we're thrilled to have you with us.
+                Yes, the "someone" in the video is none other than <strong>Steve Jobs</strong> — a remarkable innovator who went beyond pure science to bring human-centered, accessible technology to the world. His work didn't just create products; it inspired <em>ambition</em>, <em>curiosity</em>, and <em>belief</em>.
               </p>
               <p>
-                This is a place for you to be bold, to experiment, and to grow. We provide the challenges and the support system; you bring the passion and the drive. Together, we will create a lasting impact on Vietnam's tech ecosystem and beyond.
+                Many people we know today — Elon Musk, Mark Zuckerberg, Jeff Bezos — once found their spark in Steve's ideas.
               </p>
-              <div className="mt-8 text-center">
+              <p>
+                After watching the video, some of you may feel an immediate resonance, perhaps seeing parts of yourself reflected in it. And if you don't, <strong>that's completely okay</strong>. Not everyone experiences clarity at the same time. For many people, meaning doesn't arrive in a single moment — it unfolds slowly, through experience, failure, and reflection. That gradual discovery is what makes the idea of <em>"life"</em> feel deep and personal.
+              </p>
+              <div className="py-6 flex items-center gap-4">
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+                <span className="text-slate-400 dark:text-slate-500 text-sm font-medium">Brief journey of my own</span>
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+              </div>
+              <p>
+                For a long time, <strong>I believed that technology was for "special people."</strong>
+              </p>
+              <p>
+                I admired it. I talked about it. I followed trends and ideas. But I didn't truly build anything, because deep down, I believed I didn't belong. I told myself I wasn't technical enough, not smart enough, not the "type" of person who could succeed in this space. So I stayed at a distance — interested, but inactive.
+              </p>
+              <p>
+                <strong>My university years changed that.</strong>
+              </p>
+              <p>
+                Being surrounded by driven, curious peers forced me to confront my own excuses. I stepped out of my comfort zone and started learning technology from its roots — slowly, imperfectly, and often through failure. I taught myself how to code. I reached out to people far better than me. I pushed my network, without knowing if it would ever convert into anything meaningful.
+              </p>
+              <p>
+                Over time, through humbling experiences, I realized something important: <strong>no one starts special</strong>. People become capable by starting honestly, staying consistent, and allowing themselves to learn.
+              </p>
+              <div className="relative my-6 pl-5 pr-5 py-4 border-l-4 border-primary/70 bg-primary/5 dark:bg-primary/10 rounded-r-lg">
+                <p className="mb-0">
+                  I'm not here to say I'm a tech leader. I'm here because I want people like my past self to reach clarity faster, with better guidance, and with fewer unnecessary doubts.
+                </p>
+              </div>
+              <div className="py-6 flex items-center gap-4">
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+                <span className="text-slate-400 dark:text-slate-500 text-sm font-medium">Project X Vietnam</span>
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+              </div>
+              <p>
+                That belief is also why I joined Project X Vietnam — and why I chose to step up further after experiencing the <strong>Summer Fellowship Program 2024</strong>. At first, I thought PJX was mainly a bridge: connecting young people to companies, internships, and opportunities. But after living through the experience, I realized that stopping there would be a mistake.
+              </p>
+              <p>
+                <strong>Project X Vietnam should not be a purely transactional program.</strong> It should not end once summer ends. It should not measure success only by placements or short-term outcomes.
+              </p>
+              <div className="relative my-6 pl-5 pr-5 py-4 border-l-4 border-primary/70 bg-primary/5 dark:bg-primary/10 rounded-r-lg">
+                <p className="mb-0">
+                  Instead, PJX should be a <strong>career enabler</strong> — one that empowers you with <em>knowledge</em>, <em>mindset</em>, <em>network</em>, and <em>community</em> across multiple stages of your tech journey. A place where learning compounds. Where relationships last. Where growth continues even when no one is watching.
+                </p>
+              </div>
+              <div className="py-6 flex items-center gap-4">
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+                <span className="text-slate-400 dark:text-slate-500 text-sm font-medium">And...</span>
+                <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
+              </div>
+              <p>
+                As we work toward our mission of <strong>empowering the next generation of tech youth</strong>, our goal doesn't exclude the members; we want to help you grow, create, and eventually become the roots of a strong, future-facing tech community.
+              </p>
+              <p>
+                It's a privilege if you already know what you love doing at this stage of your life. And if you don't, Project X Vietnam is meant to be a <strong>safe space to explore</strong> — to try new roles, take on new perspectives, and look at your work from different angles. Through experience and reflection, the path ahead will gradually become clearer.
+              </p>
+              <p>
+                So I encourage you to embrace your time at Project X Vietnam as an opportunity — to try, to meet new people, to reflect often, and most importantly, to <strong>stay curious and keep learning</strong>. Keep creating dots along the way. Trust that one day, those dots will connect.
+              </p>
+              <p>
+                And when you finally discover what you truly love, I promise this will be a community that does its very best to support you and help you move forward.
+              </p>
+              <p className="text-center mt-8">
+                So, as Steve once said:
+              </p>
+              <p className="text-center text-xl md:text-2xl font-semibold italic">
+                "Stay hungry. Stay foolish."
+              </p>
+              <p className="text-center text-xl md:text-2xl font-bold mt-8">
+                Welcome to Project X Vietnam.
+              </p>
+              <div className="mt-12 text-center">
                 <p className={`font-bold text-lg ${isDark ? "text-white" : "text-pxv-dark"}`}>Liam Lee</p>
                 <p className={`${isDark ? "text-white/60" : "text-slate-500"}`}>President, Project X Vietnam</p>
               </div>
