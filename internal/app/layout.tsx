@@ -6,10 +6,7 @@ export const metadata: Metadata = {
   title: "Project X Vietnam",
   description: "Building the future of Vietnam's tech ecosystem. Join a community of innovators, entrepreneurs, and tech leaders.",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    icon: "/favicon.svg",
     apple: "/favicon.svg",
   },
   openGraph: {
