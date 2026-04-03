@@ -329,7 +329,7 @@ const Footer = () => (
           </div>
           <span className={`${syne.className} font-[800] text-xl tracking-tight text-white`}>xOS</span>
         </div>
-        <p className="text-slate-400 text-sm max-w-sm mb-6 leading-relaxed">Single source of truth for Project X.<br />Everything you need to connect and build.</p>
+        <p className="text-slate-400 text-sm max-w-sm mb-6 leading-relaxed">Single source of truth for Project X.<br />Learn, connect and build.</p>
       </div>
       <div>
         <h4 className="font-bold mb-4 uppercase tracking-wider text-sm text-slate-300">Quick Links</h4>
@@ -492,7 +492,7 @@ const SectionTitle = ({ icon: Icon, title }: { icon: any, title: string }) => (
 
 
 const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-const itemVariants = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20 } } };
+const itemVariants = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 200, damping: 20 } } };
 
 // 9. Modal
 const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClose: () => void }) => {
@@ -610,7 +610,7 @@ const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClos
             </div>
 
             {/* RIGHT COLUMN: Details Scroll */}
-            <div 
+            <div
               className="w-full md:w-[62%] lg:w-[65%] p-6 md:p-8 relative overflow-y-auto custom-scrollbar bg-slate-50/50 group/bento"
               onMouseMove={handleMouseMove}
             >
@@ -620,13 +620,13 @@ const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClos
                 style={{ background: spotlightMain }}
               />
 
-              <motion.div 
+              <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
                 className="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-min pb-8 w-full max-w-full relative z-10"
               >
-                
+
                 {/* Khối 1: Identity */}
                 <motion.section variants={itemVariants} className="col-span-1 md:col-span-2 bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 shadow-sm relative overflow-hidden group/card">
                   <motion.div
@@ -644,8 +644,8 @@ const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClos
                       <p className="text-xs text-slate-500 font-bold mb-3 uppercase tracking-wider">3 core values I live towards:</p>
                       <div className="flex flex-wrap gap-2.5">
                         {member.coreValues.map((v, i) => (
-                          <motion.span 
-                            key={i} 
+                          <motion.span
+                            key={i}
                             whileHover={{ scale: 1.05, rotate: 1 }}
                             className="px-4 py-1.5 bg-orange-50 text-orange-600 rounded-full text-xs font-bold border border-orange-100 shadow-sm cursor-default"
                           >
@@ -721,12 +721,12 @@ const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClos
                   <SectionTitle icon={Orbit} title="Current Pulse" />
                   <div className="space-y-5 mt-4 flex-1 flex flex-col justify-center relative z-10">
                     <div>
-                      <p className="text-[11px] font-bold text-blue-500 uppercase tracking-widest mb-2 flex items-center gap-1.5"><MonitorSmartphone size={14}/> Building / Exploring</p>
+                      <p className="text-[11px] font-bold text-blue-500 uppercase tracking-widest mb-2 flex items-center gap-1.5"><MonitorSmartphone size={14} /> Building / Exploring</p>
                       <p className="text-[15px] font-semibold text-slate-800 leading-snug">{member.currentFocus}</p>
                     </div>
                     <div className="h-px w-full bg-slate-100" />
                     <div>
-                      <p className="text-[11px] font-bold text-red-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Heart size={14}/> Obsession</p>
+                      <p className="text-[11px] font-bold text-red-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Heart size={14} /> Obsession</p>
                       <p className="text-[15px] font-semibold text-slate-800 leading-snug">{member.obsession}</p>
                     </div>
                   </div>
@@ -765,10 +765,10 @@ const MemberDetailsModal = ({ member, onClose }: { member: Member | null; onClos
                       </>
                     ) : (
                       <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-3">
-                         <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
-                           <Lightbulb size={24} className="text-slate-300" />
-                         </div>
-                         <span className="font-medium text-sm text-slate-400">No representative moment uploaded</span>
+                        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Lightbulb size={24} className="text-slate-300" />
+                        </div>
+                        <span className="font-medium text-sm text-slate-400">No representative moment uploaded</span>
                       </div>
                     )}
                   </div>
@@ -912,7 +912,7 @@ export default function Page() {
       </div>
 
       {/* --- GRID EXPERIMENT --- */}
-    <section className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-8 pb-32 pt-8 flex flex-col items-center">
+      <section className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-8 pb-32 pt-8 flex flex-col items-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 w-full">
           <AnimatePresence mode="popLayout">
             {displayedMembers.map((member, i) => (
@@ -939,7 +939,7 @@ export default function Page() {
             ))}
           </AnimatePresence>
         </div>
-        
+
         {filtered.length > displayedMembers.length && (
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -947,7 +947,7 @@ export default function Page() {
             onClick={() => setVisibleCount(prev => prev + 12)}
             className="mt-16 px-8 py-3 bg-white/80 backdrop-blur text-blue-600 font-bold rounded-full border border-blue-200 shadow-sm hover:bg-white hover:shadow flex items-center justify-center gap-2"
           >
-            Load More Talents <ArrowUp className="rotate-180" size={16} />
+            Show More Talents <ArrowUp className="rotate-180" size={16} />
           </motion.button>
         )}
 
