@@ -215,7 +215,7 @@ export default function xOSPage() {
 
         .fan-header {
           max-width: 1280px;
-          margin: 0 auto 48px;
+          margin: 0 auto 32px;
           padding: 0 32px;
         }
 
@@ -235,9 +235,9 @@ export default function xOSPage() {
           bottom: 0;
           left: 50%;
           width: clamp(220px, 20vw, 280px);
-          min-height: 340px;
+          min-height: 300px;
           border-radius: 24px;
-          padding: 36px 30px;
+          padding: 24px 20px;
           border: 1.5px solid rgba(1,30,23,0.1);
           box-shadow: 0 12px 40px rgba(1,30,23,0.12);
           display: flex;
@@ -507,15 +507,14 @@ export default function xOSPage() {
 
         /* Hero */
         .hero {
-          min-height: 100vh;
+          min-height: 70vh;
           max-width: 1280px;
           margin: 0 auto;
-          padding: 0 32px;
+          padding: 60px 32px 40px;
           display: grid;
           grid-template-columns: 1fr 1fr;
           align-items: center;
-          gap: 48px;
-          padding-top: 72px;
+          gap: 32px;
         }
 
         .hero-left { padding-right: 24px; }
@@ -649,7 +648,7 @@ export default function xOSPage() {
 
         /* Section shared */
         .section {
-          padding: 100px 32px;
+          padding: 60px 32px;
           transition: background-color 0.8s ease;
         }
 
@@ -665,7 +664,7 @@ export default function xOSPage() {
           text-transform: uppercase;
           color: #011E17;
           opacity: 0.55;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
 
         .section-title {
@@ -675,7 +674,7 @@ export default function xOSPage() {
           letter-spacing: 0.01em;
           text-transform: uppercase;
           color: #011E17;
-          margin-bottom: 56px;
+          margin-bottom: 32px;
         }
 
         .section-title em {
@@ -774,7 +773,7 @@ export default function xOSPage() {
         .service-card {
           background: #F2F1ED;
           border-radius: 20px;
-          padding: 36px;
+          padding: 24px;
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
@@ -822,7 +821,7 @@ export default function xOSPage() {
         .why-card {
           background: #F2F1ED;
           border-radius: 20px;
-          padding: 36px;
+          padding: 24px;
           display: flex;
           gap: 20px;
           align-items: flex-start;
@@ -872,8 +871,8 @@ export default function xOSPage() {
         .step-item {
           display: grid;
           grid-template-columns: 180px 1fr;
-          gap: 48px;
-          padding: 48px 0;
+          gap: 32px;
+          padding: 32px 0;
           border-top: 1px solid rgba(1,30,23,0.12);
           position: relative;
           transition: background 0.2s ease;
@@ -1145,7 +1144,7 @@ export default function xOSPage() {
         <section className="cta-section" style={{ paddingTop: "100px", paddingBottom: "40px" }}>
           <div className="cta-inner">
             <h2 className="cta-title" style={{ fontSize: "48px", marginBottom: "0" }}>
-              Listen to this while ...
+              Listen to this while exploring ...
             </h2>
             <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "16px", boxShadow: "0 10px 30px rgba(1, 30, 23, 0.4)", maxWidth: "480px", margin: "24px auto 0" }}>
               <iframe
