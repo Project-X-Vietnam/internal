@@ -7,18 +7,18 @@ import { useEffect, useRef, useState } from "react";
 const TaxManSVG = ({ mugged }: { mugged: boolean }) => (
   <svg viewBox="0 0 320 480" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
     {/* Body */}
-    <ellipse cx="160" cy="360" rx="80" ry="110" fill="#011E17" />
+    <ellipse cx="160" cy="360" rx="80" ry="110" fill="#0f172a" />
     {/* Suit lapels */}
-    <path d="M130 280 L160 350 L190 280 L175 260 L160 300 L145 260 Z" fill="#1a3a2e" />
+    <path d="M130 280 L160 350 L190 280 L175 260 L160 300 L145 260 Z" fill="#1e293b" />
     {/* Tie */}
-    <path d="M155 290 L160 350 L165 290 L162 280 L160 295 L158 280 Z" fill="#C6EFD1" />
+    <path d="M155 290 L160 350 L165 290 L162 280 L160 295 L158 280 Z" fill="#2563eb" />
     {/* Head */}
     <ellipse cx="160" cy="200" rx="60" ry="65" fill="#f4c58a" />
     {/* Eyes */}
     <ellipse cx="140" cy="195" rx="8" ry="9" fill="white" />
     <ellipse cx="180" cy="195" rx="8" ry="9" fill="white" />
-    <circle cx="142" cy="196" r="5" fill="#011E17" />
-    <circle cx="182" cy="196" r="5" fill="#011E17" />
+    <circle cx="142" cy="196" r="5" fill="#0f172a" />
+    <circle cx="182" cy="196" r="5" fill="#0f172a" />
     <circle cx="143" cy="194" r="2" fill="white" />
     <circle cx="183" cy="194" r="2" fill="white" />
     {/* Nose */}
@@ -42,26 +42,26 @@ const TaxManSVG = ({ mugged }: { mugged: boolean }) => (
     <path d="M105 165 Q130 130 160 128 Q190 130 215 165" fill="#2d1a0a" />
     <rect x="100" y="155" width="120" height="18" rx="4" fill="#2d1a0a" />
     {/* Briefcase */}
-    <rect x="200" y="320" width="70" height="55" rx="8" fill="#1a3a2e" />
-    <rect x="220" y="312" width="30" height="14" rx="6" fill="none" stroke="#1a3a2e" strokeWidth="4" />
-    <rect x="200" y="343" width="70" height="4" fill="#0d2419" />
-    <rect x="228" y="330" width="14" height="14" rx="3" fill="#C6EFD1" />
+    <rect x="200" y="320" width="70" height="55" rx="8" fill="#1e293b" />
+    <rect x="220" y="312" width="30" height="14" rx="6" fill="none" stroke="#1e293b" strokeWidth="4" />
+    <rect x="200" y="343" width="70" height="4" fill="#0f172a" />
+    <rect x="228" y="330" width="14" height="14" rx="3" fill="#2563eb" />
     {/* Legs */}
-    <rect x="130" y="460" width="28" height="20" rx="6" fill="#011E17" />
-    <rect x="162" y="460" width="28" height="20" rx="6" fill="#011E17" />
+    <rect x="130" y="460" width="28" height="20" rx="6" fill="#0f172a" />
+    <rect x="162" y="460" width="28" height="20" rx="6" fill="#0f172a" />
     {/* HMRC text on briefcase */}
-    <text x="215" y="340" fontSize="8" fill="#C6EFD1" fontFamily="monospace" fontWeight="bold">HMRC</text>
+    <text x="215" y="340" fontSize="8" fill="#2563eb" fontFamily="monospace" fontWeight="bold">HMRC</text>
   </svg>
 );
 
 const KeyLogoSVG = () => (
   <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-auto">
-    <text x="0" y="30" fontSize="26" fontFamily="Anton, sans-serif" fill="#011E17" letterSpacing="1">xOS</text>
-    <circle cx="107" cy="18" r="8" fill="#C6EFD1" />
-    <path d="M107 14 L107 27" stroke="#011E17" strokeWidth="2.5" strokeLinecap="round" />
-    <path d="M107 23 L111 27" stroke="#011E17" strokeWidth="2" strokeLinecap="round" />
-    <path d="M107 23 L103 27" stroke="#011E17" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="107" cy="13" r="3" stroke="#011E17" strokeWidth="2" fill="none" />
+    <text x="0" y="30" fontSize="26" fontFamily="Inter Tight, sans-serif" fontWeight="800" fill="#0f172a" letterSpacing="-1">xOS</text>
+    <circle cx="107" cy="18" r="8" fill="#2563eb" />
+    <path d="M107 14 L107 27" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M107 23 L111 27" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M107 23 L103 27" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="107" cy="13" r="3" stroke="#0f172a" strokeWidth="2" fill="none" />
   </svg>
 );
 
@@ -101,7 +101,7 @@ const MY_PICS = [
   {
     title: "Moment represents me",
     img: "https://storage.tally.so/private/z7634460446801_351a234a4ddf155a87114fb2ea815987.jpg?id=EMa4b2&accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVNYTRiMiIsImZvcm1JZCI6IlpqVmdNYSIsImlhdCI6MTc3Mzg0ODkwNn0.CQKBVy-Tjy14Cz3hf-6X5uoVXTN2rMlxCdqyE5gv1DU&signature=ae162d1b3d8fb3c7e47b6cdd543ea4613bb830ae61f06529ddc91cd6446c5428",
-    bg: "#C6EFD1",
+    bg: "#e0e7ff",
     tilt: 10,
   },
 ];
@@ -109,12 +109,12 @@ const MY_PICS = [
 
 // Sticky step panels — alternating background colours
 const STICKY_STEPS = [
-  { step: "Step 1", label: "talk to us", title: "Who do you dream of becoming one day?", desc: "I actually don't dream of becoming anyone else but the best version of myself. I dream of being true, being alive, being imperfect, being whoever I am. As long as I'm the version that's better than my yesterday self, that's cool enough.", bg: "#F2F1ED", accent: "#C6EFD1" },
-  { step: "Step 2", label: "we build defences", title: "What topic could you give a 30-minute talk about with zero preparation?", desc: "If I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds' names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee", bg: "#C6EFD1", accent: "#F6D0D8" },
-  { step: "Step 3", label: "quarterly reporting", title: "Something you are currently obsessed with?", desc: "Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness", bg: "#F6D0D8", accent: "#C6EFD1" },
-  { step: "Step 4", label: "your taxes sorted", title: "What are you probably doing when nobody is watching?", desc: "Talking to my dog about my existential crisis or any other minor issue in life.", bg: "#011E17", accent: "#C6EFD1" },
-  { step: "Step 5", label: "talk to us", title: "What can people ask you for help with?", desc: "If possible, I can give you some tips on how to: Work with children, Build easy dashboard using PowerBI + AI, Deliver a speech using your humour, body and voice ", bg: "#F2F1ED", accent: "#C6EFD1" },
-  { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#C6EFD1", accent: "#F6D0D8" },
+  { step: "Step 1", label: "talk to us", title: "Who do you dream of becoming one day?", desc: "I actually don't dream of becoming anyone else but the best version of myself. I dream of being true, being alive, being imperfect, being whoever I am. As long as I'm the version that's better than my yesterday self, that's cool enough.", bg: "#f8fafc", accent: "#dbeafe" },
+  { step: "Step 2", label: "we build defences", title: "What topic could you give a 30-minute talk about with zero preparation?", desc: "If I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds' names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee", bg: "#f1f5f9", accent: "#bfdbfe" },
+  { step: "Step 3", label: "quarterly reporting", title: "Something you are currently obsessed with?", desc: "Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness", bg: "#ffffff", accent: "#dbeafe" },
+  { step: "Step 4", label: "your taxes sorted", title: "What are you probably doing when nobody is watching?", desc: "Talking to my dog about my existential crisis or any other minor issue in life.", bg: "#0f172a", accent: "#1e40af" },
+  { step: "Step 5", label: "talk to us", title: "What can people ask you for help with?", desc: "If possible, I can give you some tips on how to: Work with children, Build easy dashboard using PowerBI + AI, Deliver a speech using your humour, body and voice ", bg: "#f8fafc", accent: "#dbeafe" },
+  { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#f1f5f9", accent: "#bfdbfe" },
 ];
 
 const FOOTER_LINKS = {
@@ -128,7 +128,7 @@ const FOOTER_LINKS = {
 export default function xOSPage() {
   const [mugged, setMugged] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [bgColor, setBgColor] = useState("#F2F1ED");
+  const [bgColor, setBgColor] = useState("#f8fafc");
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [fanProgress, setFanProgress] = useState(0); // 0..1 scroll progress inside fan wrapper
@@ -152,11 +152,11 @@ export default function xOSPage() {
       const whyTop = whyRef.current?.offsetTop ?? 0;
       const stepsTop = stepsRef.current?.offsetTop ?? 0;
 
-      if (y >= stepsTop - 200) setBgColor("#F6D0D8");
-      else if (y >= whyTop - 200) setBgColor("#C6EFD1");
-      else if (y >= servicesTop - 200) setBgColor("#F6D0D8");
-      else if (y >= whoTop - 200) setBgColor("#C6EFD1");
-      else setBgColor("#F2F1ED");
+      if (y >= stepsTop - 200) setBgColor("#f1f5f9");
+      else if (y >= whyTop - 200) setBgColor("#ffffff");
+      else if (y >= servicesTop - 200) setBgColor("#f8fafc");
+      else if (y >= whoTop - 200) setBgColor("#ffffff");
+      else setBgColor("#f8fafc");
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -189,7 +189,7 @@ export default function xOSPage() {
     <>
       {/* Google Fonts */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -254,15 +254,14 @@ export default function xOSPage() {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #011E17;
-          opacity: 0.45;
+          color: #94a3b8;
         }
 
         .fan-card-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: 22px;
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           line-height: 1.1;
         }
 
@@ -284,11 +283,11 @@ export default function xOSPage() {
         .fan-card-arrow {
           width: 40px; height: 40px;
           border-radius: 50%;
-          background: #011E17;
+          background: #eff6ff;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #C6EFD1;
+          color: #2563eb;
           font-size: 16px;
           margin-top: auto;
           flex-shrink: 0;
@@ -338,40 +337,41 @@ export default function xOSPage() {
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #011E17;
-          opacity: 0.4;
+          color: #94a3b8;
         }
 
         .sticky-step-label {
           display: inline-block;
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 14px;
           text-transform: uppercase;
           letter-spacing: 0.06em;
           padding: 5px 16px;
-          border-radius: 100px;
-          color: #011E17;
+          border-radius: 9999px;
+          color: #1e40af;
+          background: #dbeafe;
         }
 
         .sticky-step-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(36px, 4.5vw, 68px);
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           line-height: 1.02;
+          letter-spacing: -0.01em;
         }
 
-        .sticky-step-title.light { color: #F2F1ED; }
+        .sticky-step-title.light { color: #ffffff; }
 
         .sticky-step-desc {
           font-size: 16px;
           line-height: 1.75;
-          color: #011E17;
-          opacity: 0.65;
+          color: #475569;
           max-width: 480px;
         }
 
-        .sticky-step-desc.light { color: #F2F1ED; opacity: 0.7; }
+        .sticky-step-desc.light { color: #cbd5e1; }
 
         .sticky-step-right {
           display: flex;
@@ -390,7 +390,8 @@ export default function xOSPage() {
         }
 
         .sticky-step-blob-num {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: 180px;
           line-height: 1;
           color: transparent;
@@ -448,7 +449,7 @@ export default function xOSPage() {
           font-family: 'Inter', sans-serif;
           font-size: 14px;
           font-weight: 500;
-          color: #011E17;
+          color: #0f172a;
           text-decoration: none;
           letter-spacing: 0.02em;
           position: relative;
@@ -460,7 +461,7 @@ export default function xOSPage() {
           position: absolute;
           bottom: 0; left: 0;
           width: 0; height: 1.5px;
-          background: #011E17;
+          background: #2563eb;
           transition: width 0.3s ease;
         }
 
@@ -468,11 +469,11 @@ export default function xOSPage() {
 
         .btn-outline {
           padding: 8px 20px;
-          border: 1.5px solid #011E17;
-          border-radius: 100px;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 9999px;
           font-size: 13px;
           font-weight: 600;
-          color: #011E17;
+          color: #0f172a;
           background: transparent;
           cursor: pointer;
           text-decoration: none;
@@ -481,17 +482,17 @@ export default function xOSPage() {
         }
 
         .btn-outline:hover {
-          background: #011E17;
-          color: #F2F1ED;
+          background: #f8fafc;
+          color: #0f172a;
         }
 
         .btn-primary {
           padding: 10px 24px;
-          border-radius: 100px;
+          border-radius: 9999px;
           font-size: 13px;
           font-weight: 700;
-          color: #F2F1ED;
-          background: #011E17;
+          color: #ffffff;
+          background: #2563eb;
           cursor: pointer;
           text-decoration: none;
           transition: all 0.2s ease;
@@ -500,9 +501,9 @@ export default function xOSPage() {
         }
 
         .btn-primary:hover {
-          background: #0d3326;
+          background: #1d4ed8;
           transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(1,30,23,0.25);
+          box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
         }
 
         /* Hero */
@@ -521,37 +522,35 @@ export default function xOSPage() {
 
         .hero-tag {
           display: inline-block;
-          background: #011E17;
-          color: #C6EFD1;
+          background: #e0e7ff;
+          color: #3730a3;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           padding: 6px 14px;
-          border-radius: 100px;
+          border-radius: 9999px;
           margin-bottom: 28px;
         }
 
         .hero-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(52px, 6vw, 96px);
           line-height: 0.95;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          color: #011E17;
+          letter-spacing: -0.02em;
+          color: #0f172a;
           margin-bottom: 24px;
         }
 
         .hero-title span {
-          color: transparent;
-          -webkit-text-stroke: 2px #011E17;
+          color: #2563eb;
         }
 
         .hero-sub {
           font-size: 16px;
           line-height: 1.7;
-          color: #011E17;
-          opacity: 0.75;
+          color: #475569;
           max-width: 420px;
           margin-bottom: 24px;
         }
@@ -575,14 +574,14 @@ export default function xOSPage() {
           gap: 10px;
           font-size: 14px;
           font-weight: 500;
-          color: #011E17;
+          color: #0f172a;
         }
 
         .hero-feature::before {
           content: '';
           width: 20px; height: 20px;
           border-radius: 50%;
-          background: #C6EFD1;
+          background: #eff6ff;
           flex-shrink: 0;
           display: flex;
           align-items: center;
@@ -592,7 +591,7 @@ export default function xOSPage() {
         .feature-check {
           width: 20px; height: 20px;
           border-radius: 50%;
-          background: #C6EFD1;
+          background: #eff6ff;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -626,24 +625,25 @@ export default function xOSPage() {
           left: 50%;
           transform: translateX(-50%);
           padding: 10px 22px;
-          border: 2px solid #011E17;
-          border-radius: 100px;
-          background: #F2F1ED;
+          border: 2px solid #e2e8f0;
+          border-radius: 9999px;
+          background: #ffffff;
           font-family: 'Inter', sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #011E17;
+          letter-spacing: 0.02em;
+          color: #0f172a;
           cursor: pointer;
           z-index: 2;
           transition: all 0.2s ease;
           white-space: nowrap;
+          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
         }
 
         .mug-btn:hover {
-          background: #011E17;
-          color: #C6EFD1;
+          background: #2563eb;
+          border-color: #2563eb;
+          color: #ffffff;
         }
 
         /* Section shared */
@@ -662,25 +662,24 @@ export default function xOSPage() {
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #011E17;
-          opacity: 0.55;
+          color: #2563eb;
+          opacity: 1;
           margin-bottom: 12px;
         }
 
         .section-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(42px, 5vw, 80px);
           line-height: 0.98;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          color: #011E17;
+          letter-spacing: -0.02em;
+          color: #0f172a;
           margin-bottom: 32px;
         }
 
         .section-title em {
           font-style: normal;
-          color: transparent;
-          -webkit-text-stroke: 2px #011E17;
+          color: #2563eb;
         }
 
         /* Who it's for */
@@ -699,33 +698,31 @@ export default function xOSPage() {
 
         .who-card {
           flex: 0 0 calc(33.333% - 14px);
-          background: white;
-          border-radius: 20px;
+          background: #ffffff;
+          border-radius: 16px;
           padding: 36px;
           min-height: 200px;
-          border: 1px solid rgba(1,30,23,0.08);
+          border: 1px solid #e2e8f0;
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .who-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 16px 40px rgba(1,30,23,0.1);
+          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
         }
 
         .who-card-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 22px;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           margin-bottom: 12px;
         }
 
         .who-card-desc {
           font-size: 14px;
           line-height: 1.65;
-          color: #011E17;
-          opacity: 0.65;
+          color: #475569;
         }
 
         .carousel-controls {
@@ -738,9 +735,9 @@ export default function xOSPage() {
         .carousel-btn {
           width: 44px; height: 44px;
           border-radius: 50%;
-          border: 1.5px solid #011E17;
+          border: 1.5px solid #e2e8f0;
           background: transparent;
-          color: #011E17;
+          color: #0f172a;
           font-size: 18px;
           cursor: pointer;
           display: flex;
@@ -750,8 +747,9 @@ export default function xOSPage() {
         }
 
         .carousel-btn:hover:not(:disabled) {
-          background: #011E17;
-          color: #F2F1ED;
+          background: #f8fafc;
+          border-color: #cbd5e1;
+          color: #0f172a;
         }
 
         .carousel-btn:disabled {
@@ -761,7 +759,7 @@ export default function xOSPage() {
 
         /* Services */
         .services-section {
-          background: #F6D0D8;
+          background: transparent;
         }
 
         .services-grid {
@@ -771,44 +769,44 @@ export default function xOSPage() {
         }
 
         .service-card {
-          background: #F2F1ED;
-          border-radius: 20px;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
           padding: 24px;
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .service-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 16px 40px rgba(1,30,23,0.12);
+          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
         }
 
         .service-num {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: 48px;
-          color: #C6EFD1;
+          color: #bfdbfe;
           line-height: 1;
           margin-bottom: 12px;
         }
 
         .service-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 20px;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           margin-bottom: 10px;
         }
 
         .service-desc {
           font-size: 14px;
           line-height: 1.65;
-          color: #011E17;
-          opacity: 0.65;
+          color: #475569;
         }
 
         /* Why Choose  */
         .why-section {
-          background: #C6EFD1;
+          background: transparent;
         }
 
         .why-grid {
@@ -819,47 +817,47 @@ export default function xOSPage() {
         }
 
         .why-card {
-          background: #F2F1ED;
-          border-radius: 20px;
+          background: #ffffff;
+          border-radius: 16px;
           padding: 24px;
           display: flex;
           gap: 20px;
           align-items: flex-start;
           transition: transform 0.25s ease;
+          border: 1px solid #e2e8f0;
         }
 
-        .why-card:hover { transform: translateY(-4px); }
+        .why-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
 
         .why-icon {
           width: 44px; height: 44px;
           border-radius: 50%;
-          background: #011E17;
+          background: #eff6ff;
           flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #C6EFD1;
+          color: #2563eb;
           font-size: 18px;
         }
 
         .why-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 20px;
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           margin-bottom: 8px;
         }
 
         .why-desc {
           font-size: 14px;
           line-height: 1.65;
-          color: #011E17;
-          opacity: 0.65;
+          color: #475569;
         }
 
         /* Steps */
         .steps-section {
-          background: #F2F1ED;
+          background: transparent;
         }
 
         .steps-list {
@@ -873,13 +871,13 @@ export default function xOSPage() {
           grid-template-columns: 180px 1fr;
           gap: 32px;
           padding: 32px 0;
-          border-top: 1px solid rgba(1,30,23,0.12);
+          border-top: 1px solid #e2e8f0;
           position: relative;
           transition: background 0.2s ease;
         }
 
         .step-item:last-child {
-          border-bottom: 1px solid rgba(1,30,23,0.12);
+          border-bottom: 1px solid #e2e8f0;
         }
 
         .step-left {
@@ -893,18 +891,17 @@ export default function xOSPage() {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #011E17;
-          opacity: 0.45;
+          color: #94a3b8;
         }
 
         .step-label {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 16px;
-          text-transform: uppercase;
-          color: #011E17;
-          background: #C6EFD1;
+          color: #1e40af;
+          background: #dbeafe;
           padding: 4px 12px;
-          border-radius: 100px;
+          border-radius: 9999px;
           display: inline-block;
           width: fit-content;
         }
@@ -912,25 +909,25 @@ export default function xOSPage() {
         .step-right {}
 
         .step-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(28px, 3vw, 48px);
-          text-transform: uppercase;
-          color: #011E17;
+          color: #0f172a;
           line-height: 1.05;
           margin-bottom: 14px;
+          letter-spacing: -0.01em;
         }
 
         .step-desc {
           font-size: 15px;
           line-height: 1.7;
-          color: #011E17;
-          opacity: 0.65;
+          color: #475569;
           max-width: 600px;
         }
 
         /* CTA Banner */
         .cta-section {
-          background: #011E17;
+          background: #020617;
           padding: 80px 32px;
           text-align: center;
         }
@@ -945,44 +942,43 @@ export default function xOSPage() {
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #C6EFD1;
-          opacity: 0.7;
+          color: #60a5fa;
           margin-bottom: 20px;
         }
 
         .cta-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(40px, 5vw, 72px);
-          text-transform: uppercase;
           line-height: 0.98;
-          color: #F2F1ED;
+          color: #ffffff;
           margin-bottom: 36px;
+          letter-spacing: -0.02em;
         }
 
         .btn-cta {
           padding: 14px 36px;
-          border-radius: 100px;
+          border-radius: 9999px;
           font-size: 15px;
           font-weight: 700;
-          color: #011E17;
-          background: #C6EFD1;
+          color: #ffffff;
+          background: #2563eb;
           cursor: pointer;
           text-decoration: none;
           transition: all 0.2s ease;
-          letter-spacing: 0.02em;
           border: none;
           display: inline-block;
         }
 
         .btn-cta:hover {
-          background: #aee8bf;
+          background: #3b82f6;
           transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          box-shadow: 0 10px 30px rgba(37,99,235,0.3);
         }
 
         /* Footer */
         .footer {
-          background: #011E17;
+          background: #020617;
           position: relative;
         }
 
@@ -1000,17 +996,17 @@ export default function xOSPage() {
 
         .footer-logo-row {
           padding: 40px 0 48px;
-          border-bottom: 1px solid rgba(198,239,209,0.15);
+          border-bottom: 1px solid rgba(255,255,255,0.1);
           margin-bottom: 48px;
         }
 
         .footer-logo-text {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 800;
           font-size: clamp(60px, 8vw, 120px);
-          text-transform: uppercase;
           color: transparent;
-          -webkit-text-stroke: 1.5px rgba(198,239,209,0.3);
-          letter-spacing: 0.02em;
+          -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
+          letter-spacing: -0.02em;
           line-height: 0.95;
         }
 
@@ -1022,27 +1018,28 @@ export default function xOSPage() {
         }
 
         .footer-col-title {
-          font-family: 'Anton', sans-serif;
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
           font-size: 14px;
           text-transform: uppercase;
-          color: #C6EFD1;
+          color: #e2e8f0;
           margin-bottom: 20px;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.05em;
         }
 
         .footer-link {
           display: block;
           font-size: 13px;
-          color: rgba(242,241,237,0.55);
+          color: #94a3b8;
           text-decoration: none;
           margin-bottom: 10px;
           transition: color 0.2s ease;
         }
 
-        .footer-link:hover { color: #F2F1ED; }
+        .footer-link:hover { color: #ffffff; }
 
         .footer-bottom {
-          border-top: 1px solid rgba(198,239,209,0.12);
+          border-top: 1px solid rgba(255,255,255,0.1);
           padding-top: 28px;
           display: flex;
           justify-content: space-between;
@@ -1053,7 +1050,7 @@ export default function xOSPage() {
 
         .footer-copy {
           font-size: 12px;
-          color: rgba(242,241,237,0.35);
+          color: #64748b;
         }
 
         .footer-badges {
@@ -1063,10 +1060,10 @@ export default function xOSPage() {
 
         .footer-badge {
           padding: 4px 12px;
-          border: 1px solid rgba(198,239,209,0.2);
-          border-radius: 100px;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 9999px;
           font-size: 11px;
-          color: rgba(198,239,209,0.5);
+          color: #94a3b8;
           font-weight: 600;
         }
 
@@ -1077,7 +1074,7 @@ export default function xOSPage() {
           border: none;
           cursor: pointer;
           padding: 8px;
-          color: #011E17;
+          color: #0f172a;
         }
 
         /* Responsive */
@@ -1146,7 +1143,7 @@ export default function xOSPage() {
             <h2 className="cta-title" style={{ fontSize: "48px", marginBottom: "0" }}>
               Listen to this while exploring ...
             </h2>
-            <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "16px", boxShadow: "0 10px 30px rgba(1, 30, 23, 0.4)", maxWidth: "480px", margin: "24px auto 0" }}>
+            <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "16px", boxShadow: "0 10px 30px rgba(15, 23, 42, 0.4)", maxWidth: "480px", margin: "24px auto 0" }}>
               <iframe
                 src="https://www.youtube.com/embed/rScwLoES2bM?si=7UOJc_od3uAMOZNg"
                 title="YouTube video player"
@@ -1180,7 +1177,7 @@ export default function xOSPage() {
                   <div key={f} className="hero-feature">
                     <span className="feature-check">
                       <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path d="M1 4L3.5 6.5L9 1" stroke="#011E17" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1 4L3.5 6.5L9 1" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
                     {f}
@@ -1245,7 +1242,7 @@ export default function xOSPage() {
               >
                 →
               </button>
-              <span style={{ fontSize: "13px", color: "#011E17", opacity: 0.45, marginLeft: "8px" }}>
+              <span style={{ fontSize: "13px", color: "#0f172a", opacity: 0.45, marginLeft: "8px" }}>
                 {carouselIndex + 1} / {maxIndex + 1}
               </span>
             </div>
@@ -1262,7 +1259,7 @@ export default function xOSPage() {
               <em>Experience</em>
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start" }}>
-              <p style={{ fontSize: "16px", lineHeight: "1.75", color: "#011E17", opacity: 0.7 }}>
+              <p style={{ fontSize: "16px", lineHeight: "1.75", color: "#0f172a", opacity: 0.7 }}>
                 Bespoke accounting for creatives. We encounter and resolve your challenges every day so you can focus on what you do best.
               </p>
             </div>
@@ -1374,7 +1371,7 @@ export default function xOSPage() {
         {/* ══════════════════════════════════════════════════════ */}
         <div className="sticky-steps-wrapper">
           {STICKY_STEPS.map((s, i) => {
-            const isDark = s.bg === "#011E17";
+            const isDark = s.bg === "#0f172a";
             return (
               <div
                 key={s.step}
@@ -1412,10 +1409,9 @@ export default function xOSPage() {
                         marginTop: 8,
                         fontWeight: 700,
                         fontSize: 14,
-                        color: isDark ? s.accent : "#011E17",
+                        color: isDark ? s.accent : "#2563eb",
                         textDecoration: "none",
                         letterSpacing: "0.04em",
-                        textTransform: "uppercase" as const,
                       }}
                     >
                     </a>
@@ -1459,7 +1455,7 @@ export default function xOSPage() {
                 <p style={{ fontSize: "14px", lineHeight: "1.75", color: "rgba(242,241,237,0.5)", maxWidth: "260px", marginBottom: "24px" }}>
                   Accountants for UK-based creatives who'd rather be creating.
                 </p>
-                <a href="#" className="btn-outline" style={{ color: "#C6EFD1", borderColor: "rgba(198,239,209,0.3)", fontSize: "13px" }}>
+                <a href="#" className="btn-outline" style={{ color: "#2563eb", borderColor: "#2563eb", fontSize: "13px" }}>
                   Talk to us →
                 </a>
               </div>
