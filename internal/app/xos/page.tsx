@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import MagicBento, { BentoCardData } from "@/components/ui/MagicBento";
+import QuoteMusicSection from "@/components/xos/QuoteMusicSection";
+import IntroAboutSection from "@/components/xos/IntroAboutSection";
+import ExperienceBentoSection from "@/components/xos/ExperienceBentoSection";
 
 // ─── Inline SVG Illustrations ───────────────────────────────────────────────
 
@@ -83,11 +87,40 @@ const ABOUT_ME = [
   { title: "Phone number", desc: "00000000" },
 ];
 
-const EXPERIENCE = [
-  { title: "Organizations / Side quests / Competitions", desc: "- Volunteer - Vietnam Youth Music Institution - Volunteer - Hanoi Grapevin" },
-  { title: "Courses", desc: "- Microsoft Power BI Data Analyst - Datapot" },
-  { title: "A tool you use that most people probably haven’t heard of", desc: "If it's something people haven't heard of then I don't think I have any." },
-  { title: "Work experience", desc: "ABCDEF" },
+const EXPERIENCE: BentoCardData[] = [
+  {
+    icon: "🏆",
+    label: "Activities",
+    title: "Organizations / Side quests / Competitions",
+    description: "Volunteer — Vietnam Youth Music Institution · Volunteer — Hanoi Grapevine",
+    color: "#0f172a",
+    colSpan: 2,
+    rowSpan: 1,
+  },
+  {
+    icon: "🎓",
+    label: "Education",
+    title: "Courses",
+    description: "Microsoft Power BI Data Analyst — Datapot",
+    color: "#1e1b4b",
+    colSpan: 2,
+  },
+  {
+    icon: "🛠️",
+    label: "Hidden gem",
+    title: "A tool most people haven't heard of",
+    description: "If it's something people haven't heard of then I don't think I have any — yet!",
+    color: "#0c1a2e",
+    colSpan: 2,
+  },
+  {
+    icon: "💼",
+    label: "Work",
+    title: "Work Experience",
+    description: "ABCDEF",
+    color: "#0f172a",
+    colSpan: 2,
+  },
 ];
 
 // Fan-card colours & tilts match the original site palette
@@ -1137,147 +1170,14 @@ export default function xOSPage() {
             </div>
           </div>
         </header>
-        {/* ── Theme Song ──────────────────────────────────── */}
-        <section className="cta-section" style={{ paddingTop: "100px", paddingBottom: "40px" }}>
-          <div className="cta-inner">
-            <h2 className="cta-title" style={{ fontSize: "48px", marginBottom: "0" }}>
-              Listen to this while exploring ...
-            </h2>
-            <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "16px", boxShadow: "0 10px 30px rgba(15, 23, 42, 0.4)", maxWidth: "480px", margin: "24px auto 0" }}>
-              <iframe
-                src="https://www.youtube.com/embed/rScwLoES2bM?si=7UOJc_od3uAMOZNg"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-              ></iframe>
-            </div>
-          </div>
-        </section>
+        {/* ── S1: Quote + Music ─────────────────────────────── */}
+        <QuoteMusicSection />
 
-        {/* ── Hero ───────────────────────────────────────── */}
-        <section ref={heroRef}>
-          <div className="hero">
-            <div className="hero-left">
-              <span className="hero-tag">Operations Member</span>
-              <h1 className="hero-title">
-                Ngọc
-                <span></span>
-                <span> Châu</span>
-              </h1>
-              <p className="hero-sub">
-                Yipee - or meo, when I'm overstimulated
-              </p>
+        {/* ── S2: Intro + About ─────────────────────────────── */}
+        <IntroAboutSection />
 
-
-              <div className="hero-features">
-                {["Fun", "Alivee", "True"].map((f) => (
-                  <div key={f} className="hero-feature">
-                    <span className="feature-check">
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path d="M1 4L3.5 6.5L9 1" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                    {f}
-                  </div>
-                ))}
-              </div>
-              {/* CTA buttons */}
-              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                <a href="#" className="btn-outline" style={{ marginTop: "40px" }}>Facebook</a>
-                <a href="#" className="btn-primary" style={{ marginTop: "40px" }}>LinkedIn</a>
-              </div>
-            </div>
-
-            <div className="hero-right">
-              <div className="hero-illustration">
-                <TaxManSVG mugged={mugged} />
-              </div>
-              <button className="mug-btn" onClick={() => setMugged((m) => !m)}>
-                {mugged ? "😤 Nose Pin On!" : "Click To Mug Off"}
-              </button>
-            </div>
-          </div>
-        </section>
-
-
-        {/* ── Who it's for ────────────────────────────────── */}
-        <section className="section who-section" ref={whoRef}>
-          <div className="section-inner">
-            <p className="section-tag">Who am I</p>
-            <h2 className="section-title">
-              About<br />
-              <em>Me</em>
-            </h2>
-
-            <div className="carousel-wrapper">
-              <div
-                className="carousel-track"
-                style={{ transform: `translateX(calc(-${carouselIndex} * (33.333% + 7px)))` }}
-              >
-                {ABOUT_ME.map((item, i) => (
-                  <div key={item.title} className="who-card">
-                    <div className="service-num">0{i + 1}</div>
-                    <h3 className="who-card-title">{item.title}</h3>
-                    <p className="who-card-desc">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="carousel-controls">
-              <button
-                className="carousel-btn"
-                onClick={() => setCarouselIndex((i) => Math.max(0, i - 1))}
-                disabled={carouselIndex === 0}
-              >
-                ←
-              </button>
-              <button
-                className="carousel-btn"
-                onClick={() => setCarouselIndex((i) => Math.min(maxIndex, i + 1))}
-                disabled={carouselIndex >= maxIndex}
-              >
-                →
-              </button>
-              <span style={{ fontSize: "13px", color: "#0f172a", opacity: 0.45, marginLeft: "8px" }}>
-                {carouselIndex + 1} / {maxIndex + 1}
-              </span>
-            </div>
-          </div>
-        </section>
-
-
-        {/* ── Why Choose Us ───────────────────────────────── */}
-        <section className="section why-section" ref={whyRef}>
-          <div className="section-inner">
-            <p className="section-tag">What I&apos;ve done</p>
-            <h2 className="section-title">
-              My<br />
-              <em>Experience</em>
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start" }}>
-              <p style={{ fontSize: "16px", lineHeight: "1.75", color: "#0f172a", opacity: 0.7 }}>
-                Bespoke accounting for creatives. We encounter and resolve your challenges every day so you can focus on what you do best.
-              </p>
-            </div>
-            <div className="why-grid" style={{ marginTop: "40px" }}>
-              {EXPERIENCE.map((w, i) => (
-                <div key={w.title} className="why-card">
-                  <div className="why-icon">
-                    {["💬", "😌", "📋", "🤝"][i]}
-                  </div>
-                  <div>
-                    <h3 className="why-title">{w.title}</h3>
-                    <p className="why-desc">{w.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ── S3: Experience Bento ─────────────────────────── */}
+        <ExperienceBentoSection />
 
 
 
