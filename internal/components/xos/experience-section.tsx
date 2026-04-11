@@ -305,7 +305,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
 
 // ─── Main Section ──────────────────────────────────────────────────────────────
 
-export default function ExperienceBentoSection() {
+export default function ExperienceSection() {
   const gridMouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: -9999, y: -9999, active: false });
 
   const handleGridMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {

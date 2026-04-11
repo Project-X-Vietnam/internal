@@ -271,7 +271,7 @@ function BentoCard({
 
 // ─── Grid ─────────────────────────────────────────────────────────────────────
 
-export default function MagicBento({
+export default function MagicBentoAnimation({
   cards,
   glowColor = "37, 99, 235",
   particleCount = 12,

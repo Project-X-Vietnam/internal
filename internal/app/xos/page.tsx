@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MagicBento, { BentoCardData } from "@/components/ui/MagicBento";
-import QuoteMusicSection from "@/components/xos/QuoteMusicSection";
-import IntroAboutSection from "@/components/xos/IntroAboutSection";
-import ExperienceBentoSection from "@/components/xos/ExperienceBentoSection";
+import MagicBentoAnimation, { BentoCardData } from "@/components/xos/magic-bento-animation";
+import IntroSection from "@/components/xos/intro-section";
+import ExperienceSection from "@/components/xos/experience-section";
 
 // ─── Inline SVG Illustrations ───────────────────────────────────────────────
 
@@ -1170,14 +1169,11 @@ export default function xOSPage() {
             </div>
           </div>
         </header>
-        {/* ── S1: Quote + Music ─────────────────────────────── */}
-        <QuoteMusicSection />
-
-        {/* ── S2: Intro + About ─────────────────────────────── */}
-        <IntroAboutSection />
+        {/* ── S1 & S2: Intro + About ─────────────────────────────── */}
+        <IntroSection />
 
         {/* ── S3: Experience Bento ─────────────────────────── */}
-        <ExperienceBentoSection />
+        <ExperienceSection />
 
 
 

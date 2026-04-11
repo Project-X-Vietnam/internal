@@ -3,6 +3,35 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, animate, AnimatePresence, useTransform } from "framer-motion";
 
+// ─── Marquee ──────────────────────────────────────────────────────────────────
+
+function Marquee() {
+  const item = (
+    <span style={{
+      whiteSpace: "nowrap", fontSize: 17, fontWeight: 700,
+      color: "rgba(255,255,255,0.45)", paddingRight: 72, letterSpacing: "0.02em",
+    }}>
+      {"Yipee — or "}
+      <span style={{ color: "#60a5fa" }}>meo</span>
+      {", when I’m overstimulated \u00a0\u2736\u00a0 "}
+    </span>
+  );
+
+  return (
+    <div style={{ overflow: "hidden" }}>
+      <div style={{ display: "flex", width: "max-content", animation: "xos-mq 26s linear infinite" }}>
+        {Array(10).fill(null).map((_, i) => <span key={i}>{item}</span>)}
+      </div>
+      <style>{`
+        @keyframes xos-mq {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ─── Card data (Operations Member added as first card) ────────────────────────
 
 interface CardDatum {
@@ -278,53 +307,64 @@ function RotatingValue() {
 // ─── Main Section ─────────────────────────────────────────────────────────────
 
 
-export default function IntroAboutSection() {
+export default function IntroSection() {
   return (
-    <section style={{ background: "#0d1117", padding: "80px 48px 0" }}>
-      <div style={{
-        maxWidth: 1120, margin: "0 auto",
-        display: "flex", gap: 72, alignItems: "flex-start", flexWrap: "wrap",
+    <>
+      <section style={{
+        background: "#0d1117",
+        paddingTop: 72,
+        borderBottom: "1px solid rgba(255,255,255,0.05)",
       }}>
+        <div style={{ paddingTop: 18, paddingBottom: 18 }}>
+          <Marquee />
+        </div>
+      </section>
+      <section style={{ background: "#0d1117", padding: "80px 48px 0" }}>
+        <div style={{
+          maxWidth: 1120, margin: "0 auto",
+          display: "flex", gap: 72, alignItems: "flex-start", flexWrap: "wrap",
+        }}>
 
-        {/* ── Left: Intro ── */}
-        <div style={{ flex: 1.1, minWidth: 300 }}>
-          {/* Name */}
-          <div style={{
-            fontSize: "clamp(52px,7vw,88px)",
-            fontWeight: 900, letterSpacing: -3,
-            lineHeight: 1, color: "#ffffff",
-            marginBottom: 40,
-            fontFamily: "'Inter Tight', sans-serif",
-            whiteSpace: "nowrap",
-          }}>
-            Ngọc&nbsp;<span style={{ color: "#60a5fa" }}>Châu</span>
-          </div>
-
-          {/* Core value inline */}
-          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+          {/* ── Left: Intro ── */}
+          <div style={{ flex: 1.1, minWidth: 300 }}>
+            {/* Name */}
             <div style={{
-              fontSize: 20, fontWeight: 700, color: "#60a5fa",
-              letterSpacing: "-0.01em", whiteSpace: "nowrap",
+              fontSize: "clamp(52px,7vw,88px)",
+              fontWeight: 900, letterSpacing: -3,
+              lineHeight: 1, color: "#ffffff",
+              marginBottom: 40,
+              fontFamily: "'Inter Tight', sans-serif",
+              whiteSpace: "nowrap",
             }}>
-              My core value
+              Ngọc&nbsp;<span style={{ color: "#60a5fa" }}>Châu</span>
             </div>
-            <RotatingValue />
-          </div>
-        </div>
 
-        {/* ── Right: Spring Stack ── */}
-        <div style={{ flex: 0.9, minWidth: 380 }}>
-          <SpringStack />
-          <div style={{
-            textAlign: "center", fontSize: 12,
-            color: "rgba(255,255,255,0.25)",
-            marginTop: 14, letterSpacing: "0.04em",
-          }}>
-            drag or click to shuffle ✦
+            {/* Core value inline */}
+            <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+              <div style={{
+                fontSize: 20, fontWeight: 700, color: "#60a5fa",
+                letterSpacing: "-0.01em", whiteSpace: "nowrap",
+              }}>
+                My core value
+              </div>
+              <RotatingValue />
+            </div>
           </div>
-        </div>
 
-      </div>
-    </section>
+          {/* ── Right: Spring Stack ── */}
+          <div style={{ flex: 0.9, minWidth: 380 }}>
+            <SpringStack />
+            <div style={{
+              textAlign: "center", fontSize: 12,
+              color: "rgba(255,255,255,0.25)",
+              marginTop: 14, letterSpacing: "0.04em",
+            }}>
+              drag or click to shuffle ✦
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </>
   );
 }
