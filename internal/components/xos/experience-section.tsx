@@ -255,7 +255,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
         style={{
-          background: "#ffffff",
+          background: "transparent",
           borderRadius: 24,
           padding: 24,
           position: "relative",
@@ -264,7 +264,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
           transformStyle: "preserve-3d",
           willChange: "transform",
           height: "100%",
-          border: "1px solid rgba(15,23,42,0.06)",
+          border: "1px solid rgba(15,23,42,0.08)",
         }}
       >
         {/* Surface spotlight */}
@@ -428,7 +428,7 @@ export default function ExperienceSection() {
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#ffffff",
+                background: "#EBF5FF",
                 border: "1px solid rgba(15,23,42,0.1)",
                 borderRadius: 24,
                 padding: 40,
