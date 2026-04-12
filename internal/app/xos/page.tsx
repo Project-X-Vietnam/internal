@@ -1,62 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MagicBentoAnimation, { BentoCardData } from "@/components/xos/magic-bento-animation";
 import IntroSection from "@/components/xos/intro-section";
 import ExperienceSection from "@/components/xos/experience-section";
 
-// ─── Inline SVG Illustrations ───────────────────────────────────────────────
-
-const TaxManSVG = ({ mugged }: { mugged: boolean }) => (
-  <svg viewBox="0 0 320 480" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-    {/* Body */}
-    <ellipse cx="160" cy="360" rx="80" ry="110" fill="#0f172a" />
-    {/* Suit lapels */}
-    <path d="M130 280 L160 350 L190 280 L175 260 L160 300 L145 260 Z" fill="#1e293b" />
-    {/* Tie */}
-    <path d="M155 290 L160 350 L165 290 L162 280 L160 295 L158 280 Z" fill="#2563eb" />
-    {/* Head */}
-    <ellipse cx="160" cy="200" rx="60" ry="65" fill="#f4c58a" />
-    {/* Eyes */}
-    <ellipse cx="140" cy="195" rx="8" ry="9" fill="white" />
-    <ellipse cx="180" cy="195" rx="8" ry="9" fill="white" />
-    <circle cx="142" cy="196" r="5" fill="#0f172a" />
-    <circle cx="182" cy="196" r="5" fill="#0f172a" />
-    <circle cx="143" cy="194" r="2" fill="white" />
-    <circle cx="183" cy="194" r="2" fill="white" />
-    {/* Nose */}
-    {mugged ? (
-      <g>
-        {/* Nose pin / clothes peg */}
-        <ellipse cx="160" cy="213" rx="10" ry="6" fill="#f4c58a" />
-        <rect x="148" y="207" width="24" height="4" rx="2" fill="#FF6B35" />
-        <rect x="150" y="211" width="4" height="8" rx="1" fill="#FF6B35" />
-        <rect x="166" y="211" width="4" height="8" rx="1" fill="#FF6B35" />
-      </g>
-    ) : (
-      <ellipse cx="160" cy="213" rx="10" ry="6" fill="#e8a96a" />
-    )}
-    {/* Mouth */}
-    <path d="M148 228 Q160 238 172 228" stroke="#a0662a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    {/* Ears */}
-    <ellipse cx="100" cy="200" rx="12" ry="16" fill="#f4c58a" />
-    <ellipse cx="220" cy="200" rx="12" ry="16" fill="#f4c58a" />
-    {/* Hair / Hat */}
-    <path d="M105 165 Q130 130 160 128 Q190 130 215 165" fill="#2d1a0a" />
-    <rect x="100" y="155" width="120" height="18" rx="4" fill="#2d1a0a" />
-    {/* Briefcase */}
-    <rect x="200" y="320" width="70" height="55" rx="8" fill="#1e293b" />
-    <rect x="220" y="312" width="30" height="14" rx="6" fill="none" stroke="#1e293b" strokeWidth="4" />
-    <rect x="200" y="343" width="70" height="4" fill="#0f172a" />
-    <rect x="228" y="330" width="14" height="14" rx="3" fill="#2563eb" />
-    {/* Legs */}
-    <rect x="130" y="460" width="28" height="20" rx="6" fill="#0f172a" />
-    <rect x="162" y="460" width="28" height="20" rx="6" fill="#0f172a" />
-    {/* HMRC text on briefcase */}
-    <text x="215" y="340" fontSize="8" fill="#2563eb" fontFamily="monospace" fontWeight="bold">HMRC</text>
-  </svg>
-);
-
+// ─── Inline SVG Illustrations ──────────────────────────────────────────────
 const KeyLogoSVG = () => (
   <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-auto">
     <text x="0" y="30" fontSize="26" fontFamily="Inter Tight, sans-serif" fontWeight="800" fill="#0f172a" letterSpacing="-1">xOS</text>
@@ -79,48 +27,7 @@ const TornPaperSVG = () => (
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const ABOUT_ME = [
-  { title: "University", desc: "National Economics University (NEU)" },
-  { title: "DOB", desc: "30/02/2005" },
-  { title: "Email", desc: "chau@gmail.com" },
-  { title: "Phone number", desc: "00000000" },
-];
 
-const EXPERIENCE: BentoCardData[] = [
-  {
-    icon: "🏆",
-    label: "Activities",
-    title: "Organizations / Side quests / Competitions",
-    description: "Volunteer — Vietnam Youth Music Institution · Volunteer — Hanoi Grapevine",
-    color: "#0f172a",
-    colSpan: 2,
-    rowSpan: 1,
-  },
-  {
-    icon: "🎓",
-    label: "Education",
-    title: "Courses",
-    description: "Microsoft Power BI Data Analyst — Datapot",
-    color: "#1e1b4b",
-    colSpan: 2,
-  },
-  {
-    icon: "🛠️",
-    label: "Hidden gem",
-    title: "A tool most people haven't heard of",
-    description: "If it's something people haven't heard of then I don't think I have any — yet!",
-    color: "#0c1a2e",
-    colSpan: 2,
-  },
-  {
-    icon: "💼",
-    label: "Work",
-    title: "Work Experience",
-    description: "ABCDEF",
-    color: "#0f172a",
-    colSpan: 2,
-  },
-];
 
 // Fan-card colours & tilts match the original site palette
 const MY_PICS = [
@@ -149,46 +56,16 @@ const STICKY_STEPS = [
   { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#f1f5f9", accent: "#bfdbfe" },
 ];
 
-const FOOTER_LINKS = {
-  Services: ["Onboarding Phase", "Quarterly Reports", "Annual Accounts & Corporation Tax", "VAT", "Payroll & Pensions", "Self Assessment", "Making Tax Digital (MTD)"],
-  Company: ["Who we help", "Our Community", "Team", "Our Story"],
-  Resources: ["Case Studies", "Guides", "News", "Newsletter", "Videos"],
-};
-
-// ─── Main Component ──────────────────────────────────────────────────────────
-
 export default function xOSPage() {
-  const [mugged, setMugged] = useState(false);
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [bgColor, setBgColor] = useState("#f8fafc");
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [fanProgress, setFanProgress] = useState(0); // 0..1 scroll progress inside fan wrapper
 
-
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const whoRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useRef<HTMLDivElement>(null);
-  const whyRef = useRef<HTMLDivElement>(null);
-  const stepsRef = useRef<HTMLDivElement>(null);
   const fanWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-triggered background color changes
+  // Scroll-triggered changes
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 60);
-      const y = window.scrollY;
-      const whoTop = whoRef.current?.offsetTop ?? 0;
-      const servicesTop = servicesRef.current?.offsetTop ?? 0;
-      const whyTop = whyRef.current?.offsetTop ?? 0;
-      const stepsTop = stepsRef.current?.offsetTop ?? 0;
-
-      if (y >= stepsTop - 200) setBgColor("#f1f5f9");
-      else if (y >= whyTop - 200) setBgColor("#ffffff");
-      else if (y >= servicesTop - 200) setBgColor("#f8fafc");
-      else if (y >= whoTop - 200) setBgColor("#ffffff");
-      else setBgColor("#f8fafc");
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -214,8 +91,6 @@ export default function xOSPage() {
     return () => window.removeEventListener("scroll", handleFanScroll);
   }, []);
 
-  const cardsVisible = 3;
-  const maxIndex = Math.max(0, ABOUT_ME.length - cardsVisible);
 
   return (
     <>
@@ -440,8 +315,7 @@ export default function xOSPage() {
 
         body {
           font-family: 'Inter', sans-serif;
-          background-color: ${bgColor};
-          transition: background-color 0.8s ease;
+          background-color: #f8fafc;
         }
 
         .page-wrapper {
@@ -538,354 +412,7 @@ export default function xOSPage() {
           box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
         }
 
-        /* Hero */
-        .hero {
-          min-height: 70vh;
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 60px 32px 40px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          align-items: center;
-          gap: 32px;
-        }
 
-        .hero-left { padding-right: 24px; }
-
-        .hero-tag {
-          display: inline-block;
-          background: #e0e7ff;
-          color: #3730a3;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          padding: 6px 14px;
-          border-radius: 9999px;
-          margin-bottom: 28px;
-        }
-
-        .hero-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: clamp(52px, 6vw, 96px);
-          line-height: 0.95;
-          letter-spacing: -0.02em;
-          color: #0f172a;
-          margin-bottom: 24px;
-        }
-
-        .hero-title span {
-          color: #2563eb;
-        }
-
-        .hero-sub {
-          font-size: 16px;
-          line-height: 1.7;
-          color: #475569;
-          max-width: 420px;
-          margin-bottom: 24px;
-        }
-
-        .hero-buttons {
-          display: flex;
-          gap: 14px;
-          flex-wrap: wrap;
-          margin-bottom: 48px;
-        }
-
-        .hero-features {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .hero-feature {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 14px;
-          font-weight: 500;
-          color: #0f172a;
-        }
-
-        .hero-feature::before {
-          content: '';
-          width: 20px; height: 20px;
-          border-radius: 50%;
-          background: #eff6ff;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .feature-check {
-          width: 20px; height: 20px;
-          border-radius: 50%;
-          background: #eff6ff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .hero-right {
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: flex-end;
-          height: 520px;
-        }
-
-        .hero-illustration {
-          height: 460px;
-          width: auto;
-          position: relative;
-          z-index: 1;
-          animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-16px); }
-        }
-
-        .mug-btn {
-          position: absolute;
-          bottom: 32px;
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 10px 22px;
-          border: 2px solid #e2e8f0;
-          border-radius: 9999px;
-          background: #ffffff;
-          font-family: 'Inter', sans-serif;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          color: #0f172a;
-          cursor: pointer;
-          z-index: 2;
-          transition: all 0.2s ease;
-          white-space: nowrap;
-          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
-        }
-
-        .mug-btn:hover {
-          background: #2563eb;
-          border-color: #2563eb;
-          color: #ffffff;
-        }
-
-        /* Section shared */
-        .section {
-          padding: 60px 32px;
-          transition: background-color 0.8s ease;
-        }
-
-        .section-inner {
-          max-width: 1280px;
-          margin: 0 auto;
-        }
-
-        .section-tag {
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #2563eb;
-          opacity: 1;
-          margin-bottom: 12px;
-        }
-
-        .section-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: clamp(42px, 5vw, 80px);
-          line-height: 0.98;
-          letter-spacing: -0.02em;
-          color: #0f172a;
-          margin-bottom: 32px;
-        }
-
-        .section-title em {
-          font-style: normal;
-          color: #2563eb;
-        }
-
-        /* Who it's for */
-        .who-section { background: transparent; }
-
-        .carousel-wrapper {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .carousel-track {
-          display: flex;
-          gap: 20px;
-          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .who-card {
-          flex: 0 0 calc(33.333% - 14px);
-          background: #ffffff;
-          border-radius: 16px;
-          padding: 36px;
-          min-height: 200px;
-          border: 1px solid #e2e8f0;
-          transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .who-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-        }
-
-        .who-card-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
-          font-size: 22px;
-          color: #0f172a;
-          margin-bottom: 12px;
-        }
-
-        .who-card-desc {
-          font-size: 14px;
-          line-height: 1.65;
-          color: #475569;
-        }
-
-        .carousel-controls {
-          display: flex;
-          gap: 12px;
-          margin-top: 28px;
-          align-items: center;
-        }
-
-        .carousel-btn {
-          width: 44px; height: 44px;
-          border-radius: 50%;
-          border: 1.5px solid #e2e8f0;
-          background: transparent;
-          color: #0f172a;
-          font-size: 18px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-        }
-
-        .carousel-btn:hover:not(:disabled) {
-          background: #f8fafc;
-          border-color: #cbd5e1;
-          color: #0f172a;
-        }
-
-        .carousel-btn:disabled {
-          opacity: 0.3;
-          cursor: not-allowed;
-        }
-
-        /* Services */
-        .services-section {
-          background: transparent;
-        }
-
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
-        }
-
-        .service-card {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 16px;
-          padding: 24px;
-          transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .service-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-        }
-
-        .service-num {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: 48px;
-          color: #bfdbfe;
-          line-height: 1;
-          margin-bottom: 12px;
-        }
-
-        .service-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
-          font-size: 20px;
-          color: #0f172a;
-          margin-bottom: 10px;
-        }
-
-        .service-desc {
-          font-size: 14px;
-          line-height: 1.65;
-          color: #475569;
-        }
-
-        /* Why Choose  */
-        .why-section {
-          background: transparent;
-        }
-
-        .why-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 20px;
-          margin-bottom: 40px;
-        }
-
-        .why-card {
-          background: #ffffff;
-          border-radius: 16px;
-          padding: 24px;
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-          transition: transform 0.25s ease;
-          border: 1px solid #e2e8f0;
-        }
-
-        .why-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
-
-        .why-icon {
-          width: 44px; height: 44px;
-          border-radius: 50%;
-          background: #eff6ff;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #2563eb;
-          font-size: 18px;
-        }
-
-        .why-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
-          font-size: 20px;
-          color: #0f172a;
-          margin-bottom: 8px;
-        }
-
-        .why-desc {
-          font-size: 14px;
-          line-height: 1.65;
-          color: #475569;
-        }
 
         /* Steps */
         .steps-section {
@@ -957,56 +484,7 @@ export default function xOSPage() {
           max-width: 600px;
         }
 
-        /* CTA Banner */
-        .cta-section {
-          background: #020617;
-          padding: 80px 32px;
-          text-align: center;
-        }
 
-        .cta-inner {
-          max-width: 700px;
-          margin: 0 auto;
-        }
-
-        .cta-tag {
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #60a5fa;
-          margin-bottom: 20px;
-        }
-
-        .cta-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: clamp(40px, 5vw, 72px);
-          line-height: 0.98;
-          color: #ffffff;
-          margin-bottom: 36px;
-          letter-spacing: -0.02em;
-        }
-
-        .btn-cta {
-          padding: 14px 36px;
-          border-radius: 9999px;
-          font-size: 15px;
-          font-weight: 700;
-          color: #ffffff;
-          background: #2563eb;
-          cursor: pointer;
-          text-decoration: none;
-          transition: all 0.2s ease;
-          border: none;
-          display: inline-block;
-        }
-
-        .btn-cta:hover {
-          background: #3b82f6;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(37,99,235,0.3);
-        }
 
         /* Footer */
         .footer {
@@ -1042,33 +520,12 @@ export default function xOSPage() {
           line-height: 0.95;
         }
 
-        .footer-links-grid {
-          display: grid;
-          grid-template-columns: 2fr 1fr 1fr 1fr;
-          gap: 48px;
+        .footer-links-col {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
           margin-bottom: 60px;
         }
-
-        .footer-col-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
-          font-size: 14px;
-          text-transform: uppercase;
-          color: #e2e8f0;
-          margin-bottom: 20px;
-          letter-spacing: 0.05em;
-        }
-
-        .footer-link {
-          display: block;
-          font-size: 13px;
-          color: #94a3b8;
-          text-decoration: none;
-          margin-bottom: 10px;
-          transition: color 0.2s ease;
-        }
-
-        .footer-link:hover { color: #ffffff; }
 
         .footer-bottom {
           border-top: 1px solid rgba(255,255,255,0.1);
@@ -1111,27 +568,9 @@ export default function xOSPage() {
 
         /* Responsive */
         @media (max-width: 900px) {
-          .hero {
-            grid-template-columns: 1fr;
-            padding-top: 96px;
-            text-align: center;
-          }
-          .hero-right { height: 340px; }
-          .hero-illustration { height: 300px; }
-          .hero-sub, .hero-features { max-width: 100%; align-items: center; }
-          .hero-buttons { justify-content: center; }
           .nav-center { display: none; }
           .mobile-menu-btn { display: block; }
-          .services-grid { grid-template-columns: 1fr 1fr; }
-          .why-grid { grid-template-columns: 1fr; }
-          .footer-links-grid { grid-template-columns: 1fr 1fr; }
           .step-item { grid-template-columns: 1fr; gap: 16px; }
-          .who-card { flex: 0 0 calc(100% - 14px); }
-        }
-
-        @media (max-width: 600px) {
-          .services-grid { grid-template-columns: 1fr; }
-          .footer-links-grid { grid-template-columns: 1fr; }
         }
 
         /* Scroll fade-in */
@@ -1158,15 +597,9 @@ export default function xOSPage() {
             {/* Nav */}
             <nav className="nav-center" style={{ display: "flex", gap: "30px", alignItems: "center" }}>
               <a href="#" className="nav-link">Home</a>
-              <a href="#" className="nav-link">Members Hub</a>
-              <a href="#" className="nav-link">Resource Hub</a>
+              <a href="#about" className="nav-link">About</a>
+              <a href="#experience" className="nav-link">Experience</a>
             </nav>
-
-            {/* CTA buttons */}
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <a href="#" className="btn-outline">View pricing</a>
-              <a href="#" className="btn-primary">Talk to us</a>
-            </div>
           </div>
         </header>
         {/* ── S1 & S2: Intro + About ─────────────────────────────── */}
@@ -1345,37 +778,22 @@ export default function xOSPage() {
               <div className="footer-logo-text">xOS</div>
             </div>
 
-            <div className="footer-links-grid">
+            <div className="footer-links-col">
               {/* Tagline col */}
               <div>
                 <p style={{ fontSize: "14px", lineHeight: "1.75", color: "rgba(242,241,237,0.5)", maxWidth: "260px", marginBottom: "24px" }}>
-                  Accountants for UK-based creatives who'd rather be creating.
+                  A personal portfolio designed as a seamless operating system.
                 </p>
                 <a href="#" className="btn-outline" style={{ color: "#2563eb", borderColor: "#2563eb", fontSize: "13px" }}>
-                  Talk to us →
+                  Contact Me →
                 </a>
               </div>
-
-              {/* Link cols */}
-              {Object.entries(FOOTER_LINKS).map(([col, links]) => (
-                <div key={col}>
-                  <p className="footer-col-title">{col}</p>
-                  {links.map((link) => (
-                    <a key={link} href="#" className="footer-link">{link}</a>
-                  ))}
-                </div>
-              ))}
             </div>
 
             <div className="footer-bottom">
               <p className="footer-copy">
-                © 2026 xOS Limited | Company No. 14184586 | Registered Office: 10 Spinney Nook, Bolton, BL2 4BB, England
+                © {new Date().getFullYear()} xOS | Built by Chau
               </p>
-              <div className="footer-badges">
-                <span className="footer-badge">AccountsSorted</span>
-                <span className="footer-badge">TaxPaid</span>
-                <span className="footer-badge">PeaceOfMind</span>
-              </div>
             </div>
           </div>
         </footer>
