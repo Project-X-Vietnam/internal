@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 
 interface BentoItem {
   id:   string;
-  icon: string;
   title: string;
   body:  string;
+  shortBody?: string;
   tag?:  string;
   gridColumn?: string;
   gridRow?:    string;
@@ -17,54 +18,61 @@ interface BentoItem {
 const ITEMS: BentoItem[] = [
   {
     id: "bc0",
-    icon:  "💬",
-    title: "Organizations / Side quests / Competitions",
+    title: "Organizations /\nSide quests",
+    shortBody: "Involved in music and arts communities.",
     body:  "Volunteer — Vietnam Youth Music Institution\n\nVolunteer — Hanoi Grapevine",
     tag:   "Volunteering",
+    gridColumn: "span 4",
     gridRow: "span 2",
   },
   {
-    id: "bc1",
-    icon:  "😌",
-    title: "Courses",
-    body:  "Microsoft Power BI Data Analyst — Datapot",
-    tag:   "Data & Analytics",
+    id: "bc3",
+    title: "Work experience",
+    shortBody: "A sneak peek into my professional journey.",
+    body:  "ABCDEF",
+    tag:   "Professional",
+    gridColumn: "span 8",
+    gridRow: "span 2",
   },
   {
     id: "bc2",
-    icon:  "📋",
-    title: "A tool most people haven't heard of",
-    body:  "If it's something people haven't heard of then I don't think I have any.",
+    title: "Hidden tool",
+    shortBody: "Tools you've never heard of.",
+    body:  "If it's something people haven't heard of then I don't think I have any — yet!",
+    tag:   "Unknown",
+    gridColumn: "span 9",
+    gridRow: "span 1",
   },
   {
-    id: "bc3",
-    icon:  "🤝",
-    title: "Work experience",
-    body:  "ABCDEF",
-    tag:   "Professional",
-    gridColumn: "2",
-    gridRow: "2 / 4",
+    id: "bc1",
+    title: "Courses",
+    shortBody: "Building technical foundations.",
+    body:  "Microsoft Power BI Data Analyst — Datapot",
+    tag:   "Analytics",
+    gridColumn: "span 3",
+    gridRow: "span 1",
   },
 ];
 
 // ─── Animation constants ───────────────────────────────────────────────────────
 
-const GLOW_RGB        = "0,100,255";    // rich electric blue
-const SPOTLIGHT_R     = 360;            // wide radius spotlight
+const GLOW_RGB        = "30,64,175";      // darker blue-black (xanh đen)
+const SPOTLIGHT_R     = 450;              // wider radius spotlight for softer falloff
 const TILT_MAX        = 12;
 const MAGNET_MAX      = 10;
 const EDGE_REACH      = 300;
-const RING_PX         = 8;              // thicker border glow
-const NUM_STARS       = 15;             // less stars for a cleaner look
+const RING_PX         = 9;                // 6px border glow
+const NUM_STARS       = 15;               // less stars for a cleaner look
 
 // ─── Individual Bento Card ────────────────────────────────────────────────────
 
 interface BentoCardProps {
   item: BentoItem;
   gridMouseRef: React.MutableRefObject<{ x: number; y: number; active: boolean }>;
+  onClick: () => void;
 }
 
-function BentoCard({ item, gridMouseRef }: BentoCardProps) {
+function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const cardRef    = useRef<HTMLDivElement>(null);
   const borderRef  = useRef<HTMLDivElement>(null);    // cursor-chase border ring (OUTSIDE card)
@@ -175,7 +183,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
       const globalI = Math.max(0, 1 - dist / SPOTLIGHT_R);
 
       spot.style.opacity     = (globalI * 0.85).toFixed(3);
-      borderEl.style.opacity = Math.min(0.9, globalI * 1.2).toFixed(3);
+      borderEl.style.opacity = Math.min(1.0, globalI * 1.5).toFixed(3);
 
       rafGrid.current = requestAnimationFrame(gridTick);
     }
@@ -185,6 +193,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
 
   // ── Click ripple ──────────────────────────────────────────────────────────
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    onClick();
     const card = cardRef.current;
     if (!card) return;
     const r = card.getBoundingClientRect();
@@ -198,7 +207,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
     `;
     card.appendChild(rip);
     setTimeout(() => rip.remove(), 600);
-  }, []);
+  }, [onClick]);
 
   // ── 3-D tilt + magnetism ──────────────────────────────────────────────────
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -216,6 +225,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
   return (
     <div
       ref={wrapperRef}
+      className="xos-card-wrapper"
       style={{ position: "relative", gridColumn: item.gridColumn, gridRow: item.gridRow }}
     >
       {/* Dynamic cursor border ring (OUTSIDE overflow hidden) */}
@@ -228,7 +238,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
           pointerEvents: "none",
           zIndex: 6,
           opacity: 0,
-          background: `radial-gradient(circle 240px at var(--sx,50%) var(--sy,50%), rgba(${GLOW_RGB},1), rgba(${GLOW_RGB},0.08) 35%, transparent 60%)`,
+          background: `radial-gradient(circle 420px at var(--sx,50%) var(--sy,50%), rgba(96,165,250,1) 0%, rgba(${GLOW_RGB},0.9) 25%, rgba(${GLOW_RGB},0.3) 65%, transparent 100%)`,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           maskComposite: "exclude",
@@ -246,8 +256,8 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
         onClick={handleClick}
         style={{
           background: "#060A14", // Matte black / charcoal
-          borderRadius: 22,
-          padding: 32,
+          borderRadius: 24,
+          padding: 24,
           position: "relative",
           overflow: "hidden",
           cursor: "pointer",
@@ -263,7 +273,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
           style={{
             position: "absolute", inset: 0, borderRadius: 22,
             pointerEvents: "none", zIndex: 1, opacity: 0,
-            background: `radial-gradient(circle ${SPOTLIGHT_R}px at var(--sx,50%) var(--sy,50%), rgba(${GLOW_RGB},0.12), transparent 70%)`,
+            background: `radial-gradient(circle ${SPOTLIGHT_R}px at var(--sx,50%) var(--sy,50%), rgba(${GLOW_RGB},0.15) 0%, rgba(${GLOW_RGB},0.05) 50%, transparent 100%)`,
             transition: "opacity 0.2s ease-out",
           } as React.CSSProperties}
         />
@@ -279,24 +289,29 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
         />
 
         {/* Content */}
-        <div className="xos-bc-content" style={{ position: "relative", zIndex: 4 }}>
-          <span style={{ fontSize: 24, display: "block", marginBottom: 16 }}>{item.icon}</span>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 10, lineHeight: 1.4 }}>
-            {item.title}
-          </div>
-          <div className="xos-bc-body" style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
-            {item.body}
-          </div>
-          {item.tag && (
-            <div className="xos-bc-tag" style={{
-              display: "inline-block", marginTop: 14,
-              background: `rgba(${GLOW_RGB},0.15)`, color: "#93c5fd",
-              fontSize: 11, fontWeight: 600, padding: "4px 13px", borderRadius: 20,
-              border: `1px solid rgba(${GLOW_RGB},0.3)`,
-            }}>
-              {item.tag}
+        <div className="xos-bc-content" style={{ position: "relative", zIndex: 4, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", lineHeight: 1.35, whiteSpace: "pre-line" }}>
+              {item.title}
             </div>
-          )}
+            {item.shortBody && (
+              <div className="xos-short-body" style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", marginTop: 8, lineHeight: 1.4 }}>
+                {item.shortBody}
+              </div>
+            )}
+          </div>
+          <div>
+            {item.tag && (
+              <div style={{
+                display: "inline-block",
+                background: `rgba(${GLOW_RGB},0.15)`, color: "#93c5fd",
+                fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 20,
+                border: `1px solid rgba(${GLOW_RGB},0.3)`,
+              }}>
+                {item.tag}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -307,6 +322,7 @@ function BentoCard({ item, gridMouseRef }: BentoCardProps) {
 
 export default function ExperienceSection() {
   const gridMouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: -9999, y: -9999, active: false });
+  const [selectedItem, setSelectedItem] = useState<BentoItem | null>(null);
 
   const handleGridMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     gridMouseRef.current = { x: e.clientX, y: e.clientY, active: true };
@@ -319,21 +335,13 @@ export default function ExperienceSection() {
   return (
     <section style={{ background: "#0d1117", padding: "40px 48px 80px" }}>
       <style>{`
-        .xos-card .xos-bc-body {
+        /* No explicit card height, inherits perfectly from grid-auto-rows */
+        .xos-card .xos-short-body {
           opacity: 0;
           transform: translateY(6px);
           transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .xos-card:hover .xos-bc-body {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .xos-card .xos-bc-tag {
-          opacity: 0;
-          transform: translateY(4px);
-          transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.08s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.08s;
-        }
-        .xos-card:hover .xos-bc-tag {
+        .xos-card:hover .xos-short-body {
           opacity: 1;
           transform: translateY(0);
         }
@@ -341,45 +349,125 @@ export default function ExperienceSection() {
           from { transform: scale(0); opacity: 1; }
           to   { transform: scale(5); opacity: 0; } 
         }
+        @media (max-width: 900px) {
+          .xos-bento-grid {
+            grid-template-columns: 1fr 1fr !important;
+            grid-auto-rows: 200px !important;
+          }
+          .xos-card-wrapper {
+            grid-column: span 1 !important;
+            grid-row: span 1 !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .xos-bento-grid {
+            grid-template-columns: 1fr !important;
+            grid-auto-rows: 160px !important;
+          }
+        }
       `}</style>
 
-      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        {/* Bridge label */}
+      {/* Grid container with restricted width to perfectly center the cards leaving side empty space */}
+      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+        {/* Section Title */}
         <div style={{
-          display: "flex", alignItems: "center", gap: 14, marginBottom: 36,
+          display: "flex", alignItems: "center", gap: 24, marginBottom: 48,
         }}>
-          <div style={{
-            width: 28, height: 1,
-            background: "rgba(255,255,255,0.15)",
-          }} />
-          <div style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: "3px",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.28)",
+          <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
+          <h2 style={{
+            fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: "clamp(32px, 4vw, 56px)",
+            letterSpacing: "-0.03em", margin: 0, color: "#fff", whiteSpace: "nowrap",
+            lineHeight: 1.4, padding: "0.15em 0"
           }}>
-            My Experience
-          </div>
-          <div style={{
-            flex: 1, height: 1,
-            background: "rgba(255,255,255,0.06)",
-          }} />
+            My <span style={{ color: "#3b82f6" }}>Experience</span>
+          </h2>
+          <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
         </div>
 
         {/* Bento grid */}
         <div
+          className="xos-bento-grid"
           onMouseMove={handleGridMouseMove}
           onMouseLeave={handleGridMouseLeave}
           style={{
             display: "grid",
-            gridTemplateColumns: "1.5fr 1fr",
-            gap: 20,
+            gridTemplateColumns: "repeat(12, 1fr)",
+            gridAutoRows: "136px",
+            gap: 24,
           }}
         >
           {ITEMS.map(item => (
-            <BentoCard key={item.id} item={item} gridMouseRef={gridMouseRef} />
+            <BentoCard key={item.id} item={item} gridMouseRef={gridMouseRef} onClick={() => setSelectedItem(item)} />
           ))}
         </div>
       </div>
+
+      {/* Pop-up Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedItem(null)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0,0,0,0.6)",
+              backdropFilter: "blur(4px)",
+              padding: 24,
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#0d1117",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 24,
+                padding: 40,
+                maxWidth: 480,
+                width: "100%",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
+              }}
+            >
+              {selectedItem.tag && (
+                <div style={{
+                  display: "inline-block", marginBottom: 16,
+                  background: `rgba(${GLOW_RGB},0.15)`, color: "#93c5fd",
+                  fontSize: 12, fontWeight: 600, padding: "6px 14px", borderRadius: 20,
+                  border: `1px solid rgba(${GLOW_RGB},0.3)`,
+                }}>
+                  {selectedItem.tag}
+                </div>
+              )}
+              <h3 style={{ fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 20, lineHeight: 1.2, whiteSpace: "pre-line" }}>
+                {selectedItem.title}
+              </h3>
+              <div style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
+                {selectedItem.body}
+              </div>
+              
+              <button
+                onClick={() => setSelectedItem(null)}
+                style={{
+                  marginTop: 32, padding: "10px 24px", borderRadius: 8,
+                  background: "#2563eb", border: "none", color: "#fff", cursor: "pointer",
+                  fontSize: 14, fontWeight: 600,
+                }}
+              >
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

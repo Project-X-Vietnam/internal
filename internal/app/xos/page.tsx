@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import IntroSection from "@/components/xos/intro-section";
 import ExperienceSection from "@/components/xos/experience-section";
+import MyPicSection from "@/components/xos/mypic-section";
 
 // ─── Inline SVG Illustrations ──────────────────────────────────────────────
 const KeyLogoSVG = () => (
@@ -29,21 +30,7 @@ const TornPaperSVG = () => (
 
 
 
-// Fan-card colours & tilts match the original site palette
-const MY_PICS = [
-  {
-    title: "My pic",
-    img: "https://storage.tally.so/private/anh-the-promax-Chau.jpg?id=W1ZxQa&accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlcxWnhRYSIsImZvcm1JZCI6IlpqVmdNYSIsImlhdCI6MTc3Mzg0ODkwNn0.ZwDe_Pd1xOlOlasq2CTelJvaIFEeommy_vTKzXeiSbw&signature=a3dc5c8b627776505c08aeea74c2de88edec35ac91182bbc3727362849820535",
-    bg: "#F6D0D8",
-    tilt: -10,
-  },
-  {
-    title: "Moment represents me",
-    img: "https://storage.tally.so/private/z7634460446801_351a234a4ddf155a87114fb2ea815987.jpg?id=EMa4b2&accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVNYTRiMiIsImZvcm1JZCI6IlpqVmdNYSIsImlhdCI6MTc3Mzg0ODkwNn0.CQKBVy-Tjy14Cz3hf-6X5uoVXTN2rMlxCdqyE5gv1DU&signature=ae162d1b3d8fb3c7e47b6cdd543ea4613bb830ae61f06529ddc91cd6446c5428",
-    bg: "#e0e7ff",
-    tilt: 10,
-  },
-];
+// Sticky step panels — alternating background colours
 
 
 // Sticky step panels — alternating background colours
@@ -58,9 +45,6 @@ const STICKY_STEPS = [
 
 export default function xOSPage() {
   const [scrolled, setScrolled] = useState(false);
-  const [fanProgress, setFanProgress] = useState(0); // 0..1 scroll progress inside fan wrapper
-
-  const fanWrapperRef = useRef<HTMLDivElement>(null);
 
   // Scroll-triggered changes
   useEffect(() => {
@@ -72,25 +56,6 @@ export default function xOSPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll-progress tracker for the fan wrapper
-  useEffect(() => {
-    const handleFanScroll = () => {
-      const wrapper = fanWrapperRef.current;
-      if (!wrapper) return;
-      const rect = wrapper.getBoundingClientRect();
-      const wrapperH = wrapper.offsetHeight;
-      const vh = window.innerHeight;
-      // scrolled = how far into the sticky runway we are
-      const scrolled = -rect.top;
-      const totalScrollable = wrapperH - vh;
-      if (totalScrollable <= 0) return;
-      setFanProgress(Math.max(0, Math.min(1, scrolled / totalScrollable)));
-    };
-    window.addEventListener("scroll", handleFanScroll, { passive: true });
-    handleFanScroll(); // run once on mount
-    return () => window.removeEventListener("scroll", handleFanScroll);
-  }, []);
-
 
   return (
     <>
@@ -100,104 +65,30 @@ export default function xOSPage() {
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── Fan-cards (Who it's for) ───────────────────────── */
-
-        /* ── Fan wrapper: tall scroll runway ── */
-        .fan-wrapper {
-          position: relative;
-          /* 100vh sticky scene + (N cards × 80vh) runway */
-          height: calc(100vh + 5 * 90vh);
-          background: #F2F1ED;
-        }
-
-        .fan-sticky-scene {
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        .fan-header {
-          max-width: 1280px;
-          margin: 0 auto 32px;
-          padding: 0 32px;
-        }
-
-        .fan-stage {
-          position: relative;
-          flex: 1;
-          overflow: hidden;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          /* pivot bottom-center so rotation fans correctly */
-        }
-
-        .fan-card {
-          position: absolute;
-          /* cards start off-screen at the bottom */
-          bottom: 0;
-          left: 50%;
-          width: clamp(220px, 20vw, 280px);
-          min-height: 300px;
-          border-radius: 24px;
-          padding: 24px 20px;
-          border: 1.5px solid rgba(1,30,23,0.1);
-          box-shadow: 0 12px 40px rgba(1,30,23,0.12);
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          transform-origin: bottom center;
-          /* transition only for smoothness within a frame — actual movement is JS-driven */
-          transition: transform 0.12s ease-out, opacity 0.12s ease-out;
-          will-change: transform, opacity;
-        }
-
-        .fan-card-tag {
-          font-size: 10px;
+        /* ── Section Shared ─────────────────────────────────── */
+        .section-tag {
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #94a3b8;
+          color: #2563eb;
+          opacity: 1;
+          margin-bottom: 12px;
         }
 
-        .fan-card-title {
+        .section-title {
           font-family: 'Inter Tight', sans-serif;
           font-weight: 800;
-          font-size: 22px;
+          font-size: clamp(42px, 5vw, 80px);
+          line-height: 0.98;
+          letter-spacing: -0.02em;
           color: #0f172a;
-          line-height: 1.1;
+          margin-bottom: 32px;
         }
 
-        .fan-card-desc {
-          flex: 1;
-          border-radius: 12px;
-          overflow: hidden;
-          margin: 4px 0;
-        }
-
-        .fan-card-desc img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          border-radius: 12px;
-        }
-
-        .fan-card-arrow {
-          width: 40px; height: 40px;
-          border-radius: 50%;
-          background: #eff6ff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .section-title em {
+          font-style: normal;
           color: #2563eb;
-          font-size: 16px;
-          margin-top: auto;
-          flex-shrink: 0;
         }
 
         /* ── Sticky Steps ───────────────────────────────────── */
@@ -307,8 +198,6 @@ export default function xOSPage() {
         }
 
         @media (max-width: 900px) {
-          .fan-stage { height: 600px; }
-          .fan-card { width: 220px; min-height: 280px; }
           .sticky-step-inner { grid-template-columns: 1fr; padding: 0 32px; gap: 32px; }
           .sticky-step-right { display: none; }
         }
@@ -611,89 +500,9 @@ export default function xOSPage() {
 
 
         {/* ══════════════════════════════════════════════════════ */}
-        {/* ── NEW SECTION 1: Fan-cards scroll-driven (Who it's for) */}
+        {/* ── NEW SECTION 1: Fan-cards (My Pic) scroll-driven ─── */}
         {/* ══════════════════════════════════════════════════════ */}
-        <div className="fan-wrapper" ref={fanWrapperRef}>
-          <div className="fan-sticky-scene">
-            {/* Heading */}
-            <div className="fan-header">
-              <p className="section-tag" style={{ marginBottom: 14 }}>Who it&apos;s for</p>
-              <h2 className="section-title" style={{ marginBottom: 0 }}>
-                Me in my<br />
-                <em>Environment</em>
-              </h2>
-            </div>
-
-            {/* Card stage */}
-            <div className="fan-stage">
-              {(() => {
-                const N = MY_PICS.length; // 5
-                const slotSize = 1 / N;    // 0.2 per card
-                // Fan-out starts once all cards are in (progress > 0.85)
-                const fanFactor = Math.max(0, Math.min(1, (fanProgress - 0.80) / 0.20));
-                const cardW = 260; // px — approximate card width
-                const spread = cardW * 0.85; // horizontal spread in full fan
-                const centerIdx = Math.floor(N / 2);
-
-                return MY_PICS.map((card, i) => {
-                  // --- scroll progress for this card slot ---
-                  const slotStart = i * slotSize;
-                  const cardProgress = Math.max(0, Math.min(1,
-                    (fanProgress - slotStart) / slotSize
-                  ));
-
-                  // ease-out interpolation
-                  const ease = 1 - Math.pow(1 - cardProgress, 3);
-
-                  // Y: slide up from 110% below → 0% (settled)
-                  const translateY = (1 - ease) * 110; // %
-
-                  // X: spread only once ALL cards have arrived
-                  const targetX = (i - centerIdx) * spread;
-                  const translateX = fanFactor * targetX;
-
-                  // Rotation: each card already has its final tilt from the start
-                  // so it slides up already tilted (like real cards dealt from a deck)
-                  const rotate = card.tilt;
-
-                  // Z-index: later cards (higher i) sit on top during stacking
-                  // but centre card sits on top in final fan
-                  const zIndex = cardProgress > 0.5
-                    ? i + 1   // stacking order
-                    : 0;
-
-                  return (
-                    <div
-                      key={i}
-                      className="fan-card"
-                      style={{
-                        backgroundColor: card.bg,
-                        marginLeft: `-${cardW / 2}px`, // center the card at left:50%
-                        zIndex,
-                        opacity: cardProgress > 0.05 ? 1 : 0,
-                        transform: [
-                          `translateX(${translateX}px)`,
-                          `translateY(${translateY}%)`,
-                          `rotate(${rotate}deg)`,
-                        ].join(" "),
-                      }}
-                    >
-                      <span className="fan-card-tag">For</span>
-                      <h3 className="fan-card-title">{card.title}</h3>
-                      <div className="fan-card-desc">
-                        <img
-                          src={card.img}
-                          alt={card.title}
-                        />
-                      </div>
-                      <div className="fan-card-arrow">→</div>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-          </div>
-        </div>
+        <MyPicSection />
 
         {/* ══════════════════════════════════════════════════════ */}
         {/* ── NEW SECTION 2: Sticky Steps Panels ────────────────── */}

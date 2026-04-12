@@ -8,18 +8,23 @@ import { motion, useMotionValue, animate, AnimatePresence, useTransform } from "
 function Marquee() {
   const item = (
     <span style={{
-      whiteSpace: "nowrap", fontSize: 17, fontWeight: 700,
-      color: "rgba(255,255,255,0.45)", paddingRight: 72, letterSpacing: "0.02em",
+      display: "inline-flex", alignItems: "center",
+      whiteSpace: "nowrap", fontSize: 22, fontWeight: 700,
+      color: "rgba(255,255,255,0.45)", letterSpacing: "0.02em",
+      textTransform: "uppercase",
     }}>
-      {"Yipee — or "}
-      <span style={{ color: "#60a5fa" }}>meo</span>
-      {", when I’m overstimulated \u00a0\u2736\u00a0 "}
+      <span>
+        {"Yipee — or "}
+        <span style={{ color: "#60a5fa" }}>meo</span>
+        {", when I’m overstimulated"}
+      </span>
+      <span style={{ margin: "0 45px" }}>{`\u2727`}</span>
     </span>
   );
 
   return (
     <div style={{ overflow: "hidden" }}>
-      <div style={{ display: "flex", width: "max-content", animation: "xos-mq 26s linear infinite" }}>
+      <div style={{ display: "flex", width: "max-content", animation: "xos-mq 45s linear infinite" }}>
         {Array(10).fill(null).map((_, i) => <span key={i}>{item}</span>)}
       </div>
       <style>{`
@@ -90,7 +95,7 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
       style={{
         x,
-        rotateY: isFront ? rotateY : 0,
+        rotateY: rotateY,
         border: "1px solid rgba(255,255,255,0.07)", // No dynamic highlights
         boxShadow: combinedShadow,
         position: "absolute",
@@ -157,8 +162,8 @@ function SpringStack() {
   const dragXs = [dx0, dx1, dx2, dx3];
 
   function sendToBack(cardIdx: number) {
-    // Reset card's drag offset immediately
-    dragXs[cardIdx].set(0);
+    // Smoothly animate the card back to center on X
+    animate(dragXs[cardIdx], 0, { type: "spring", stiffness: 260, damping: 20 });
     // Move front card → back of visual stack
     setOrder(prev => {
       const without = prev.filter(i => i !== cardIdx);
@@ -327,27 +332,29 @@ export default function IntroSection() {
 
           {/* ── Left: Intro ── */}
           <div style={{ flex: 1.1, minWidth: 300 }}>
-            {/* Name */}
-            <div style={{
-              fontSize: "clamp(52px,7vw,88px)",
-              fontWeight: 900, letterSpacing: -3,
-              lineHeight: 1, color: "#ffffff",
-              marginBottom: 40,
-              fontFamily: "'Inter Tight', sans-serif",
-              whiteSpace: "nowrap",
-            }}>
-              Ngọc&nbsp;<span style={{ color: "#60a5fa" }}>Châu</span>
-            </div>
-
-            {/* Core value inline */}
-            <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+            <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
+              {/* Name */}
               <div style={{
-                fontSize: 20, fontWeight: 700, color: "#60a5fa",
-                letterSpacing: "-0.01em", whiteSpace: "nowrap",
+                fontSize: "clamp(52px,7vw,88px)",
+                fontWeight: 900, letterSpacing: -3,
+                lineHeight: 1, color: "#ffffff",
+                marginBottom: 40,
+                fontFamily: "'Inter Tight', sans-serif",
+                whiteSpace: "nowrap",
               }}>
-                My core value
+                Ngọc&nbsp;<span style={{ color: "#60a5fa" }}>Châu</span>
               </div>
-              <RotatingValue />
+
+              {/* Core value inline */}
+              <div style={{ display: "flex", alignItems: "center", gap: 18, justifyContent: "center" }}>
+                <div style={{
+                  fontSize: 20, fontWeight: 700, color: "#60a5fa",
+                  letterSpacing: "-0.01em", whiteSpace: "nowrap",
+                }}>
+                  My core value
+                </div>
+                <RotatingValue />
+              </div>
             </div>
           </div>
 
