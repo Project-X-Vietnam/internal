@@ -44,7 +44,7 @@ export default function MyPicSection() {
         .fan-wrapper {
           position: relative;
           height: calc(100vh + 2 * 90vh); /* adjusted for 2 cards */
-          background: #0d1117; /* match previous section */
+          background: #EBF5FF; /* pastel blue light mode */
         }
         .fan-sticky-scene {
           position: sticky;
@@ -82,8 +82,8 @@ export default function MyPicSection() {
           min-height: 380px;
           border-radius: 24px;
           padding: 24px 20px;
-          border: 1.5px solid rgba(255,255,255,0.1);
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+          border: 1.5px solid rgba(15,23,42,0.1);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.15);
           display: flex;
           flex-direction: column;
           gap: 12px;
@@ -127,15 +127,15 @@ export default function MyPicSection() {
       <div className="fan-wrapper" ref={fanWrapperRef}>
         <div className="fan-sticky-scene">
           <div className="fan-header">
-            <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
+            <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
             <h2 style={{
               fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: "clamp(32px, 4vw, 56px)",
-              letterSpacing: "-0.03em", margin: 0, color: "#fff", whiteSpace: "nowrap",
+              letterSpacing: "-0.03em", margin: 0, color: "#0f172a", whiteSpace: "nowrap",
               lineHeight: 1.4, padding: "0.15em 0"
             }}>
               My <span style={{ color: "#3b82f6" }}>Pictures</span>
             </h2>
-            <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
+            <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
           </div>
 
           <div className="fan-stage">

@@ -56,7 +56,7 @@ const ITEMS: BentoItem[] = [
 
 // ─── Animation constants ───────────────────────────────────────────────────────
 
-const GLOW_RGB        = "30,64,175";      // darker blue-black (xanh đen)
+const GLOW_RGB        = "59,130,246";     // vibrant blue for light mode
 const SPOTLIGHT_R     = 450;              // wider radius spotlight for softer falloff
 const TILT_MAX        = 12;
 const MAGNET_MAX      = 10;
@@ -238,7 +238,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
           pointerEvents: "none",
           zIndex: 6,
           opacity: 0,
-          background: `radial-gradient(circle 420px at var(--sx,50%) var(--sy,50%), rgba(96,165,250,1) 0%, rgba(${GLOW_RGB},0.9) 25%, rgba(${GLOW_RGB},0.3) 65%, transparent 100%)`,
+          background: `radial-gradient(circle 420px at var(--sx,50%) var(--sy,50%), rgba(29,78,216,1) 0%, rgba(${GLOW_RGB},0.6) 25%, rgba(${GLOW_RGB},0.2) 65%, transparent 100%)`,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           maskComposite: "exclude",
@@ -255,7 +255,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
         style={{
-          background: "#060A14", // Matte black / charcoal
+          background: "#ffffff",
           borderRadius: 24,
           padding: 24,
           position: "relative",
@@ -264,7 +264,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
           transformStyle: "preserve-3d",
           willChange: "transform",
           height: "100%",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid rgba(15,23,42,0.06)",
         }}
       >
         {/* Surface spotlight */}
@@ -291,11 +291,11 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
         {/* Content */}
         <div className="xos-bc-content" style={{ position: "relative", zIndex: 4, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", lineHeight: 1.35, whiteSpace: "pre-line" }}>
+            <div style={{ fontSize: 18, fontWeight: 600, color: "#0f172a", lineHeight: 1.35, whiteSpace: "pre-line" }}>
               {item.title}
             </div>
             {item.shortBody && (
-              <div className="xos-short-body" style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", marginTop: 8, lineHeight: 1.4 }}>
+              <div className="xos-short-body" style={{ fontSize: 14, color: "rgba(15,23,42,0.55)", marginTop: 8, lineHeight: 1.4 }}>
                 {item.shortBody}
               </div>
             )}
@@ -304,7 +304,7 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
             {item.tag && (
               <div style={{
                 display: "inline-block",
-                background: `rgba(${GLOW_RGB},0.15)`, color: "#93c5fd",
+                background: `rgba(${GLOW_RGB},0.1)`, color: "#2563eb",
                 fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 20,
                 border: `1px solid rgba(${GLOW_RGB},0.3)`,
               }}>
@@ -333,7 +333,7 @@ export default function ExperienceSection() {
   }, []);
 
   return (
-    <section style={{ background: "#0d1117", padding: "40px 48px 80px" }}>
+    <section style={{ background: "#EBF5FF", padding: "40px 48px 80px" }}>
       <style>{`
         /* No explicit card height, inherits perfectly from grid-auto-rows */
         .xos-card .xos-short-body {
@@ -373,15 +373,15 @@ export default function ExperienceSection() {
         <div style={{
           display: "flex", alignItems: "center", gap: 24, marginBottom: 48,
         }}>
-          <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
+          <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
           <h2 style={{
             fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: "clamp(32px, 4vw, 56px)",
-            letterSpacing: "-0.03em", margin: 0, color: "#fff", whiteSpace: "nowrap",
+            letterSpacing: "-0.03em", margin: 0, color: "#0f172a", whiteSpace: "nowrap",
             lineHeight: 1.4, padding: "0.15em 0"
           }}>
             My <span style={{ color: "#3b82f6" }}>Experience</span>
           </h2>
-          <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.15)" }} />
+          <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
         </div>
 
         {/* Bento grid */}
@@ -417,8 +417,8 @@ export default function ExperienceSection() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "rgba(0,0,0,0.6)",
-              backdropFilter: "blur(4px)",
+              background: "rgba(255,255,255,0.5)",
+              backdropFilter: "blur(8px)",
               padding: 24,
             }}
           >
@@ -428,29 +428,29 @@ export default function ExperienceSection() {
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#0d1117",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "#ffffff",
+                border: "1px solid rgba(15,23,42,0.1)",
                 borderRadius: 24,
                 padding: 40,
                 maxWidth: 480,
                 width: "100%",
-                boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.12)",
               }}
             >
               {selectedItem.tag && (
                 <div style={{
                   display: "inline-block", marginBottom: 16,
-                  background: `rgba(${GLOW_RGB},0.15)`, color: "#93c5fd",
+                  background: `rgba(${GLOW_RGB},0.1)`, color: "#2563eb",
                   fontSize: 12, fontWeight: 600, padding: "6px 14px", borderRadius: 20,
                   border: `1px solid rgba(${GLOW_RGB},0.3)`,
                 }}>
                   {selectedItem.tag}
                 </div>
               )}
-              <h3 style={{ fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 20, lineHeight: 1.2, whiteSpace: "pre-line" }}>
+              <h3 style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", marginBottom: 20, lineHeight: 1.2, whiteSpace: "pre-line" }}>
                 {selectedItem.title}
               </h3>
-              <div style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
+              <div style={{ fontSize: 15, color: "rgba(15,23,42,0.65)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
                 {selectedItem.body}
               </div>
               

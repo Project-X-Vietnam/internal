@@ -10,12 +10,12 @@ function Marquee() {
     <span style={{
       display: "inline-flex", alignItems: "center",
       whiteSpace: "nowrap", fontSize: 22, fontWeight: 700,
-      color: "rgba(255,255,255,0.45)", letterSpacing: "0.02em",
+      color: "rgba(15,23,42,0.5)", letterSpacing: "0.02em",
       textTransform: "uppercase",
     }}>
       <span>
         {"Yipee — or "}
-        <span style={{ color: "#60a5fa" }}>meo</span>
+        <span style={{ color: "#3b82f6" }}>meo</span>
         {", when I’m overstimulated"}
       </span>
       <span style={{ margin: "0 45px" }}>{`\u2727`}</span>
@@ -128,11 +128,11 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
       }}
       onClick={() => { if (isFront) sendToBack(cardIdx); }}
     >
-      {/* Dark blue tint shadow for inactive layers */}
+      {/* Tint shadow for inactive layers */}
       {!isFront && (
         <div style={{
           position: "absolute", inset: 0, borderRadius: 18,
-          background: "rgba(0,10,35,0.45)", pointerEvents: "none"
+          background: "rgba(15,23,42,0.15)", pointerEvents: "none"
         }} />
       )}
       <div style={{ position: "relative", zIndex: 2 }}>
@@ -316,15 +316,15 @@ export default function IntroSection() {
   return (
     <>
       <section style={{
-        background: "#0d1117",
+        background: "#EBF5FF",
         paddingTop: 72,
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        borderBottom: "1px solid rgba(15,23,42,0.06)",
       }}>
         <div style={{ paddingTop: 18, paddingBottom: 18 }}>
           <Marquee />
         </div>
       </section>
-      <section style={{ background: "#0d1117", padding: "80px 48px 0" }}>
+      <section style={{ background: "#EBF5FF", padding: "80px 48px 0" }}>
         <div style={{
           maxWidth: 1120, margin: "0 auto",
           display: "flex", gap: 72, alignItems: "flex-start", flexWrap: "wrap",
@@ -337,18 +337,18 @@ export default function IntroSection() {
               <div style={{
                 fontSize: "clamp(52px,7vw,88px)",
                 fontWeight: 900, letterSpacing: -3,
-                lineHeight: 1, color: "#ffffff",
+                lineHeight: 1, color: "#0f172a",
                 marginBottom: 40,
                 fontFamily: "'Inter Tight', sans-serif",
                 whiteSpace: "nowrap",
               }}>
-                Ngọc&nbsp;<span style={{ color: "#60a5fa" }}>Châu</span>
+                Ngọc&nbsp;<span style={{ color: "#3b82f6" }}>Châu</span>
               </div>
 
               {/* Core value inline */}
               <div style={{ display: "flex", alignItems: "center", gap: 18, justifyContent: "center" }}>
                 <div style={{
-                  fontSize: 20, fontWeight: 700, color: "#60a5fa",
+                  fontSize: 20, fontWeight: 700, color: "#3b82f6",
                   letterSpacing: "-0.01em", whiteSpace: "nowrap",
                 }}>
                   My core value
@@ -363,7 +363,7 @@ export default function IntroSection() {
             <SpringStack />
             <div style={{
               textAlign: "center", fontSize: 12,
-              color: "rgba(255,255,255,0.25)",
+              color: "rgba(15,23,42,0.35)",
               marginTop: 14, letterSpacing: "0.04em",
             }}>
               drag or click to shuffle ✦

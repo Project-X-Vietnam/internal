@@ -21,7 +21,7 @@ const TornPaperSVG = () => (
   <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full">
     <path
       d="M0,80 L0,40 L30,55 L60,35 L90,50 L120,30 L150,48 L180,25 L210,45 L240,32 L270,55 L300,38 L330,60 L360,42 L390,58 L420,28 L450,50 L480,35 L510,55 L540,38 L570,62 L600,40 L630,52 L660,33 L690,55 L720,38 L750,58 L780,30 L810,50 L840,35 L870,55 L900,40 L930,62 L960,42 L990,55 L1020,32 L1050,52 L1080,38 L1110,58 L1140,30 L1170,50 L1200,35 L1230,55 L1260,40 L1290,60 L1320,42 L1350,55 L1380,35 L1410,50 L1440,38 L1440,0 L0,0 Z"
-      fill="#F2F1ED"
+      fill="#DBEAFE"
     />
   </svg>
 );
@@ -35,12 +35,12 @@ const TornPaperSVG = () => (
 
 // Sticky step panels — alternating background colours
 const STICKY_STEPS = [
-  { step: "Step 1", label: "talk to us", title: "Who do you dream of becoming one day?", desc: "I actually don't dream of becoming anyone else but the best version of myself. I dream of being true, being alive, being imperfect, being whoever I am. As long as I'm the version that's better than my yesterday self, that's cool enough.", bg: "#f8fafc", accent: "#dbeafe" },
-  { step: "Step 2", label: "we build defences", title: "What topic could you give a 30-minute talk about with zero preparation?", desc: "If I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds' names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee", bg: "#f1f5f9", accent: "#bfdbfe" },
-  { step: "Step 3", label: "quarterly reporting", title: "Something you are currently obsessed with?", desc: "Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness", bg: "#ffffff", accent: "#dbeafe" },
-  { step: "Step 4", label: "your taxes sorted", title: "What are you probably doing when nobody is watching?", desc: "Talking to my dog about my existential crisis or any other minor issue in life.", bg: "#0f172a", accent: "#1e40af" },
-  { step: "Step 5", label: "talk to us", title: "What can people ask you for help with?", desc: "If possible, I can give you some tips on how to: Work with children, Build easy dashboard using PowerBI + AI, Deliver a speech using your humour, body and voice ", bg: "#f8fafc", accent: "#dbeafe" },
-  { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#f1f5f9", accent: "#bfdbfe" },
+  { step: "Step 1", label: "talk to us", title: "Who do you dream of becoming one day?", desc: "I actually don't dream of becoming anyone else but the best version of myself. I dream of being true, being alive, being imperfect, being whoever I am. As long as I'm the version that's better than my yesterday self, that's cool enough.", bg: "#EBF5FF", accent: "#60a5fa" },
+  { step: "Step 2", label: "we build defences", title: "What topic could you give a 30-minute talk about with zero preparation?", desc: "If I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds' names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee", bg: "#EBF5FF", accent: "#60a5fa" },
+  { step: "Step 3", label: "quarterly reporting", title: "Something you are currently obsessed with?", desc: "Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness", bg: "#EBF5FF", accent: "#60a5fa" },
+  { step: "Step 4", label: "your taxes sorted", title: "What are you probably doing when nobody is watching?", desc: "Talking to my dog about my existential crisis or any other minor issue in life.", bg: "#EBF5FF", accent: "#60a5fa" },
+  { step: "Step 5", label: "talk to us", title: "What can people ask you for help with?", desc: "If possible, I can give you some tips on how to: Work with children, Build easy dashboard using PowerBI + AI, Deliver a speech using your humour, body and voice ", bg: "#EBF5FF", accent: "#60a5fa" },
+  { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#EBF5FF", accent: "#60a5fa" },
 ];
 
 export default function xOSPage() {
@@ -204,7 +204,7 @@ export default function xOSPage() {
 
         body {
           font-family: 'Inter', sans-serif;
-          background-color: #f8fafc;
+          background-color: #EBF5FF;
         }
 
         .page-wrapper {
@@ -212,12 +212,11 @@ export default function xOSPage() {
           font-family: 'Inter', sans-serif;
         }
 
-        /* Sticky Header */
         .header {
           position: fixed;
           top: 0; left: 0; right: 0;
           z-index: 100;
-          background-color: ${scrolled ? "#F2F1ED" : "transparent"};
+          background-color: ${scrolled ? "rgba(235, 245, 255, 0.85)" : "transparent"};
           backdrop-filter: ${scrolled ? "blur(10px)" : "none"};
           border-bottom: ${scrolled ? "1px solid rgba(1,30,23,0.1)" : "none"};
           transition: all 0.3s ease;
@@ -377,7 +376,7 @@ export default function xOSPage() {
 
         /* Footer */
         .footer {
-          background: #020617;
+          background: #DBEAFE;
           position: relative;
         }
 
@@ -395,7 +394,7 @@ export default function xOSPage() {
 
         .footer-logo-row {
           padding: 40px 0 48px;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(15,23,42,0.1);
           margin-bottom: 48px;
         }
 
@@ -404,7 +403,7 @@ export default function xOSPage() {
           font-weight: 800;
           font-size: clamp(60px, 8vw, 120px);
           color: transparent;
-          -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
+          -webkit-text-stroke: 1.5px rgba(15,23,42,0.15);
           letter-spacing: -0.02em;
           line-height: 0.95;
         }
@@ -417,7 +416,7 @@ export default function xOSPage() {
         }
 
         .footer-bottom {
-          border-top: 1px solid rgba(255,255,255,0.1);
+          border-top: 1px solid rgba(15,23,42,0.1);
           padding-top: 28px;
           display: flex;
           justify-content: space-between;
@@ -438,10 +437,10 @@ export default function xOSPage() {
 
         .footer-badge {
           padding: 4px 12px;
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid rgba(15,23,42,0.2);
           border-radius: 9999px;
           font-size: 11px;
-          color: #94a3b8;
+          color: #475569;
           font-weight: 600;
         }
 
@@ -590,7 +589,7 @@ export default function xOSPage() {
             <div className="footer-links-col">
               {/* Tagline col */}
               <div>
-                <p style={{ fontSize: "14px", lineHeight: "1.75", color: "rgba(242,241,237,0.5)", maxWidth: "260px", marginBottom: "24px" }}>
+                <p style={{ fontSize: "14px", lineHeight: "1.75", color: "rgba(15,23,42,0.55)", maxWidth: "260px", marginBottom: "24px" }}>
                   A personal portfolio designed as a seamless operating system.
                 </p>
                 <a href="#" className="btn-outline" style={{ color: "#2563eb", borderColor: "#2563eb", fontSize: "13px" }}>
