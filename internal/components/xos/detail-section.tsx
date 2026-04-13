@@ -1,199 +1,515 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import Folder from "./Folder";
 
-// Sticky step panels — alternating background colours
+/** Three “papers” inside the Folder for step 01 */
+const WHO_I_AM_FOLDER_PAPERS: React.ReactNode[] = [
+  <React.Fragment key="watching">
+    <span className="folder-paper-label">When nobody&apos;s watching:</span>
+    <span className="folder-paper-body">
+      Talking to my dog about my existential crisis or any other minor issue in life.
+    </span>
+  </React.Fragment>,
+  <React.Fragment key="obsessed">
+    <span className="folder-paper-label">Currently obsessed with:</span>
+    <span className="folder-paper-body">
+      Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness.
+    </span>
+  </React.Fragment>,
+  <React.Fragment key="talk">
+    <span className="folder-paper-label">30-min talk with zero prep:</span>
+    <span className="folder-paper-body">
+      Ummm, if I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds&apos; names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee (or meo, when I&apos;m overstimulated).
+    </span>
+  </React.Fragment>,
+];
+
 const STICKY_STEPS = [
-  { step: "Step 1", label: "talk to us", title: "Who do you dream of becoming one day?", desc: "I actually don't dream of becoming anyone else but the best version of myself. I dream of being true, being alive, being imperfect, being whoever I am. As long as I'm the version that's better than my yesterday self, that's cool enough.", bg: "#EBF5FF", accent: "#60a5fa" },
-  { step: "Step 2", label: "we build defences", title: "What topic could you give a 30-minute talk about with zero preparation?", desc: "If I have to talk about something for 30 minutes then I guess it would be about dogs. I remember most of the breeds' names, and how they look. Shitzu? You name it. Doberman? You name it. Chow chows, Border Collie, English Dachshund... yipee", bg: "#EBF5FF", accent: "#60a5fa" },
-  { step: "Step 3", label: "quarterly reporting", title: "Something you are currently obsessed with?", desc: "Maybe not obsessed but captivated by flowers. Love them. I feel like flowers carry more than just beauty, they also hold many other values about imperfection, instability, humility and quietness", bg: "#EBF5FF", accent: "#60a5fa" },
-  { step: "Step 4", label: "your taxes sorted", title: "What are you probably doing when nobody is watching?", desc: "Talking to my dog about my existential crisis or any other minor issue in life.", bg: "#EBF5FF", accent: "#60a5fa" },
-  { step: "Step 5", label: "talk to us", title: "What can people ask you for help with?", desc: "If possible, I can give you some tips on how to: Work with children, Build easy dashboard using PowerBI + AI, Deliver a speech using your humour, body and voice ", bg: "#EBF5FF", accent: "#60a5fa" },
-  { step: "Step 6", label: "we build defences", title: "What are you currently building or exploring?", desc: "I'm exploring career paths, which I can definitely learn from by hearing stories from different people and also experiencing them myself. Hope you guys can give me some of your own stories about your career life<3", bg: "#EBF5FF", accent: "#60a5fa" },
+  {
+    step: "01",
+    label: "Who I Am behind closed doors",
+    title: "",
+    /** Rendered as interactive Folder instead of plain text */
+    desc: null as React.ReactNode,
+    bg: "#FFFFFF",
+    accent: "#17CAFA", /* Cyan highlight for keywords on white */
+    textColor: "#01001F",
+  },
+  {
+    step: "02",
+    label: "For now, I’m building…",
+    title: "Exploring momentum and direction",
+    desc: (
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>I'm exploring <span className="keyword">career paths</span>, which I can definitely learn from by hearing stories from different people and also experiencing them myself.</div>
+        <div>Hope you guys can give me some of your own stories about your <span className="keyword">career life {"<3"}</span></div>
+      </div>
+    ),
+    bg: "#0E56FA",
+    accent: "#17CAFA", /* Cyan highlight for keywords on Blue */
+    textColor: "#FFFFFF",
+  },
+  {
+    step: "03",
+    label: "I dream of becoming…",
+    title: "Just the true version of myself",
+    desc: (
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px", fontSize: "20px", lineHeight: 1.8 }}>
+        <p>
+          I actually don't dream of becoming anyone else but <span className="keyword">the best version of myself</span>. I dream of being true, being alive, being imperfect, being whoever I am.
+        </p>
+        <p>
+          As long as I'm the version that's better than my <span className="keyword">yesterday self</span>, that's cool enough.
+        </p>
+      </div>
+    ),
+    bg: "#01001F",
+    accent: "#0E56FA", /* Blue highlight for keywords on Black */
+    textColor: "#FFFFFF",
+  },
 ];
 
 export default function DetailSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeStep = STICKY_STEPS[activeIndex];
+
   return (
     <>
+      <TargetCursor
+        spinDuration={2}
+        hideDefaultCursor
+        hoverDuration={0.2}
+      />
       <style>{`
-        /* ── Sticky Steps ───────────────────────────────────── */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-        .sticky-steps-wrapper {
-          /* total height = number-of-panels × 100vh */
-          /* each panel is 100vh tall and sticky */
-        }
-
-        .sticky-step-panel {
-          position: sticky;
-          top: 0;
-          height: 100vh;
+        .section-divider-wrapper {
           display: flex;
           align-items: center;
-          overflow: hidden;
-        }
-
-        .sticky-step-inner {
-          max-width: 1280px;
+          justify-content: center;
           width: 100%;
-          margin: 0 auto;
-          padding: 0 64px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 80px;
-          align-items: center;
+          padding: 100px 4vw;
+          background: #FFFFFF;
         }
 
-        .sticky-step-left {
+        .section-divider-text {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-weight: 800;
+          font-size: clamp(32px, 4vw, 56px);
+          margin: 0 40px;
+          white-space: nowrap;
+          letter-spacing: -0.02em;
+        }
+
+        .section-divider-line {
+          flex: 1;
+          height: 1px;
+          background-color: rgba(1, 0, 31, 0.15);
+          max-width: 400px;
+        }
+
+        .bareis-wrapper {
+          display: flex;
+          width: 100%;
+          min-height: 100vh;
+          background: #01001F;
+        }
+
+        .bareis-left {
+          width: 40%;
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          border-right: 1px solid rgba(255,255,255,0.15);
         }
 
-        .sticky-step-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .sticky-step-num {
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #94a3b8;
-        }
-
-        .sticky-step-label {
-          display: inline-block;
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
-          font-size: 14px;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          padding: 5px 16px;
-          border-radius: 9999px;
-          color: #1e40af;
-          background: #dbeafe;
-        }
-
-        .sticky-step-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: clamp(36px, 4.5vw, 68px);
-          color: #0f172a;
-          line-height: 1.02;
-          letter-spacing: -0.01em;
-        }
-
-        .sticky-step-title.light { color: #ffffff; }
-
-        .sticky-step-desc {
-          font-size: 16px;
-          line-height: 1.75;
-          color: #475569;
-          max-width: 480px;
-        }
-
-        .sticky-step-desc.light { color: #cbd5e1; }
-
-        .sticky-step-right {
+        .bareis-row {
+          flex: 1;
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: space-between;
+          padding: 0 4vw;
+          border-bottom: 1px solid rgba(255,255,255,0.15);
+          cursor: pointer;
+          transition: background-color 0.3s ease;
         }
 
-        .sticky-step-blob {
-          width: 320px;
-          height: 320px;
+        .bareis-row:last-child {
+          border-bottom: none;
+        }
+
+        .bareis-row:hover, .bareis-row.active {
+          background-color: #0E56FA; /* Brand Blue Hover */
+        }
+
+        .bareis-row-title {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-weight: 600;
+          font-size: clamp(20px, 2.5vw, 32px);
+          color: #FFFFFF;
+          margin: 0;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+        }
+
+        .bareis-row-icon {
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.3);
           display: flex;
           align-items: center;
           justify-content: center;
-          position: relative;
+          background-color: rgba(26, 29, 33, 0.55);
+          transition: all 0.3s ease;
         }
 
-        .sticky-step-blob-num {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
-          font-size: 180px;
-          line-height: 1;
-          color: transparent;
-          -webkit-text-stroke: 2px currentColor;
-          user-select: none;
+        .bareis-row:hover .bareis-row-icon, .bareis-row.active .bareis-row-icon {
+          border-color: #FFFFFF;
+          background-color: #1A1D21;
+        }
+
+        .bareis-row-mark-img {
+          width: 26px;
+          height: 26px;
+          object-fit: contain;
+          display: block;
+        }
+
+        .bareis-row.active .bareis-row-mark-img {
+          width: 28px;
+          height: 28px;
+        }
+
+        .bareis-right {
+          width: 60%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 4vw 6vw;
+          transition: background-color 0.5s ease;
+        }
+
+        .bareis-right:has(.xos-folder-stage) {
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          align-items: stretch;
+          justify-content: flex-start;
+        }
+
+        .right-content-wrapper {
+          max-width: 600px;
+          width: 100%;
+        }
+
+        .right-content-wrapper.xos-right-folder {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-height: min(72vh, 640px);
+          max-width: 100%;
+        }
+
+        .right-title {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-weight: 600;
+          font-size: clamp(32px, 3.5vw, 48px);
+          line-height: 1.1;
+          letter-spacing: -0.01em;
+          margin-bottom: 40px;
+          transition: color 0.5s ease;
+        }
+
+        .right-desc {
+          font-family: 'Inter', system-ui, sans-serif;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.7;
+          transition: color 0.5s ease;
+        }
+
+        .xos-folder-stage {
+          position: relative;
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          flex: 1;
+          min-height: 0;
+          padding: 0 0 8px;
+        }
+
+        .xos-folder-hint {
+          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+          font-size: clamp(15px, 2vw, 18px);
+          font-weight: 700;
+          color: #01001f;
+          text-align: center;
+          line-height: 1.45;
+          padding: 0 8px 16px;
+          flex-shrink: 0;
+        }
+
+        .xos-folder-hint .xos-do-not-strike {
+          text-decoration: line-through;
+          text-decoration-thickness: 2px;
+          text-decoration-color: #0e56fa;
+          opacity: 0.85;
+          margin: 0 0.2em;
+        }
+
+        .xos-folder-spacer {
+          flex: 1;
+          min-height: 16px;
+        }
+
+        .xos-folder-footer {
+          flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          padding-top: 8px;
+        }
+
+        .keyword {
+          font-weight: 600;
+          background-image: linear-gradient(transparent 60%, var(--keyword-color) 60%);
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          padding: 0 2px;
+          transition: background-image 0.5s ease;
         }
 
         @media (max-width: 900px) {
-          .sticky-step-inner { grid-template-columns: 1fr; padding: 0 32px; gap: 32px; }
-          .sticky-step-right { display: none; }
+          .bareis-wrapper {
+            flex-direction: column;
+            height: auto;
+          }
+          .bareis-left, .bareis-right {
+            width: 100%;
+          }
+          .bareis-row {
+            padding: 40px 24px;
+          }
+          .bareis-row-icon {
+            width: 40px;
+            height: 40px;
+          }
+
+          .bareis-row-mark-img {
+            width: 22px;
+            height: 22px;
+          }
+
+          .bareis-row.active .bareis-row-mark-img {
+            width: 24px;
+            height: 24px;
+          }
+          .bareis-right {
+            padding: 48px 24px;
+            min-height: 50vh;
+          }
         }
       `}</style>
-      <div className="sticky-steps-wrapper">
-        {STICKY_STEPS.map((s, i) => {
-          const isDark = s.bg === "#0f172a";
-          return (
-            <div
-              key={s.step}
-              className="sticky-step-panel"
-              style={{
-                backgroundColor: s.bg,
-                // each panel stacks above the previous (z-index)
-                zIndex: i + 10,
-              }}
-            >
-              <div className="sticky-step-inner">
-                {/* Left: text content */}
-                <div className="sticky-step-left">
-                  <div className="sticky-step-badge">
-                    <span className="sticky-step-num">{s.step}</span>
-                    <span
-                      className="sticky-step-label"
-                      style={{ backgroundColor: s.accent }}
-                    >
-                      {s.label}
-                    </span>
-                  </div>
-                  <h2 className={`sticky-step-title\${isDark ? " light" : ""}`}>
-                    {s.title}
-                  </h2>
-                  <p className={`sticky-step-desc\${isDark ? " light" : ""}`}>
-                    {s.desc}
-                  </p>
-                  <a
-                    href="#"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginTop: 8,
-                      fontWeight: 700,
-                      fontSize: 14,
-                      color: isDark ? s.accent : "#2563eb",
-                      textDecoration: "none",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                  </a>
-                </div>
 
-                {/* Right: large ghost step number as visual */}
-                <div className="sticky-step-right">
-                  <div
-                    className="sticky-step-blob"
-                    style={{ backgroundColor: s.accent }}
-                  >
-                    <span
-                      className="sticky-step-blob-num"
-                      style={{ color: s.accent, WebkitTextStrokeColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(1,30,23,0.15)" }}
-                    >
-                      {i + 1}
-                    </span>
-                  </div>
-                </div>
+      <div className="section-divider-wrapper">
+        <div className="section-divider-line" />
+        <h2 className="section-divider-text">
+          <span style={{ color: "#01001F" }}>More things</span> <span style={{ color: "#0E56FA" }}>about me...</span>
+        </h2>
+        <div className="section-divider-line" />
+      </div>
+
+      <div className="bareis-wrapper">
+        {/* LEFT COLUMN - NAV/ACCORDION */}
+        <div className="bareis-left">
+          {STICKY_STEPS.map((step, idx) => (
+            <div
+              key={step.step}
+              className={`bareis-row cursor-target ${activeIndex === idx ? 'active' : ''}`}
+              onClick={() => setActiveIndex(idx)}
+            >
+              <h2 className="bareis-row-title">{step.label}</h2>
+              <div className="bareis-row-icon">
+                <img
+                  className="bareis-row-mark-img"
+                  src="/xos/project-x-mark.png"
+                  alt=""
+                  width={28}
+                  height={28}
+                />
               </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+
+        {/* RIGHT COLUMN - CONTENT CONTAINER */}
+        <div
+          className="bareis-right"
+          style={{
+            backgroundColor: activeStep.bg,
+            /* @ts-ignore: Custom CSS variable passing */
+            "--keyword-color": activeStep.accent
+          }}
+        >
+          <div
+            className={`right-content-wrapper${activeIndex === 0 ? " xos-right-folder" : ""}`}
+          >
+            {activeIndex !== 0 && activeStep.title ? (
+              <h3 className="right-title" style={{ color: activeStep.textColor }}>
+                {activeStep.title}
+              </h3>
+            ) : null}
+            {activeIndex === 0 ? (
+              <div className="xos-folder-stage">
+                <p className="xos-folder-hint">
+                  Sensitive content,{" "}
+                  <span className="xos-do-not-strike" aria-label="DO NOT (crossed out)">
+                    DO NOT
+                  </span>{" "}
+                  OPEN!
+                </p>
+                <div className="xos-folder-spacer" aria-hidden="true" />
+                <div className="xos-folder-footer">
+                  <Folder
+                    size={1.15}
+                    color="#0E56FA"
+                    items={WHO_I_AM_FOLDER_PAPERS}
+                    className="xos-member-folder"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="right-desc" style={{ color: activeStep.textColor }}>
+                {activeStep.desc}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </>
+  );
+}
+
+function TargetCursor({
+  spinDuration = 2,
+  hideDefaultCursor = true,
+  hoverDuration = 0.2
+}: {
+  spinDuration?: number;
+  hideDefaultCursor?: boolean;
+  hoverDuration?: number;
+}) {
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+  const cursorX = useSpring(mouseX, springConfig);
+  const cursorY = useSpring(mouseY, springConfig);
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    if (hideDefaultCursor) {
+      const style = document.createElement("style");
+      style.innerHTML = `.cursor-target, .cursor-target * { cursor: none !important; }`;
+      document.head.appendChild(style);
+      return () => { document.head.removeChild(style); };
+    }
+  }, [hideDefaultCursor]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('.cursor-target');
+      if (target) {
+        setIsHovering(true);
+      }
+    };
+    const handleMouseOut = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('.cursor-target');
+      if (target) {
+        setIsHovering(false);
+      }
+    };
+
+    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseout", handleMouseOut);
+
+    return () => {
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("mouseout", handleMouseOut);
+    };
+  }, []);
+
+  const size = 80;
+  const width = isHovering ? size : 0;
+  const height = isHovering ? size : 0;
+  const borderRadius = "50%";
+
+  return (
+    <motion.div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        x: cursorX,
+        y: cursorY,
+        width,
+        height,
+        borderRadius,
+        pointerEvents: "none",
+        zIndex: 9999,
+        translateX: "-50%",
+        translateY: "-50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: isHovering ? 1 : 0,
+      }}
+      transition={{
+        width: { duration: hoverDuration, ease: "easeOut" },
+        height: { duration: hoverDuration, ease: "easeOut" },
+        opacity: { duration: 0.15 }
+      }}
+    >
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          border: "1.5px solid rgba(23, 202, 250, 0.5)",
+          borderRadius,
+        }}
+        animate={{
+          rotate: isHovering ? 360 : 0
+        }}
+        transition={{
+          rotate: { repeat: Infinity, duration: spinDuration, ease: "linear" }
+        }}
+      >
+        {isHovering && (
+          <>
+            <div style={{ position: "absolute", top: -4, left: -4, width: 8, height: 8, borderTop: "2px solid #17CAFA", borderLeft: "2px solid #17CAFA" }} />
+            <div style={{ position: "absolute", top: -4, right: -4, width: 8, height: 8, borderTop: "2px solid #17CAFA", borderRight: "2px solid #17CAFA" }} />
+            <div style={{ position: "absolute", bottom: -4, left: -4, width: 8, height: 8, borderBottom: "2px solid #17CAFA", borderLeft: "2px solid #17CAFA" }} />
+            <div style={{ position: "absolute", bottom: -4, right: -4, width: 8, height: 8, borderBottom: "2px solid #17CAFA", borderRight: "2px solid #17CAFA" }} />
+          </>
+        )}
+      </motion.div>
+    </motion.div>
   );
 }

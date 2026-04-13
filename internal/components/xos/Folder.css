@@ -1,0 +1,204 @@
+/* Root: cards above, folder visual below (full width of column for cards) */
+.folder-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.folder-scale-wrap {
+  transform-origin: center bottom;
+  flex-shrink: 0;
+}
+
+.folder {
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+}
+
+.folder:not(.folder--click):hover {
+  transform: translateY(-4px);
+}
+
+.folder:not(.folder--click):hover .folder__front {
+  transform: skew(15deg) scaleY(0.6);
+}
+
+.folder:not(.folder--click):hover .right {
+  transform: skew(-15deg) scaleY(0.6);
+}
+
+.folder.open {
+  transform: translateY(-4px);
+}
+
+.folder.open .folder__front {
+  transform: skew(15deg) scaleY(0.6);
+}
+
+.folder.open .right {
+  transform: skew(-15deg) scaleY(0.6);
+}
+
+.folder__back {
+  position: relative;
+  width: 178px;
+  height: 132px;
+  background: var(--folder-back-color);
+  border-radius: 0 10px 10px 10px;
+}
+
+.folder__back::after {
+  position: absolute;
+  z-index: 0;
+  bottom: 98%;
+  left: 0;
+  content: "";
+  width: 34px;
+  height: 11px;
+  background: var(--folder-back-color);
+  border-radius: 5px 5px 0 0;
+}
+
+/* Brand mark — Project X, ~40% opacity, behind tabs / peeks */
+.folder__brand-watermark {
+  position: absolute;
+  inset: 10px 12px 16px 12px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.folder__brand-watermark img {
+  width: 78%;
+  max-height: 68%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Closed: thin peeking “papers” (no text) */
+.paper-peek {
+  position: absolute;
+  z-index: 2;
+  bottom: 12%;
+  left: 50%;
+  transform: translate(-50%, 8%);
+  width: 72%;
+  height: 12px;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+}
+
+.paper-peek-1 {
+  background: #e2e8f0;
+  width: 70%;
+}
+
+.paper-peek-2 {
+  background: #f1f5f9;
+  width: 80%;
+  bottom: 18%;
+  height: 11px;
+}
+
+.paper-peek-3 {
+  background: #ffffff;
+  width: 90%;
+  bottom: 24%;
+  height: 10px;
+  border: 1px solid rgba(1, 0, 31, 0.08);
+}
+
+.folder:not(.open):hover .paper-peek-1 {
+  transform: translate(-50%, 2px);
+}
+
+.folder__front {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: var(--folder-color);
+  border-radius: 5px 10px 10px 10px;
+  transform-origin: bottom;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Open: horizontal cards, stacked top → bottom (card 1, then 2, then 3) */
+.folder-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  animation: folder-cards-in 0.35s ease-out;
+}
+
+@keyframes folder-cards-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.folder-card-horizontal {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid rgba(1, 0, 31, 0.12);
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(1, 0, 31, 0.06);
+}
+
+.folder-card-horizontal--1 {
+  background: #eef2f6;
+}
+
+.folder-card-horizontal--2 {
+  background: #f4f6f9;
+}
+
+.folder-card-horizontal--3 {
+  background: #ffffff;
+}
+
+.folder-card-horizontal-inner {
+  padding: 14px 18px 16px;
+  overflow: visible;
+  text-align: left;
+}
+
+.folder-paper-inner * {
+  cursor: default;
+}
+
+.folder-paper-label {
+  display: block;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 1.8vw, 14px);
+  line-height: 1.25;
+  margin-bottom: 8px;
+  color: #01001f;
+  border-bottom: 2px solid #17cafa;
+  padding-bottom: 6px;
+}
+
+.folder-paper-body {
+  display: block;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: clamp(13px, 2vw, 15px);
+  font-weight: 500;
+  line-height: 1.55;
+  color: #1e293b;
+}
