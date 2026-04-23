@@ -95,9 +95,6 @@ export default function Folder({
           aria-label={open ? "Close folder" : "Open folder"}
         >
           <div className="folder__back">
-            <div className="folder__brand-watermark" aria-hidden>
-              <img src="/xos/project-x-mark.png" alt="" />
-            </div>
             {!open && (
               <>
                 <div className="paper-peek paper-peek-1" aria-hidden />
