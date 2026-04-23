@@ -333,7 +333,7 @@ export default function ExperienceSection() {
   }, []);
 
   return (
-    <section style={{ background: "#EBF5FF", padding: "40px 48px 80px" }}>
+    <section style={{ background: "transparent", padding: "40px 48px 80px" }}>
       <style>{`
         /* No explicit card height, inherits perfectly from grid-auto-rows */
         .xos-card .xos-short-body {
@@ -369,19 +369,31 @@ export default function ExperienceSection() {
 
       {/* Grid container with restricted width to perfectly center the cards leaving side empty space */}
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        {/* Section Title */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 24, marginBottom: 48,
-        }}>
-          <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
-          <h2 style={{
-            fontFamily: "'Inter Tight', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4vw, 56px)",
-            letterSpacing: "-0.03em", margin: 0, color: "#0f172a", whiteSpace: "nowrap",
-            lineHeight: 1.4, padding: "0.15em 0"
+        {/* Section Title — CORETEAM badge style */}
+        <div style={{ marginBottom: 48, display: "flex", alignItems: "flex-start" }}>
+          <div style={{
+            display: "inline-block",
+            background: "#2563eb",
+            padding: "12px 28px",
+            borderRadius: 0,
+            transform: "rotate(-3deg)",
+            boxShadow: "5px 8px 20px rgba(0,0,0,0.22), 3px 5px 12px rgba(37,99,235,0.35)",
+            transformOrigin: "left center",
           }}>
-            My <span style={{ color: "#3b82f6" }}>Experience</span>
-          </h2>
-          <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
+            <h2 style={{
+              fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(24px, 3vw, 40px)",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "#ffffff",
+              margin: 0,
+              lineHeight: 1.1,
+              whiteSpace: "nowrap",
+            }}>
+              My Experience
+            </h2>
+          </div>
         </div>
 
         {/* Bento grid */}
@@ -428,7 +440,7 @@ export default function ExperienceSection() {
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#EBF5FF",
+                background: "#ffffff",
                 border: "1px solid rgba(15,23,42,0.1)",
                 borderRadius: 24,
                 padding: 40,

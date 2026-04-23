@@ -61,11 +61,14 @@ interface CardDatum {
   accent: string;
 }
 
+// Brand blue gradient: lighter cyan-highlight top-left → #0E56FA center → deep navy bottom-right
+const CARD_GRADIENT = "radial-gradient(ellipse at 25% 20%, #5b9bff 0%, #1a6aff 25%, #0E56FA 55%, #0a3ce0 78%, #0827b8 100%)";
+
 const CARD_DATA: CardDatum[] = [
-  { field: "Role",       val: "Operations Member · xOS",              bg: "#1a2540", accent: "#93c5fd" },
-  { field: "University", val: "National Economics University (NEU)",   bg: "#162035", accent: "#60a5fa" },
-  { field: "DOB",        val: "30 / 02 / 2005",                        bg: "#1a2540", accent: "#7dd3fc" },
-  { field: "Email",      val: "chau@gmail.com",                        bg: "#162035", accent: "#93c5fd" },
+  { field: "Role",       val: "Operations Member · xOS",              bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
+  { field: "University", val: "National Economics University (NEU)",   bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
+  { field: "DOB",        val: "30 / 02 / 2005",                        bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
+  { field: "Email",      val: "chau@gmail.com",                        bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
 ];
 
 // Fixed randomized resting rotations (-2 to +2 degrees)
@@ -156,7 +159,7 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
           letterSpacing: "0.14em", color: card.accent, marginBottom: 8,
         }}>{card.field}</div>
         <div style={{
-          fontSize: 17, fontWeight: 700, color: "#e2e8f0",
+          fontSize: 17, fontWeight: 700, color: "#ffffff",
           lineHeight: 1.35,
         }}>{card.val}</div>
       </div>
@@ -213,7 +216,7 @@ function SpringStack() {
 const CORE_VALUES = ["Fun", "Alivee", "True"];
 const FONT_STYLE = {
   fontSize: 32, fontWeight: 900,
-  fontFamily: "'Inter Tight', sans-serif",
+  fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
   letterSpacing: "-0.5px",
 } as const;
 
@@ -331,7 +334,7 @@ export default function IntroSection() {
   return (
     <>
       <section style={{
-        background: "#EBF5FF",
+        background: "transparent",
         paddingTop: 72,
         borderBottom: "1px solid rgba(15,23,42,0.06)",
       }}>
@@ -339,7 +342,7 @@ export default function IntroSection() {
           <Marquee />
         </div>
       </section>
-      <section style={{ background: "#EBF5FF", padding: "80px 48px 0" }}>
+      <section style={{ background: "transparent", padding: "80px 48px 0" }}>
         <div style={{
           maxWidth: 1120, margin: "0 auto",
           display: "flex", gap: 72, alignItems: "flex-start", flexWrap: "wrap",
@@ -351,10 +354,10 @@ export default function IntroSection() {
               {/* Name */}
               <div style={{
                 fontSize: "clamp(52px,7vw,88px)",
-                fontWeight: 900, letterSpacing: -3,
+                fontWeight: 700, letterSpacing: -3,
                 lineHeight: 1, color: "#0f172a",
                 marginBottom: 40,
-                fontFamily: "'Inter Tight', sans-serif",
+                fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
                 whiteSpace: "nowrap",
               }}>
                 Ngọc&nbsp;<span style={{ color: "#3b82f6" }}>Châu</span>

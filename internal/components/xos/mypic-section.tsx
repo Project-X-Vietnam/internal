@@ -44,7 +44,7 @@ export default function MyPicSection() {
         .fan-wrapper {
           position: relative;
           height: calc(100vh + 2 * 90vh); /* adjusted for 2 cards */
-          background: #EBF5FF; /* pastel blue light mode */
+          background: transparent;
         }
         .fan-sticky-scene {
           position: sticky;
@@ -58,11 +58,9 @@ export default function MyPicSection() {
         .fan-header {
           width: 100%;
           max-width: 860px;
-          margin: 0 auto 32px;
+          margin: 0 auto 40px;
           padding: 0;
-          display: flex;
-          align-items: center;
-          gap: 24px;
+          display: block;
         }
         /* .fan-tag and .fan-title not needed globally with the inline layout anymore but left for safety */
 
@@ -99,7 +97,7 @@ export default function MyPicSection() {
           color: #1e293b;
         }
         .fan-card-title {
-          font-family: 'Inter Tight', sans-serif;
+          font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
           font-weight: 800;
           font-size: 22px;
           color: #0f172a;
@@ -127,15 +125,31 @@ export default function MyPicSection() {
       <div className="fan-wrapper" ref={fanWrapperRef}>
         <div className="fan-sticky-scene">
           <div className="fan-header">
-            <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
-            <h2 style={{
-              fontFamily: "'Inter Tight', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4vw, 56px)",
-              letterSpacing: "-0.03em", margin: 0, color: "#0f172a", whiteSpace: "nowrap",
-              lineHeight: 1.4, padding: "0.15em 0"
+            <div style={{ marginBottom: 0 }}>
+            <div style={{
+              display: "inline-block",
+              background: "#2563eb",
+              padding: "12px 28px",
+              borderRadius: 0,
+              transform: "rotate(-3deg)",
+              boxShadow: "5px 8px 20px rgba(0,0,0,0.22), 3px 5px 12px rgba(37,99,235,0.35)",
+              transformOrigin: "left center",
             }}>
-              My <span style={{ color: "#3b82f6" }}>Pictures</span>
-            </h2>
-            <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
+              <h2 style={{
+                fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(24px, 3vw, 40px)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "#ffffff",
+                margin: 0,
+                lineHeight: 1.1,
+                whiteSpace: "nowrap",
+              }}>
+                My Pictures
+              </h2>
+            </div>
+          </div>
           </div>
 
           <div className="fan-stage">

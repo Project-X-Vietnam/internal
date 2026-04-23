@@ -79,22 +79,41 @@ export default function xOSPage() {
         /* ── Page Specific Base Styles ─────────────────────────────────── */
 
         body {
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          background-color: #EBF5FF;
+          font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+          background-color: #ffffff;
         }
 
         .page-wrapper {
           min-height: 100vh;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+          background-color: #ffffff;
+          background-image:
+            linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+          background-size: 40px 40px;
+          position: relative;
+        }
+
+        /* Soft blue corner glow fixed behind all content */
+        .page-wrapper::before {
+          content: '';
+          position: fixed;
+          top: -100px;
+          left: -100px;
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, rgba(147,197,253,0.4) 0%, rgba(196,220,255,0.15) 50%, transparent 70%);
+          pointer-events: none;
+          z-index: 0;
         }
 
         .header {
           position: fixed;
           top: 0; left: 0; right: 0;
           z-index: 100;
-          background-color: ${scrolled ? "rgba(235, 245, 255, 0.85)" : "transparent"};
+          background-color: ${scrolled ? "rgba(255, 255, 255, 0.85)" : "transparent"};
           backdrop-filter: ${scrolled ? "blur(10px)" : "none"};
-          border-bottom: ${scrolled ? "1px solid rgba(1,30,23,0.1)" : "none"};
+          border-bottom: ${scrolled ? "1px solid rgba(15,23,42,0.08)" : "none"};
           transition: all 0.3s ease;
         }
 
@@ -116,7 +135,7 @@ export default function xOSPage() {
         }
 
         .nav-link {
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 14px;
           font-weight: 500;
           color: #0f172a;
@@ -252,7 +271,7 @@ export default function xOSPage() {
 
         /* Footer */
         .footer {
-          background: #DBEAFE;
+          background: #f0f4ff;
           position: relative;
         }
 
