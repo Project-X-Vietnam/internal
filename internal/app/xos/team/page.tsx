@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function TeamPage() {
   return (
-    <main className="bg-black min-h-screen">
+    <main className="bg-white min-h-screen">
       <TeamSection />
     </main>
   );

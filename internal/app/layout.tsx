@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { FairyDustCursor } from "@/components/FairyDustCursor";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://internal.projectxvietnam.org"),
@@ -38,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
+        <FairyDustCursor />
         {children}
       </body>
     </html>
