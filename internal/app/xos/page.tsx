@@ -45,9 +45,8 @@ export default function xOSPage() {
 
   return (
     <>
-      {/* Google Fonts */}
+      {/* Local Fonts - Plus Jakarta Sans & SF Pro Display */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -63,8 +62,8 @@ export default function xOSPage() {
         }
 
         .section-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
+          font-family: 'SF Pro Display', sans-serif;
+          font-weight: 700;
           font-size: clamp(42px, 5vw, 80px);
           line-height: 0.98;
           letter-spacing: -0.02em;
@@ -80,13 +79,13 @@ export default function xOSPage() {
         /* ── Page Specific Base Styles ─────────────────────────────────── */
 
         body {
-          font-family: 'Inter', sans-serif;
+          font-family: 'Plus Jakarta Sans', sans-serif;
           background-color: #EBF5FF;
         }
 
         .page-wrapper {
           min-height: 100vh;
-          font-family: 'Inter', sans-serif;
+          font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .header {
@@ -117,7 +116,7 @@ export default function xOSPage() {
         }
 
         .nav-link {
-          font-family: 'Inter', sans-serif;
+          font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 14px;
           font-weight: 500;
           color: #0f172a;
@@ -219,8 +218,8 @@ export default function xOSPage() {
         }
 
         .step-label {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 700;
+          font-family: 'SF Pro Display', sans-serif;
+          font-weight: 600;
           font-size: 16px;
           color: #1e40af;
           background: #dbeafe;
@@ -233,8 +232,8 @@ export default function xOSPage() {
         .step-right {}
 
         .step-title {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
+          font-family: 'SF Pro Display', sans-serif;
+          font-weight: 700;
           font-size: clamp(28px, 3vw, 48px);
           color: #0f172a;
           line-height: 1.05;
@@ -276,8 +275,8 @@ export default function xOSPage() {
         }
 
         .footer-logo-text {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 800;
+          font-family: 'SF Pro Display', sans-serif;
+          font-weight: 700;
           font-size: clamp(60px, 8vw, 120px);
           color: transparent;
           -webkit-text-stroke: 1.5px rgba(15,23,42,0.15);

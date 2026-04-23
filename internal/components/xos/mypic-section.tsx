@@ -129,7 +129,7 @@ export default function MyPicSection() {
           <div className="fan-header">
             <div style={{ height: 1, flex: 1, background: "rgba(15,23,42,0.1)" }} />
             <h2 style={{
-              fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: "clamp(32px, 4vw, 56px)",
+              fontFamily: "'Inter Tight', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4vw, 56px)",
               letterSpacing: "-0.03em", margin: 0, color: "#0f172a", whiteSpace: "nowrap",
               lineHeight: 1.4, padding: "0.15em 0"
             }}>
