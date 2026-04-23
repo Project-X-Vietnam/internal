@@ -61,14 +61,14 @@ interface CardDatum {
   accent: string;
 }
 
-// Brand blue gradient: lighter cyan-highlight top-left → #0E56FA center → deep navy bottom-right
-const CARD_GRADIENT = "radial-gradient(ellipse at 25% 20%, #5b9bff 0%, #1a6aff 25%, #0E56FA 55%, #0a3ce0 78%, #0827b8 100%)";
+// Clean pastel blue
+const CARD_GRADIENT = "#dbeafe";
 
 const CARD_DATA: CardDatum[] = [
-  { field: "Role",       val: "Operations Member · xOS",              bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
-  { field: "University", val: "National Economics University (NEU)",   bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
-  { field: "DOB",        val: "30 / 02 / 2005",                        bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
-  { field: "Email",      val: "chau@gmail.com",                        bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.65)" },
+  { field: "Role",       val: "Operations Member · xOS",              bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
+  { field: "University", val: "National Economics University (NEU)",   bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
+  { field: "DOB",        val: "30 / 02 / 2005",                        bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
+  { field: "Email",      val: "chau@gmail.com",                        bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
 ];
 
 // Fixed randomized resting rotations (-2 to +2 degrees)
@@ -103,8 +103,8 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
   const combinedShadow = useTransform(
     shadowX, 
     (sx) => isFront 
-      ? `0 16px 48px rgba(0,0,0,0.5), ${sx}px 25px 60px rgba(0,60,255,0.15)` 
-      : `0 4px 16px rgba(0,0,0,0.3)`
+      ? `0 20px 40px -10px rgba(15,23,42,0.15)` 
+      : `0 4px 16px rgba(15,23,42,0.08)`
   );
 
   return (
@@ -114,7 +114,6 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
       style={{
         x,
         rotateY: rotateY,
-        border: "1px solid rgba(255,255,255,0.07)", // No dynamic highlights
         boxShadow: combinedShadow,
         position: "absolute",
         top: 0,
@@ -159,7 +158,7 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
           letterSpacing: "0.14em", color: card.accent, marginBottom: 8,
         }}>{card.field}</div>
         <div style={{
-          fontSize: 17, fontWeight: 700, color: "#ffffff",
+          fontSize: 17, fontWeight: 700, color: "#0f172a",
           lineHeight: 1.35,
         }}>{card.val}</div>
       </div>
@@ -215,9 +214,7 @@ function SpringStack() {
 
 const CORE_VALUES = ["Fun", "Alivee", "True"];
 const FONT_STYLE = {
-  fontSize: 32, fontWeight: 900,
-  fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-  letterSpacing: "-0.5px",
+  fontSize: "clamp(32px, 4vw, 40px)", color: "#52525b",
 } as const;
 
 function RotatingValue() {
@@ -227,10 +224,10 @@ function RotatingValue() {
 
   // Measure ghost width whenever the word changes
   useEffect(() => {
-    if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth + 56);
+    if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth + 4);
   }, [idx]);
   useEffect(() => {
-    if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth + 56);
+    if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth + 4);
   }, []);
 
   // Cycle every 2.5 s — no external hidden flag needed; AnimatePresence handles sequencing
@@ -255,15 +252,12 @@ function RotatingValue() {
         {CORE_VALUES[idx]}
       </span>
 
-      {/* Blue rectangle — width transitions smoothly when word changes */}
+      {/* Transparent container — width transitions smoothly when word changes */}
       <div
         style={{
-          background: "#2563eb",
-          borderRadius: 12,
           width: boxW || "auto",
           minWidth: 80,
           transition: "width 0.28s cubic-bezier(.4,0,.2,1)",
-          padding: "10px 28px",
           overflow: "hidden",         // clips chars entering/exiting vertically
           display: "flex",
           alignItems: "center",
@@ -292,7 +286,8 @@ function RotatingValue() {
                 style={{ overflow: "hidden", display: "inline-block", lineHeight: 1.1 }}
               >
                 <motion.span
-                  style={{ display: "inline-block", color: "#fff", ...FONT_STYLE }}
+                  className="font-bold tracking-tight"
+                  style={{ display: "inline-block", ...FONT_STYLE }}
                   // Entry: spring from below, stagger per char
                   initial={{ y: "110%", opacity: 0 }}
                   animate={{
@@ -332,7 +327,7 @@ function RotatingValue() {
 
 export default function IntroSection() {
   return (
-    <>
+    <div className="font-sans">
       <section style={{
         background: "transparent",
         paddingTop: 72,
@@ -351,22 +346,26 @@ export default function IntroSection() {
           {/* ── Left: Intro ── */}
           <div style={{ flex: 1.1, minWidth: 300 }}>
             <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
-              {/* Name */}
-              <div style={{
-                fontSize: "clamp(52px,7vw,88px)",
-                fontWeight: 700, letterSpacing: -3,
-                lineHeight: 1, color: "#0f172a",
-                marginBottom: 40,
-                fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-                whiteSpace: "nowrap",
-              }}>
-                Ngọc&nbsp;<span style={{ color: "#3b82f6" }}>Châu</span>
+              <div 
+                className="font-medium tracking-tighter"
+                style={{
+                  fontSize: "clamp(52px,7vw,88px)",
+                  lineHeight: 1.1,
+                  paddingBottom: "0.15em",
+                  paddingTop: "0.05em",
+                  marginBottom: 20,
+                  whiteSpace: "nowrap",
+                  background: "linear-gradient(to right, #0E56FA, #0E56FA, #17CAFA)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                Ngọc Châu
               </div>
 
               {/* Core value inline */}
-              <div style={{ display: "flex", alignItems: "center", gap: 18, justifyContent: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "center" }}>
                 <div style={{
-                  fontSize: 20, fontWeight: 700, color: "#3b82f6",
+                  fontSize: "clamp(20px, 3vw, 24px)", fontWeight: 400, color: "#52525b",
                   letterSpacing: "-0.01em", whiteSpace: "nowrap",
                 }}>
                   My core value
@@ -384,12 +383,12 @@ export default function IntroSection() {
               color: "rgba(15,23,42,0.35)",
               marginTop: 14, letterSpacing: "0.04em",
             }}>
-              drag or click to shuffle ✦
+              drag or click to shuffle
             </div>
           </div>
 
         </div>
       </section>
-    </>
+    </div>
   );
 }

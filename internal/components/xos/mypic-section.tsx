@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const MY_PICS = [
   {
@@ -16,6 +17,40 @@ const MY_PICS = [
     tilt: 10,
   },
 ];
+
+function TiltedHeading({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(y, [-100, 0, 100], [45, 15, -15]), { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(useTransform(x, [-100, 0, 100], [-45, -15, 15]), { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleMouseLeave = () => { x.set(0); y.set(0); };
+
+  return (
+    <div style={{ perspective: 1000 }} className="inline-block relative z-20 hover:z-30">
+      <motion.div
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative px-6 py-3 md:px-8 md:py-4 bg-[#0E56FA] transform -skew-x-6 cursor-crosshair shadow-[0_10px_30px_-10px_rgba(14,86,250,0.6)] pointer-events-auto"
+      >
+        <motion.h2
+          style={{ translateZ: 40 }}
+          className="text-3xl md:text-5xl font-medium tracking-tighter text-white uppercase drop-shadow-md whitespace-nowrap"
+        >
+          {children}
+        </motion.h2>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function MyPicSection() {
   const [fanProgress, setFanProgress] = useState(0);
@@ -39,7 +74,7 @@ export default function MyPicSection() {
   }, []);
 
   return (
-    <>
+    <div className="font-sans">
       <style>{`
         .fan-wrapper {
           position: relative;
@@ -97,7 +132,6 @@ export default function MyPicSection() {
           color: #1e293b;
         }
         .fan-card-title {
-          font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
           font-weight: 800;
           font-size: 22px;
           color: #0f172a;
@@ -126,30 +160,10 @@ export default function MyPicSection() {
         <div className="fan-sticky-scene">
           <div className="fan-header">
             <div style={{ marginBottom: 0 }}>
-            <div style={{
-              display: "inline-block",
-              background: "#2563eb",
-              padding: "12px 28px",
-              borderRadius: 0,
-              transform: "rotate(-3deg)",
-              boxShadow: "5px 8px 20px rgba(0,0,0,0.22), 3px 5px 12px rgba(37,99,235,0.35)",
-              transformOrigin: "left center",
-            }}>
-              <h2 style={{
-                fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontWeight: 800,
-                fontSize: "clamp(24px, 3vw, 40px)",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                color: "#ffffff",
-                margin: 0,
-                lineHeight: 1.1,
-                whiteSpace: "nowrap",
-              }}>
+              <TiltedHeading>
                 My Pictures
-              </h2>
+              </TiltedHeading>
             </div>
-          </div>
           </div>
 
           <div className="fan-stage">
@@ -196,6 +210,6 @@ export default function MyPicSection() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

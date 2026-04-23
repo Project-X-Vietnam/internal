@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 
@@ -320,6 +320,40 @@ function BentoCard({ item, gridMouseRef, onClick }: BentoCardProps) {
 
 // ─── Main Section ──────────────────────────────────────────────────────────────
 
+function TiltedHeading({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(y, [-100, 0, 100], [45, 15, -15]), { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(useTransform(x, [-100, 0, 100], [-45, -15, 15]), { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleMouseLeave = () => { x.set(0); y.set(0); };
+
+  return (
+    <div style={{ perspective: 1000 }} className="inline-block relative z-20 hover:z-30">
+      <motion.div
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative px-6 py-3 md:px-8 md:py-4 bg-[#0E56FA] transform -skew-x-6 cursor-crosshair shadow-[0_10px_30px_-10px_rgba(14,86,250,0.6)] pointer-events-auto"
+      >
+        <motion.h2
+          style={{ translateZ: 40 }}
+          className="text-3xl md:text-5xl font-medium tracking-tighter text-white uppercase drop-shadow-md whitespace-nowrap"
+        >
+          {children}
+        </motion.h2>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function ExperienceSection() {
   const gridMouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: -9999, y: -9999, active: false });
   const [selectedItem, setSelectedItem] = useState<BentoItem | null>(null);
@@ -333,7 +367,7 @@ export default function ExperienceSection() {
   }, []);
 
   return (
-    <section style={{ background: "transparent", padding: "40px 48px 80px" }}>
+    <section className="font-sans" style={{ background: "transparent", padding: "40px 48px 80px" }}>
       <style>{`
         /* No explicit card height, inherits perfectly from grid-auto-rows */
         .xos-card .xos-short-body {
@@ -369,31 +403,11 @@ export default function ExperienceSection() {
 
       {/* Grid container with restricted width to perfectly center the cards leaving side empty space */}
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        {/* Section Title — CORETEAM badge style */}
+        {/* Section Title — TeamSection style */}
         <div style={{ marginBottom: 48, display: "flex", alignItems: "flex-start" }}>
-          <div style={{
-            display: "inline-block",
-            background: "#2563eb",
-            padding: "12px 28px",
-            borderRadius: 0,
-            transform: "rotate(-3deg)",
-            boxShadow: "5px 8px 20px rgba(0,0,0,0.22), 3px 5px 12px rgba(37,99,235,0.35)",
-            transformOrigin: "left center",
-          }}>
-            <h2 style={{
-              fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-              fontWeight: 800,
-              fontSize: "clamp(24px, 3vw, 40px)",
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: "#ffffff",
-              margin: 0,
-              lineHeight: 1.1,
-              whiteSpace: "nowrap",
-            }}>
-              My Experience
-            </h2>
-          </div>
+          <TiltedHeading>
+            My Experience
+          </TiltedHeading>
         </div>
 
         {/* Bento grid */}

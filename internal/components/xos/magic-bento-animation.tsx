@@ -238,7 +238,7 @@ function BentoCard({
             fontWeight: 700,
             color: "white",
             marginBottom: "0.4rem",
-            fontFamily: "'Inter Tight', sans-serif",
+            fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
             lineHeight: 1.2,
           }}
         >
