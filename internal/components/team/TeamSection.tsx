@@ -4,10 +4,10 @@ import { motion, AnimatePresence, useReducedMotion, useMotionValue, useSpring, u
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { MemberCard } from "./MemberCard";
 import { MemberModal } from "./MemberModal";
+import { DOMCircularGallery } from "../DOMCircularGallery";
 import { mockMembers, Member, SectionType } from "@/lib/members";
 
 const SECTIONS: SectionType[] = ["Core Team", "Growth", "Product", "Operations", "Partnerships"];
-const CARDS_PER_VIEW = 3;
 
 const DraggableOrb = ({ className, coreColor, glowColor, size = "w-[400px] h-[400px]" }: { className: string, coreColor: string, glowColor: string, size?: string }) => {
   const duration = useMemo(() => Math.random() * 4 + 6, []);
@@ -27,7 +27,7 @@ const DraggableOrb = ({ className, coreColor, glowColor, size = "w-[400px] h-[40
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9, cursor: "grabbing" }}
     >
-      <motion.div 
+      <motion.div
         className="w-full h-full rounded-full absolute pointer-events-none"
         animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.9, 1.1, 0.9] }}
         transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
@@ -97,88 +97,26 @@ const AnimatedSection = ({ children, className = "" }: { children: React.ReactNo
   );
 };
 
-// Arrow button
-function ArrowBtn({ onClick, disabled, direction }: { onClick: () => void; disabled: boolean; direction: "left" | "right" }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-        shrink-0 w-11 h-11 rounded-full border flex items-center justify-center
-        transition-all duration-300 select-none
-        ${disabled
-          ? "border-zinc-200 text-zinc-300 cursor-not-allowed"
-          : "border-[#0E56FA]/30 bg-white text-[#0E56FA] hover:bg-[#0E56FA]/10 hover:border-[#0E56FA]/50 hover:scale-110 active:scale-95"
-        }
-      `}
-      aria-label={direction === "left" ? "Previous" : "Next"}
-    >
-      {direction === "left" ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-    </button>
-  );
-}
-
 // Per-section carousel
 function SectionCarousel({ members, onSelect }: { members: Member[]; onSelect: (m: Member) => void }) {
-  const [startIdx, setStartIdx] = useState(0);
-  const [direction, setDirection] = useState(1);
-
-  const showArrows = members.length > CARDS_PER_VIEW;
-  const maxIdx = Math.max(0, members.length - CARDS_PER_VIEW);
-
-  const prev = () => {
-    setDirection(-1);
-    setStartIdx(i => Math.max(0, i - 1));
-  };
-  const next = () => {
-    setDirection(1);
-    setStartIdx(i => Math.min(maxIdx, i + 1));
-  };
-
-  const visible = members.slice(startIdx, startIdx + CARDS_PER_VIEW);
-
-  const slideVariants = {
-    enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
-    center: { opacity: 1, x: 0 },
-    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
-  };
+  const cards = members.map((member, i) => (
+    <motion.div
+      key={member.id}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
+      className="w-full h-full"
+    >
+      <MemberCard member={member} onClick={() => onSelect(member)} />
+    </motion.div>
+  ));
 
   return (
-    <div className="flex items-center gap-2 md:gap-4 w-full pointer-events-auto">
-      {/* Left arrow — always reserve space to keep layout stable */}
-      <div className="shrink-0 w-11">
-        {showArrows && (
-          <ArrowBtn onClick={prev} disabled={startIdx === 0} direction="left" />
-        )}
-      </div>
-
-      {/* Cards grid */}
-      <div className="flex-1 overflow-visible">
-        <div className="grid grid-cols-3 gap-6 md:gap-10 lg:gap-12 relative z-20">
-          <AnimatePresence mode="popLayout" initial={false} custom={direction}>
-            {visible.map(member => (
-              <motion.div
-                key={member.id}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <MemberCard member={member} onClick={() => onSelect(member)} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Right arrow — always reserve space */}
-      <div className="shrink-0 w-11">
-        {showArrows && (
-          <ArrowBtn onClick={next} disabled={startIdx >= maxIdx} direction="right" />
-        )}
-      </div>
+    <div className="w-full relative pointer-events-auto -mx-6 md:mx-0">
+      <DOMCircularGallery bend={3}>
+        {cards}
+      </DOMCircularGallery>
     </div>
   );
 }
@@ -225,11 +163,11 @@ export function TeamSection() {
       {/* Scrollable Background Elements (Draggable Orbs) */}
       <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 transition-opacity duration-1000 ${isUnlocked ? "opacity-100" : "opacity-0"}`}>
         {/* Spread out unpredictably, pushed towards the edges to avoid centering */}
-        
+
         {/* Near Top (Hero) */}
         <DraggableOrb className="top-[-2%] -left-[10%]" coreColor="rgba(14,86,250,0.8)" glowColor="rgba(14,86,250,0.3)" size="w-[600px] h-[600px]" />
         <DraggableOrb className="top-[5%] -right-[5%]" coreColor="rgba(23,202,250,0.6)" glowColor="rgba(23,202,250,0.15)" size="w-[300px] h-[300px]" />
-        
+
         {/* 15% - 30% */}
         <DraggableOrb className="top-[18%] -left-[15%]" coreColor="rgba(23,202,250,0.7)" glowColor="rgba(23,202,250,0.2)" size="w-[800px] h-[800px]" />
         <DraggableOrb className="top-[25%] left-[80%]" coreColor="rgba(14,86,250,0.6)" glowColor="rgba(14,86,250,0.15)" size="w-[350px] h-[350px]" />
