@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import React, { useRef, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Inter_Tight } from "next/font/google";
 import { Member } from "@/lib/members";
 
@@ -18,39 +18,10 @@ interface MemberCardProps {
 export function MemberCard({ member, onClick }: MemberCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   
-  // Springs for smooth 3D tilt recovery
-  const rotateX = useSpring(0, { stiffness: 300, damping: 30, mass: 0.5 });
-  const rotateY = useSpring(0, { stiffness: 300, damping: 30, mass: 0.5 });
-  
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [isHovering, setIsHovering] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    setMousePos({
-      x: (mouseX / width) * 100,
-      y: (mouseY / height) * 100,
-    });
-
-    const rY = ((mouseX / width) - 0.5) * 20; 
-    const rX = ((mouseY / height) - 0.5) * -20;
-
-    rotateX.set(rX);
-    rotateY.set(rY);
-  };
-
-  const handleMouseLeave = () => {
-    rotateX.set(0);
-    rotateY.set(0);
-    setIsHovering(false);
-  };
+  
+  const floatDelay = useMemo(() => Math.random() * 2, []);
+  const floatDuration = useMemo(() => 3 + Math.random() * 2, []);
 
   return (
     <div
@@ -59,20 +30,26 @@ export function MemberCard({ member, onClick }: MemberCardProps) {
     >
       <motion.div
         ref={cardRef}
-        onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={handleMouseLeave}
+        onMouseLeave={() => setIsHovering(false)}
         animate={{
           scale: isHovering ? 1.05 : 1,
+          y: [0, -15, 0],
         }}
         transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
+          scale: {
+            type: "spring",
+            stiffness: 400,
+            damping: 30,
+          },
+          y: {
+            duration: floatDuration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: floatDelay,
+          }
         }}
         style={{ 
-          rotateX, 
-          rotateY, 
           transformStyle: "preserve-3d" 
         }}
         className="relative w-full aspect-[3/4] md:aspect-[4/5] overflow-visible rounded-[2rem] pointer-events-auto group"

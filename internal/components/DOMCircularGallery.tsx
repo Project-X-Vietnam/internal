@@ -62,11 +62,11 @@ export function DOMCircularGallery({ children, bend = 3 }: DOMCircularGalleryPro
   }, [bend]);
 
   return (
-    <div className="w-full relative overflow-visible py-10">
+    <div className="w-full relative overflow-visible py-4 mt-2 -mb-16">
       <div 
         ref={scrollRef} 
         // We remove Tailwind's 'justify-center' to prevent the scroll overflow bug, and use safe center in style
-        className="flex overflow-x-auto snap-x snap-mandatory items-center pb-32 pt-32 gap-6 md:gap-8 hide-scrollbar px-6 md:px-12"
+        className="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory items-center pb-40 pt-8 gap-12 md:gap-24 hide-scrollbar px-6 md:px-12"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",

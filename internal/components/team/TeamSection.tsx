@@ -114,7 +114,7 @@ function SectionCarousel({ members, onSelect }: { members: Member[]; onSelect: (
 
   return (
     <div className="w-full relative pointer-events-auto -mx-6 md:mx-0">
-      <DOMCircularGallery bend={3}>
+      <DOMCircularGallery bend={12}>
         {cards}
       </DOMCircularGallery>
     </div>
