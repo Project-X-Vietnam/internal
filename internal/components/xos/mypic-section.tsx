@@ -5,15 +5,17 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const MY_PICS = [
   {
-    title: "My pic",
+    title: "The face card",
     img: "https://storage.tally.so/private/anh-the-promax-Chau.jpg?id=W1ZxQa&accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlcxWnhRYSIsImZvcm1JZCI6IlpqVmdNYSIsImlhdCI6MTc3Mzg0ODkwNn0.ZwDe_Pd1xOlOlasq2CTelJvaIFEeommy_vTKzXeiSbw&signature=a3dc5c8b627776505c08aeea74c2de88edec35ac91182bbc3727362849820535",
-    bg: "#F6D0D8",
+    bg: "#e0e7ff",
+    textColor: "#52525b",
     tilt: -10,
   },
   {
-    title: "Moment represents me",
+    title: "A glimpse of my life",
     img: "https://storage.tally.so/private/z7634460446801_351a234a4ddf155a87114fb2ea815987.jpg?id=EMa4b2&accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVNYTRiMiIsImZvcm1JZCI6IlpqVmdNYSIsImlhdCI6MTc3Mzg0ODkwNn0.CQKBVy-Tjy14Cz3hf-6X5uoVXTN2rMlxCdqyE5gv1DU&signature=ae162d1b3d8fb3c7e47b6cdd543ea4613bb830ae61f06529ddc91cd6446c5428",
     bg: "#e0e7ff",
+    textColor: "#52525b",
     tilt: 10,
   },
 ];
@@ -132,10 +134,10 @@ export default function MyPicSection() {
           color: #1e293b;
         }
         .fan-card-title {
-          font-weight: 800;
-          font-size: 22px;
-          color: #0f172a;
-          line-height: 1.1;
+          font-weight: 400;
+          font-size: clamp(20px, 3vw, 24px);
+          letter-spacing: -0.01em;
+          line-height: 1.2;
         }
         .fan-card-desc {
           flex: 1;
@@ -161,7 +163,7 @@ export default function MyPicSection() {
           <div className="fan-header">
             <div style={{ marginBottom: 0 }}>
               <TiltedHeading>
-                My Pictures
+                My Digital footprints
               </TiltedHeading>
             </div>
           </div>
@@ -185,7 +187,7 @@ export default function MyPicSection() {
               const translateY = (1 - ease) * 110; 
 
               const rotate = card.tilt;
-              const zIndex = cardProgress > 0.5 ? i + 1 : 0;
+              const zIndex = (1 - i) * 100 + Math.round(cardProgress * 100);
 
               return (
                 <div
@@ -199,8 +201,7 @@ export default function MyPicSection() {
                     transform: `translateX(${translateX}px) translateY(${translateY}%) rotate(${rotate}deg)`,
                   }}
                 >
-                  <span className="fan-card-tag">Photo</span>
-                  <h3 className="fan-card-title">{card.title}</h3>
+                  <h3 className="fan-card-title" style={{ color: card.textColor }}>{card.title}</h3>
                   <div className="fan-card-desc">
                     <img src={card.img} alt={card.title} />
                   </div>

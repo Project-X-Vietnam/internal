@@ -6,27 +6,6 @@ import ExperienceSection from "@/components/xos/experience-section";
 import MyPicSection from "@/components/xos/mypic-section";
 import DetailSection from "@/components/xos/detail-section";
 
-// ─── Inline SVG Illustrations ──────────────────────────────────────────────
-const KeyLogoSVG = () => (
-  <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-auto">
-    <text x="0" y="30" fontSize="26" fontFamily="Inter Tight, sans-serif" fontWeight="800" fill="#0f172a" letterSpacing="-1">xOS</text>
-    <circle cx="107" cy="18" r="8" fill="#2563eb" />
-    <path d="M107 14 L107 27" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" />
-    <path d="M107 23 L111 27" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
-    <path d="M107 23 L103 27" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="107" cy="13" r="3" stroke="#0f172a" strokeWidth="2" fill="none" />
-  </svg>
-);
-
-const TornPaperSVG = () => (
-  <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full">
-    <path
-      d="M0,80 L0,40 L30,55 L60,35 L90,50 L120,30 L150,48 L180,25 L210,45 L240,32 L270,55 L300,38 L330,60 L360,42 L390,58 L420,28 L450,50 L480,35 L510,55 L540,38 L570,62 L600,40 L630,52 L660,33 L690,55 L720,38 L750,58 L780,30 L810,50 L840,35 L870,55 L900,40 L930,62 L960,42 L990,55 L1020,32 L1050,52 L1080,38 L1110,58 L1140,30 L1170,50 L1200,35 L1230,55 L1260,40 L1290,60 L1320,42 L1350,55 L1380,35 L1410,50 L1440,38 L1440,0 L0,0 Z"
-      fill="#DBEAFE"
-    />
-  </svg>
-);
-
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 export default function xOSPage() {
@@ -369,22 +348,6 @@ export default function xOSPage() {
       `}</style>
 
       <div className="page-wrapper">
-        {/* ── Header ─────────────────────────────────────── */}
-        <header className="header">
-          <div className="header-inner">
-            {/* Logo */}
-            <a href="#" style={{ textDecoration: "none" }}>
-              <KeyLogoSVG />
-            </a>
-
-            {/* Nav */}
-            <nav className="nav-center" style={{ display: "flex", gap: "30px", alignItems: "center" }}>
-              <a href="#" className="nav-link">Home</a>
-              <a href="#about" className="nav-link">About</a>
-              <a href="#experience" className="nav-link">Experience</a>
-            </nav>
-          </div>
-        </header>
         {/* ── S1: Intro + About ─────────────────────────────── */}
         <IntroSection />
 
@@ -397,36 +360,7 @@ export default function xOSPage() {
         {/* ── S4: Sticky Steps Panels ────────────────── */}
         <DetailSection />
 
-        {/* ── Footer ──────────────────────────────────────── */}
-        <footer className="footer">
-          <div className="footer-torn">
-            <TornPaperSVG />
-          </div>
 
-          <div className="footer-content">
-            <div className="footer-logo-row">
-              <div className="footer-logo-text">xOS</div>
-            </div>
-
-            <div className="footer-links-col">
-              {/* Tagline col */}
-              <div>
-                <p style={{ fontSize: "14px", lineHeight: "1.75", color: "rgba(15,23,42,0.55)", maxWidth: "260px", marginBottom: "24px" }}>
-                  A personal portfolio designed as a seamless operating system.
-                </p>
-                <a href="#" className="btn-outline" style={{ color: "#2563eb", borderColor: "#2563eb", fontSize: "13px" }}>
-                  Contact Me →
-                </a>
-              </div>
-            </div>
-
-            <div className="footer-bottom">
-              <p className="footer-copy">
-                © {new Date().getFullYear()} xOS | Built by Chau
-              </p>
-            </div>
-          </div>
-        </footer>
       </div>
     </>
   );

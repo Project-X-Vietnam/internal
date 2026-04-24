@@ -406,7 +406,7 @@ export default function ExperienceSection() {
         {/* Section Title — TeamSection style */}
         <div style={{ marginBottom: 48, display: "flex", alignItems: "flex-start" }}>
           <TiltedHeading>
-            My Experience
+            My Archives
           </TiltedHeading>
         </div>
 

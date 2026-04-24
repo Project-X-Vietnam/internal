@@ -7,14 +7,14 @@ import { motion, useMotionValue, animate, AnimatePresence, useTransform } from "
 
 const IconSVG = () => (
   <svg width="24" height="24" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M125 47.0824L146.823 68.9055C148.145 70.2271 150.202 70.4679 151.794 69.4834L226.996 23.0041L205.173 1.18102C203.851 -0.140613 201.794 -0.381396 200.202 0.603142L125 47.0824Z" fill="#17CAFA"/>
-    <path d="M202.917 125L181.094 103.177C179.773 101.856 179.532 99.7982 180.516 98.2063L226.996 23.0042L248.819 44.8272C250.14 46.1489 250.381 48.2062 249.397 49.7981L202.917 125Z" fill="#17CAFA"/>
-    <path d="M202.917 125L181.094 146.823C179.773 148.145 179.532 150.202 180.516 151.794L226.996 226.996L248.819 205.173C250.14 203.852 250.381 201.794 249.397 200.202L202.917 125Z" fill="#0E56FA"/>
-    <path d="M125 202.918L146.823 181.095C148.145 179.773 150.202 179.532 151.794 180.517L226.996 226.996L205.173 248.819C203.851 250.141 201.794 250.382 200.202 249.397L125 202.918Z" fill="#0E56FA"/>
-    <path d="M125.001 202.915L103.178 181.092C101.856 179.77 99.7987 179.529 98.2069 180.514L23.0047 226.993L44.8278 248.816C46.1494 250.138 48.2068 250.379 49.7986 249.394L125.001 202.915Z" fill="#0E56FA"/>
-    <path d="M47.0826 124.997L68.9056 146.82C70.2272 148.142 70.468 150.199 69.4835 151.791L23.0042 226.993L1.18116 205.17C-0.140475 203.849 -0.381259 201.791 0.603279 200.199L47.0826 124.997Z" fill="#0E56FA"/>
-    <path d="M47.0826 124.997L68.9056 103.174C70.2272 101.853 70.468 99.7953 69.4835 98.2035L23.0042 23.0013L1.18116 44.8244C-0.140475 46.146 -0.381259 48.2034 0.603279 49.7952L47.0826 124.997Z" fill="#0E56FA"/>
-    <path d="M125.001 47.0798L103.178 68.9028C101.856 70.2244 99.7987 70.4652 98.2069 69.4807L23.0047 23.0014L44.8278 1.18102C46.1494 -0.140613 48.2068 -0.381396 49.7986 0.603142L125.001 47.0824V47.0798Z" fill="#0E56FA"/>
+    <path d="M125 47.0824L146.823 68.9055C148.145 70.2271 150.202 70.4679 151.794 69.4834L226.996 23.0041L205.173 1.18102C203.851 -0.140613 201.794 -0.381396 200.202 0.603142L125 47.0824Z" fill="#17CAFA" />
+    <path d="M202.917 125L181.094 103.177C179.773 101.856 179.532 99.7982 180.516 98.2063L226.996 23.0042L248.819 44.8272C250.14 46.1489 250.381 48.2062 249.397 49.7981L202.917 125Z" fill="#17CAFA" />
+    <path d="M202.917 125L181.094 146.823C179.773 148.145 179.532 150.202 180.516 151.794L226.996 226.996L248.819 205.173C250.14 203.852 250.381 201.794 249.397 200.202L202.917 125Z" fill="#0E56FA" />
+    <path d="M125 202.918L146.823 181.095C148.145 179.773 150.202 179.532 151.794 180.517L226.996 226.996L205.173 248.819C203.851 250.141 201.794 250.382 200.202 249.397L125 202.918Z" fill="#0E56FA" />
+    <path d="M125.001 202.915L103.178 181.092C101.856 179.77 99.7987 179.529 98.2069 180.514L23.0047 226.993L44.8278 248.816C46.1494 250.138 48.2068 250.379 49.7986 249.394L125.001 202.915Z" fill="#0E56FA" />
+    <path d="M47.0826 124.997L68.9056 146.82C70.2272 148.142 70.468 150.199 69.4835 151.791L23.0042 226.993L1.18116 205.17C-0.140475 203.849 -0.381259 201.791 0.603279 200.199L47.0826 124.997Z" fill="#0E56FA" />
+    <path d="M47.0826 124.997L68.9056 103.174C70.2272 101.853 70.468 99.7953 69.4835 98.2035L23.0042 23.0013L1.18116 44.8244C-0.140475 46.146 -0.381259 48.2034 0.603279 49.7952L47.0826 124.997Z" fill="#0E56FA" />
+    <path d="M125.001 47.0798L103.178 68.9028C101.856 70.2244 99.7987 70.4652 98.2069 69.4807L23.0047 23.0014L44.8278 1.18102C46.1494 -0.140613 48.2068 -0.381396 49.7986 0.603142L125.001 47.0824V47.0798Z" fill="#0E56FA" />
   </svg>
 );
 
@@ -56,19 +56,40 @@ function Marquee() {
 
 interface CardDatum {
   field: string;
-  val: string;
+  val: React.ReactNode;
   bg: string;
   accent: string;
 }
 
 // Clean pastel blue
-const CARD_GRADIENT = "#dbeafe";
+const CARD_GRADIENT = "#2d6af7ff";
+
+const SocialLinks = () => (
+  <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 4 }}>
+    <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ color: "#FFFFFF", transition: "transform 0.2s" }} className="hover:scale-110" onClick={(e) => e.stopPropagation()}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+      </svg>
+    </a>
+    <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ color: "#FFFFFF", transition: "transform 0.2s" }} className="hover:scale-110" onClick={(e) => e.stopPropagation()}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    </a>
+    <a href="mailto:chau@gmail.com" style={{ color: "#FFFFFF", transition: "transform 0.2s" }} className="hover:scale-110" onClick={(e) => e.stopPropagation()}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline points="22,6 12,13 2,6" />
+      </svg>
+    </a>
+  </div>
+);
 
 const CARD_DATA: CardDatum[] = [
-  { field: "Role",       val: "Operations Member · xOS",              bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
-  { field: "University", val: "National Economics University (NEU)",   bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
-  { field: "DOB",        val: "30 / 02 / 2005",                        bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
-  { field: "Email",      val: "chau@gmail.com",                        bg: CARD_GRADIENT, accent: "rgba(15,23,42,0.65)" },
+  { field: "Currently serving as", val: "Operations Member · xOS", bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.9)" },
+  { field: "Fighting for my life at", val: "National Economics University (NEU)", bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.9)" },
+  { field: "Say HPBD to me on", val: "30 / 02 / 2005", bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.9)" },
+  { field: "For business or just to yap", val: <SocialLinks />, bg: CARD_GRADIENT, accent: "rgba(255,255,255,0.9)" },
 ];
 
 // Fixed randomized resting rotations (-2 to +2 degrees)
@@ -89,10 +110,10 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
   const isFront = posInOrder === N - 1;
   const stepsFromFront = N - 1 - posInOrder;
 
-  const scale   = 1 - stepsFromFront * 0.05;
+  const scale = 1 - stepsFromFront * 0.05;
   const opacity = Math.max(0.4, 1 - stepsFromFront * 0.18);
   const yOffset = stepsFromFront * 12;
-  const rot     = isFront ? 0 : CARD_ROTS[posInOrder % CARD_ROTS.length];
+  const rot = isFront ? 0 : CARD_ROTS[posInOrder % CARD_ROTS.length];
 
   // 3D Peel on drag (pulling left flips right edge forward)
   // Distance dictates the degree of tilt
@@ -101,9 +122,9 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
   // Parallax ambient shadow (moves opposite to card drag direction to simulate depth light)
   const shadowX = useTransform(x, [-150, 0, 150], [30, 0, -30]);
   const combinedShadow = useTransform(
-    shadowX, 
-    (sx) => isFront 
-      ? `0 20px 40px -10px rgba(15,23,42,0.15)` 
+    shadowX,
+    (sx) => isFront
+      ? `0 20px 40px -10px rgba(15,23,42,0.15)`
       : `0 4px 16px rgba(15,23,42,0.08)`
   );
 
@@ -154,11 +175,11 @@ function StackCard({ card, cardIdx, posInOrder, N, x, sendToBack }: StackCardPro
       )}
       <div style={{ position: "relative", zIndex: 2 }}>
         <div style={{
-          fontSize: 10, fontWeight: 800, textTransform: "uppercase",
-          letterSpacing: "0.14em", color: card.accent, marginBottom: 8,
+          fontSize: 13, fontWeight: 600,
+          letterSpacing: "0.01em", color: card.accent, marginBottom: 8,
         }}>{card.field}</div>
         <div style={{
-          fontSize: 17, fontWeight: 700, color: "#0f172a",
+          fontSize: 17, fontWeight: 700, color: "#FFFFFF",
           lineHeight: 1.35,
         }}>{card.val}</div>
       </div>
@@ -330,14 +351,14 @@ export default function IntroSection() {
     <div className="font-sans">
       <section style={{
         background: "transparent",
-        paddingTop: 72,
+        paddingTop: 0,
         borderBottom: "1px solid rgba(15,23,42,0.06)",
       }}>
         <div style={{ paddingTop: 18, paddingBottom: 18 }}>
           <Marquee />
         </div>
       </section>
-      <section style={{ background: "transparent", padding: "80px 48px 0" }}>
+      <section style={{ background: "transparent", padding: "60px 48px 0" }}>
         <div style={{
           maxWidth: 1120, margin: "0 auto",
           display: "flex", gap: 72, alignItems: "flex-start", flexWrap: "wrap",
@@ -346,7 +367,7 @@ export default function IntroSection() {
           {/* ── Left: Intro ── */}
           <div style={{ flex: 1.1, minWidth: 300 }}>
             <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
-              <div 
+              <div
                 className="font-medium tracking-tighter"
                 style={{
                   fontSize: "clamp(52px,7vw,88px)",
@@ -368,7 +389,7 @@ export default function IntroSection() {
                   fontSize: "clamp(20px, 3vw, 24px)", fontWeight: 400, color: "#52525b",
                   letterSpacing: "-0.01em", whiteSpace: "nowrap",
                 }}>
-                  My core value
+                  Always living by...
                 </div>
                 <RotatingValue />
               </div>

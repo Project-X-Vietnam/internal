@@ -90,7 +90,7 @@ function Step02Content({ active }: { active: boolean }) {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const parentRect = (e.currentTarget as HTMLElement).closest(".bareis-right")?.getBoundingClientRect();
     const x = rect.left - (parentRect?.left ?? 0) + rect.width / 2;
-    const pool = ["❤️","🚀","🌱","✨","💼","🙌","📖","💡"];
+    const pool = ["❤️", "🚀", "🌱", "✨", "💼", "🙌", "📖", "💡"];
     const batch: FloatingEmoji[] = Array.from({ length: 6 }, () => ({
       id: counterRef.current++,
       x: x + (Math.random() - 0.5) * 80,
@@ -272,34 +272,16 @@ function TiltedHeading({ children }: { children: React.ReactNode }) {
   const handleMouseLeave = () => { x.set(0); y.set(0); };
 
   return (
-    <div style={{ perspective: 1000, display: "inline-block", position: "relative", zIndex: 20 }}>
+    <div style={{ perspective: 1000 }} className="inline-block relative z-20 hover:z-30">
       <motion.div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{
-          rotateX, rotateY,
-          transformStyle: "preserve-3d",
-          background: "#0E56FA",
-          transform: "skewX(-6deg)",
-          cursor: "crosshair",
-          boxShadow: "0 10px 30px -10px rgba(14,86,250,0.6), 6px 6px 0px #1A2B6D",
-          padding: "10px 32px 14px",
-          display: "inline-block",
-        }}
+        className="relative px-6 py-3 md:px-8 md:py-4 bg-[#0E56FA] transform -skew-x-6 cursor-crosshair shadow-[0_10px_30px_-10px_rgba(14,86,250,0.6)] pointer-events-auto"
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
       >
         <motion.h2
-          style={{
-            translateZ: 40,
-            fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(22px, 3vw, 42px)",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "#FFFFFF",
-            lineHeight: 1.1,
-            whiteSpace: "nowrap",
-            margin: 0,
-          }}
+          style={{ translateZ: 40 }}
+          className="text-3xl md:text-5xl font-sans font-medium tracking-tighter text-white uppercase drop-shadow-md whitespace-nowrap"
         >
           {children}
         </motion.h2>
@@ -313,21 +295,17 @@ export default function DetailSection() {
 
   return (
     <>
-      <TargetCursor
-        spinDuration={2}
-        hideDefaultCursor
-        hoverDuration={0.2}
-      />
+      {/* TargetCursor removed - using FairyDustCursor (star pointer) instead */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
         .section-divider-wrapper {
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: block;
           width: 100%;
-          padding: 80px 6vw 48px;
-          background: #EEF4FF;
+          max-width: 860px;
+          margin: 80px auto 48px;
+          padding: 0 48px;
+          background: transparent;
         }
 
         .section-divider-badge {
@@ -623,13 +601,13 @@ export default function DetailSection() {
                 {activeIndex === idx ? (
                   /* Minus — active */
                   <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect x="6" y="14" width="20" height="4" rx="2" fill="currentColor" opacity="0.9"/>
+                    <rect x="6" y="14" width="20" height="4" rx="2" fill="currentColor" opacity="0.9" />
                   </svg>
                 ) : (
                   /* Plus — inactive */
                   <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect x="14" y="6" width="4" height="20" rx="2" fill="currentColor" opacity="0.9"/>
-                    <rect x="6" y="14" width="20" height="4" rx="2" fill="currentColor" opacity="0.9"/>
+                    <rect x="14" y="6" width="4" height="20" rx="2" fill="currentColor" opacity="0.9" />
+                    <rect x="6" y="14" width="20" height="4" rx="2" fill="currentColor" opacity="0.9" />
                   </svg>
                 )}
               </div>
