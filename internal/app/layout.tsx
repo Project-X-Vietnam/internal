@@ -1,32 +1,40 @@
 import type { Metadata } from "next";
+import { Special_Elite, Inter } from "next/font/google";
 import "./globals.css";
+
+const specialElite = Special_Elite({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://internal.projectxvietnam.org"),
-  title: "Project X Vietnam",
-  description: "Building the future of Vietnam's tech ecosystem. Join a community of innovators, entrepreneurs, and tech leaders.",
+  title: "THEIA — Oracle Labs Investigation",
+  description: "At 23:47, THEIA called the police on its own maker. Your team has until morning.",
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
   },
   openGraph: {
-    title: "Project X Vietnam",
-    description: "Building the future of Vietnam's tech ecosystem. Join a community of innovators, entrepreneurs, and tech leaders.",
+    title: "THEIA — Oracle Labs Investigation",
+    description: "At 23:47, THEIA called the police on its own maker. Your team has until morning.",
     images: [
       {
         url: "/preview_icon.png",
         width: 1200,
         height: 630,
-        alt: "Project X Vietnam",
+        alt: "THEIA Investigation",
       },
     ],
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Project X Vietnam",
-    description: "Building the future of Vietnam's tech ecosystem.",
-    images: ["/preview_icon.png"],
   },
 };
 
@@ -37,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased">
+      <body className={`${specialElite.variable} ${inter.variable} font-body antialiased`}>
         {children}
       </body>
     </html>

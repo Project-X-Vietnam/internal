@@ -1,346 +1,91 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useRouter } from "next/navigation";
-import IntroAnimation from "@/components/IntroAnimation";
-import { Typewriter } from "@/components/ui/typewriter-text";
-import { GridPattern } from "@/components/ui/grid-pattern";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { loginTeam } from "@/lib/actions";
 
-const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
-  // Automatically transition after a delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onComplete();
-    }, 5000);
+export default function LandingPage() {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-    return () => clearTimeout(timer);
-  }, [onComplete]);
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {},
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5 }
+  async function handleSubmit(formData: FormData) {
+    setLoading(true);
+    setError(null);
+    const result = await loginTeam(formData);
+    if (result?.error) {
+      setError(result.error);
+      setLoading(false);
     }
-  };
-
-  const titleVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.7,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const subtitleVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 2,
-        duration: 0.7,
-        ease: "easeOut",
-      },
-    },
-  };
+  }
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden pointer-events-none"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <div className="relative z-10 text-center max-w-3xl mx-auto px-6">
-        <motion.h1
-          className="text-4xl md:text-3xl lg:text-6xl font-bold leading-tight mb-6 text-foreground tracking-tight"
-          variants={titleVariants}
-        >
-          Thank you for choosing to be a part of <span className="text-gradient-animated">Project X 2026 Team</span>
-        </motion.h1>
-        <motion.p
-          className="text-xl md:text-xl text-muted-foreground font-medium"
-          variants={subtitleVariants}
-        >
-          We're genuinely glad you're here
-        </motion.p>
-      </div>
-    </motion.div>
-  );
-};
+    <div className="min-h-screen flex flex-col items-center justify-center bg-warm-bg text-warm-text relative overflow-hidden">
+      {/* Subtle texture overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-30"
+        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9BBAA' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }}
+      />
 
-const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
-  const [thoughts, setThoughts] = useState("");
-  const [showSecondPart, setShowSecondPart] = useState(false);
-
-  const handleSubmit = () => {
-    // Navigate immediately for better UX
-    onComplete();
-
-    // Fire-and-forget submission to Google Sheets
-    const submitData = async () => {
-      const scriptURL =
-        "https://script.google.com/macros/s/AKfycbxw_Qo_PFjq5S5uPImbhncQ4rVLoCU2LQE3_qRLsnbOo-Pha324w-AWnXRRbJIVfIvS/exec";
-
-      const formData = new FormData();
-      formData.append("thoughts", thoughts);
-
-      console.log("Submitting to Google Sheets (background)...", { thoughts });
-
-      try {
-        await fetch(scriptURL, {
-          method: "POST",
-          body: formData,
-          mode: "no-cors",
-        });
-        console.log("Submission sent (opaque response expected)");
-      } catch (error) {
-        console.error("Error submitting to Google Sheet:", error);
-      }
-    };
-
-    submitData();
-  };
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {},
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5 }
-    }
-  };
-
-  const labelVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 1.0,
-        duration: 0.7,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const questionVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delay: 1.5,
-        duration: 0.5,
-      }
-    }
-  };
-
-  const inputVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 5,
-        duration: 0.4,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-        <div className="mb-10">
-          <motion.p 
-            className="text-primary text-xl md:text-xl text-muted-foreground font-medium tracking-widest mb-6"
-            variants={labelVariants}
-          >
-            Before we move forward…
-          </motion.p>
-
-          <motion.div 
-            className="text-3xl md:text-5xl font-bold leading-tight text-foreground max-w-3xl mx-auto"
-            variants={questionVariants}
-          >
-            <Typewriter
-              text="How are you feeling about this "
-              delay={1500}
-              speed={80}
-              cursor=""
-              onFinished={() => setShowSecondPart(true)}
-              hideCursorOnFinish={true}
-            />
-            {showSecondPart && (
-              <span className="text-gradient-animated">
-                <Typewriter
-                  text="upcoming path?"
-                  delay={0}
-                  speed={80}
-                  cursor="|"
-                />
-              </span>
-            )}
-          </motion.div>
+      <div className="relative z-10 w-full max-w-sm mx-auto px-6">
+        {/* Timestamp */}
+        <div className="text-center mb-12">
+          <p className="font-mono text-xs tracking-[0.3em] text-warm-text-muted mb-6">
+            23 : 47
+          </p>
+          <h1 className="font-heading text-4xl md:text-5xl text-warm-heading tracking-tight mb-3">
+            THEIA
+          </h1>
+          <p className="text-sm text-warm-text-muted max-w-xs mx-auto leading-relaxed">
+            Oracle Labs. Launch night. Something went wrong.
+          </p>
         </div>
-        <motion.div
-          className="w-full max-w-xl mx-auto text-center"
-          variants={inputVariants}
-        >
-          <textarea
-            rows={3}
-            className="w-full p-6 text-lg text-foreground bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl resize-none placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
-            placeholder="Share your thoughts with us..."
-            value={thoughts}
-            onChange={(e) => setThoughts(e.target.value)}
-          />
-          <button
-            onClick={handleSubmit}
-            disabled={!thoughts.trim()}
-            className={`px-10 py-4 mt-8 text-lg font-semibold rounded-full transition-all duration-300 ${
-              thoughts.trim()
-                ? "bg-white text-slate-900 shadow-lg hover:shadow-xl hover:translate-y-[-2px] hover:scale-105 cursor-pointer"
-                : "bg-white/50 text-slate-400 cursor-not-allowed"
-            }`}
-          >
-            Continue →
-          </button>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-};
 
-export default function Home() {
-  const router = useRouter();
-  const [isDark, setIsDark] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showInteractiveQuestion, setShowInteractiveQuestion] = useState(false);
-
-  // Check if user has already completed intro - redirect to /welcome
-  useEffect(() => {
-    const hasSeenIntro = sessionStorage.getItem("pxv-intro-seen");
-    if (hasSeenIntro) {
-      router.replace("/welcome");
-    }
-  }, [router]);
-
-  // Theme detection
-  useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDark(true);
-    }
-  }, []);
-
-  // Handle intro completion
-  const handleIntroComplete = useCallback(() => {
-    setShowIntro(false);
-    setShowWelcome(true);
-  }, []);
-
-  const handleWelcomeComplete = useCallback(() => {
-    setShowWelcome(false);
-    setShowInteractiveQuestion(true);
-  }, []);
-
-  const handleQuestionComplete = useCallback(() => {
-    sessionStorage.setItem("pxv-intro-seen", "true");
-    setShowInteractiveQuestion(false);
-    // Navigate to welcome page
-    router.push("/welcome");
-  }, [router]);
-
-  // Keyboard shortcut to skip intro
-  useEffect(() => {
-    if (!showIntro && !showWelcome) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
-        e.preventDefault();
-        if (showIntro) {
-          handleIntroComplete();
-        } else if (showWelcome) {
-          handleWelcomeComplete();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showIntro, showWelcome, handleIntroComplete, handleWelcomeComplete]);
-
-  return (
-    <div className={isDark ? "dark" : ""}>
-      {/* Persistent Background Pattern for Intro/Welcome/InteractiveQuestion */}
-      <AnimatePresence>
-        {(showIntro || showWelcome || showInteractiveQuestion) && (
-          <motion.div
-            className="fixed inset-0 z-40 overflow-hidden bg-background"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <GridPattern
-              squares={[
-                [4, 4],
-                [5, 1],
-                [8, 2],
-                [5, 3],
-                [5, 5],
-                [10, 10],
-                [12, 15],
-                [15, 10],
-                [10, 15],
-                [15, 10],
-                [10, 15],
-                [15, 10],
-              ]}
-              className={cn(
-                "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
-                "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
-              )}
+        {/* Login form */}
+        <form action={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-xs font-medium text-warm-text-muted mb-1.5 uppercase tracking-wider">
+              Team name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autoComplete="off"
+              className="w-full px-4 py-3 bg-warm-input border border-warm-border rounded-lg text-warm-text placeholder:text-warm-text-faint focus:outline-none focus:border-warm-accent/50 focus:ring-1 focus:ring-warm-accent/20 transition-colors"
+              placeholder="Enter team name"
             />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+          <div>
+            <label htmlFor="code" className="block text-xs font-medium text-warm-text-muted mb-1.5 uppercase tracking-wider">
+              Join code
+            </label>
+            <input
+              id="code"
+              name="code"
+              type="text"
+              required
+              autoComplete="off"
+              className="w-full px-4 py-3 bg-warm-input border border-warm-border rounded-lg text-warm-text placeholder:text-warm-text-faint focus:outline-none focus:border-warm-accent/50 focus:ring-1 focus:ring-warm-accent/20 transition-colors"
+              placeholder="Enter join code"
+            />
+          </div>
 
-      {/* Intro Animation */}
-      <AnimatePresence mode="wait">
-        {showIntro && (
-          <IntroAnimation onComplete={handleIntroComplete} />
-        )}
-        {showWelcome && (
-          <WelcomeMessage onComplete={handleWelcomeComplete} />
-        )}
-        {showInteractiveQuestion && (
-          <InteractiveQuestion onComplete={handleQuestionComplete} />
-        )}
-      </AnimatePresence>
+          {error && (
+            <p className="text-sm text-warm-error text-center">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 mt-2 bg-warm-btn text-warm-bg font-semibold rounded-lg hover:bg-warm-btn-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Entering..." : "Begin investigation"}
+          </button>
+        </form>
+
+        <p className="text-center text-xs text-warm-text-faint mt-8">
+          A Project X Vietnam experience
+        </p>
+      </div>
     </div>
   );
 }
