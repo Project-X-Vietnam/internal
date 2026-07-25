@@ -16,28 +16,37 @@ import { redirect } from "next/navigation";
 export async function loginTeam(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   const code = (formData.get("code") as string)?.trim();
+  let redirectTo = "/hub";
 
   if (!name || !code) {
     return { error: "Team name and join code are required." };
   }
 
-  const team = await db.team.findUnique({ where: { name } });
+  try {
+    const team = await db.team.findUnique({ where: { name } });
 
-  if (!team || team.joinCode !== code) {
-    return { error: "Invalid team name or join code." };
+    if (!team || team.joinCode !== code) {
+      return { error: "Invalid team name or join code." };
+    }
+
+    await setTeamSession(team.id);
+
+    if (!team.startedAt) {
+      await db.team.update({
+        where: { id: team.id },
+        data: { startedAt: new Date(), currentMilestone: 1 },
+      });
+      redirectTo = "/prologue";
+    }
+  } catch (error) {
+    console.error("Team login failed. Check production database env and migrations.", error);
+    return {
+      error:
+        "Login is temporarily unavailable. Ask the facilitator to check the production database setup.",
+    };
   }
 
-  await setTeamSession(team.id);
-
-  if (!team.startedAt) {
-    await db.team.update({
-      where: { id: team.id },
-      data: { startedAt: new Date(), currentMilestone: 1 },
-    });
-    redirect("/prologue");
-  }
-
-  redirect("/hub");
+  redirect(redirectTo);
 }
 
 // --- Team data ---
