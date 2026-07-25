@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Team {
+  id               String       @id @default(cuid())
+  name             String       @unique
+  joinCode         String
+  currentMilestone Int          @default(0)
+  startedAt        DateTime?
+  finishedAt       DateTime?
+  createdAt        DateTime     @default(now())
+
+  progress    Progress[]
+  submissions Submission[]
+  clueTokens  ClueToken[]
+}
+
+model Progress {
+  id        String    @id @default(cuid())
+  teamId    String
+  milestone Int
+  solvedAt  DateTime?
+  startedAt DateTime  @default(now())
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, milestone])
+}
+
+model Submission {
+  id        String   @id @default(cuid())
+  teamId    String
+  milestone Int
+  payload   String
+  correct   Boolean
+  createdAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@index([teamId, milestone])
+}
+
+model ClueToken {
+  id       String   @id @default(cuid())
+  teamId   String
+  key      String
+  value    String
+  earnedAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, key])
+}
