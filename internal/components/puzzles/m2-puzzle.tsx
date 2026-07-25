@@ -1396,7 +1396,7 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
         badgeWasCloned: true,
         badgeCloneSuspect: "Bảo",
         placeToken: "ThaoDien",
-        passwordPlace: "Bitexco",
+        landmarkToken: "Bitexco",
         kaiLegalName: "Đặng Vũ Khoa",
         kaiBirthdate: "19930317",
         flight0600: "VN402-5B-0600",

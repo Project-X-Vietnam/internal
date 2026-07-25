@@ -7,7 +7,7 @@ export const CLUE_VALUES = {
   suspect_1: "Minh",
   badge_anomaly: "in_without_out",
   place_token: "ThaoDien",
-  password_place: "Bitexco",
+  landmark_token: "Bitexco",
   flight_0600: "VN402-5B-0600",
   dashboard_link: "/theia/41",
   codeword: "ORACLE-EYES",
@@ -162,7 +162,7 @@ export function scoreM5PasswordSlots(slots: unknown): {
   const expected: Record<string, { value: string; transform: string }> = {
     legalname: { value: CLUE_VALUES.kai_signature, transform: "strip" },
     codeword: { value: CLUE_VALUES.codeword, transform: "none" },
-    place: { value: CLUE_VALUES.password_place, transform: "reverse" },
+    place: { value: CLUE_VALUES.landmark_token, transform: "reverse" },
     birthdate: { value: CLUE_VALUES.kai_birthdate, transform: "none" },
   };
   const aliases: Record<string, keyof typeof expected> = {
@@ -196,7 +196,7 @@ export function scoreM5PasswordSlots(slots: unknown): {
 export function buildM5Password(clues: ExistingClues): string | null {
   const kai = clues.get("kai_signature");
   const codeword = clues.get("codeword");
-  const place = clues.get("password_place");
+  const place = clues.get("landmark_token");
   const birthdate = clues.get("kai_birthdate");
   if (!kai || !codeword || !place || !birthdate) return null;
   return `${compactPasswordFragment(kai)}_${codeword}_${place.split("").reverse().join("")}_${birthdate}`;
@@ -214,7 +214,7 @@ export function hasM5Prerequisites(clues: ExistingClues): boolean {
     hasToken(clues, "kai_signature") &&
     hasToken(clues, "kai_birthdate") &&
     hasToken(clues, "place_token") &&
-    hasToken(clues, "password_place") &&
+    hasToken(clues, "landmark_token") &&
     hasToken(clues, "codeword") &&
     hasToken(clues, "cipher_key") &&
     hasToken(clues, "andy_role") &&
@@ -250,7 +250,7 @@ export function validateMilestoneSubmission(
           { key: "incident_date", value: CLUE_VALUES.incident_date },
           { key: "reported_death_time", value: CLUE_VALUES.reported_death_time },
           { key: "m3_console_arg", value: CLUE_VALUES.m3_console_arg },
-          { key: "password_place", value: CLUE_VALUES.password_place },
+          { key: "landmark_token", value: CLUE_VALUES.landmark_token },
           { key: "m1_hypothesis", value: "accepted" },
           { key: "m1_suspect_board_mode", value: "single_minh" },
           { key: "badge_anomaly", value: CLUE_VALUES.badge_anomaly },
@@ -264,7 +264,7 @@ export function validateMilestoneSubmission(
         bool(data.badgeWasCloned) &&
         normalized(data.badgeCloneSuspect) === "bao" &&
         normalized(data.placeToken) === "thaodien" &&
-        normalized(data.passwordPlace) === "bitexco" &&
+        normalized(data.landmarkToken) === "bitexco" &&
         normalized(data.kaiLegalName) === "dangvukhoa" &&
         normalized(data.kaiBirthdate) === "19930317" &&
         normalized(data.flight0600) === "vn4025b0600" &&
@@ -389,7 +389,7 @@ export function clueTokensForSolvedMilestones(
       { key: "incident_date", value: CLUE_VALUES.incident_date },
       { key: "reported_death_time", value: CLUE_VALUES.reported_death_time },
       { key: "m3_console_arg", value: CLUE_VALUES.m3_console_arg },
-      { key: "password_place", value: CLUE_VALUES.password_place },
+      { key: "landmark_token", value: CLUE_VALUES.landmark_token },
       { key: "m1_hypothesis", value: "accepted" },
       { key: "badge_anomaly", value: CLUE_VALUES.badge_anomaly }
     );

@@ -76,7 +76,7 @@ const FRIENDLY_CLUES: Record<string, (value: string) => FriendlyClue> = {
     title: "Alibi location",
     detail: `${value} proves Minh was away from the critical floor.`,
   }),
-  password_place: (value) => ({
+  landmark_token: (value) => ({
     title: "Tower landmark",
     detail: `${value} is the place named in the opening brief. Kai uses it as a vault ingredient.`,
   }),

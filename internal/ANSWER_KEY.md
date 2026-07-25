@@ -107,7 +107,7 @@ WHERE e.name LIKE '%Minh%';
 - `incident_date = 0317`
 - `reported_death_time = 23:47`
 - `m3_console_arg = 2347`
-- `password_place = Bitexco` (opening-brief landmark carried forward)
+- `landmark_token = Bitexco` (opening-brief landmark carried forward)
 - `suspect_1 = Minh`
 - `badge_anomaly = in_without_out`
 
@@ -217,7 +217,7 @@ Public Archive (`/api/mock/archive`, provider `City Business Registry`):
 - `badge_was_cloned = true`
 - `badge_clone_suspect = Bảo`
 - `place_token = ThaoDien`
-- `password_place = Bitexco`
+- `landmark_token = Bitexco`
 - `kai_signature = Đặng Vũ Khoa`
 - `kai_birthdate = 19930317`
 - `flight_0600 = VN402-5B-0600`

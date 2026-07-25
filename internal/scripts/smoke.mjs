@@ -81,7 +81,7 @@ const sourceChecks = [
       "kai_signature",
       "kai_birthdate",
       "19930317",
-      "password_place",
+      "landmark_token",
       "Bitexco",
       "dashboard_link",
       "validateMilestoneSubmission",
