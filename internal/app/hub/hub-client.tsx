@@ -114,10 +114,25 @@ export function HubClient({
 
           <div className="grid gap-4 md:grid-cols-2">
             {milestones.map((m) => {
-              const badge = STATUS_BADGES[m.status];
+              const hasDashboardLink = clueTokens.some(
+                (token) =>
+                  token.key === "dashboard_link" && token.value === "/theia/41"
+              );
+              const useDiscoveredRoutePrompt =
+                m.id === 3 && m.status === "active" && hasDashboardLink;
+              const badge = useDiscoveredRoutePrompt
+                ? {
+                    label: "Route live",
+                    className: "bg-warm-accent/15 text-warm-accent",
+                  }
+                : STATUS_BADGES[m.status];
               const content = (
                 <div
-                  className={`relative p-5 rounded-xl border transition-all ${STATUS_STYLES[m.status]}`}
+                  className={`relative p-5 rounded-xl border transition-all ${
+                    useDiscoveredRoutePrompt
+                      ? "bg-warm-surface border-warm-accent/30 shadow-sm"
+                      : STATUS_STYLES[m.status]
+                  }`}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -137,6 +152,12 @@ export function HubClient({
                   <p className="text-sm text-warm-text-muted italic">
                     &ldquo;{m.question}&rdquo;
                   </p>
+                  {useDiscoveredRoutePrompt && (
+                    <p className="mt-2 text-xs leading-5 text-warm-accent">
+                      The hidden THEIA route from Mail is unlocked now. Open the
+                      link your team recovered.
+                    </p>
+                  )}
                   {m.status === "solved" && (
                     <p className="text-xs text-warm-success mt-2">
                       {m.belief}
@@ -145,7 +166,7 @@ export function HubClient({
                 </div>
               );
 
-              if (m.status === "locked") {
+              if (m.status === "locked" || useDiscoveredRoutePrompt) {
                 return <div key={m.id}>{content}</div>;
               }
 

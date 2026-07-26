@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { BookOpen, X } from "lucide-react";
 import type { Database as SqlJsDatabase } from "sql.js";
 
 type TableInfo = {
@@ -14,6 +15,13 @@ type QueryResult = {
   values: (string | number | null)[][];
   rowCount: number;
   time: number;
+};
+
+type TableDoc = {
+  name: string;
+  group: string;
+  purpose: string;
+  lookFor: string;
 };
 
 type Props = {
@@ -48,11 +56,137 @@ const STARTER_QUERIES = [
   },
 ];
 
+const TABLE_DOCS: TableDoc[] = [
+  {
+    name: "employees",
+    group: "Identity",
+    purpose: "Core employee roster with role, department, manager, and status.",
+    lookFor: "Use emp_id as the human identity anchor for most joins.",
+  },
+  {
+    name: "hr_directory",
+    group: "Identity",
+    purpose: "Private HR details that connect employees to tax numbers and emergency contacts.",
+    lookFor: "Bridge employees to bank_transactions through tax_no.",
+  },
+  {
+    name: "device_registry",
+    group: "Identity",
+    purpose: "Maps each employee to badge, SIM, MAC address, and laptop identifiers.",
+    lookFor: "This is the main bridge between people and physical or digital traces.",
+  },
+  {
+    name: "badge_access",
+    group: "Location",
+    purpose: "Door controller events for lobby and floor access.",
+    lookFor: "ts_utc is UTC, so add 7 hours before comparing with local logs.",
+  },
+  {
+    name: "phone_logs",
+    group: "Location",
+    purpose: "Cell tower pings, calls, texts, and data events by SIM.",
+    lookFor: "Useful for testing whether a phone was near the tower at the incident time.",
+  },
+  {
+    name: "parking_gate",
+    group: "Location",
+    purpose: "Vehicle entry and exit records for the building garage.",
+    lookFor: "Good corroboration for building departure, especially when paired with phone logs.",
+  },
+  {
+    name: "wifi_sessions",
+    group: "Location",
+    purpose: "Laptop connections to office wireless access points.",
+    lookFor: "Treat as device presence, not person presence. A connected laptop can be left behind.",
+  },
+  {
+    name: "bank_transactions",
+    group: "Motive",
+    purpose: "Financial activity keyed by tax number.",
+    lookFor: "Find unusual wires or cash movements after joining through hr_directory.",
+  },
+  {
+    name: "equity_ledger",
+    group: "Motive",
+    purpose: "Share grants, dilution events, and ownership changes.",
+    lookFor: "Surfaces business pressure and possible financial motive.",
+  },
+  {
+    name: "hr_actions",
+    group: "Motive",
+    purpose: "Pending people operations actions such as terminations or role changes.",
+    lookFor: "Shows who had career risk around launch night.",
+  },
+  {
+    name: "helpdesk_tickets",
+    group: "Motive",
+    purpose: "IT support and dispute records.",
+    lookFor: "Useful context, but some entries are motive bait without location proof.",
+  },
+  {
+    name: "system_events",
+    group: "Timeline",
+    purpose: "Application login, logout, MFA, and session activity.",
+    lookFor: "Use local timestamps to bracket who was active in company systems.",
+  },
+  {
+    name: "theia_call_log",
+    group: "Timeline",
+    purpose: "THEIA health, anomaly, and emergency protocol events.",
+    lookFor: "Pins the emergency call and system lock sequence.",
+  },
+  {
+    name: "security_admin_log",
+    group: "Timeline",
+    purpose: "Security administration actions and access-control changes.",
+    lookFor: "Explains badge cloning, floor overrides, and camera maintenance.",
+  },
+  {
+    name: "calendar_audit",
+    group: "Timeline",
+    purpose: "Meeting bookings and edit history for rooms and schedules.",
+    lookFor: "Compare planned meetings with actual movement and system traces.",
+  },
+  {
+    name: "printer_jobs",
+    group: "Noise",
+    purpose: "Printed document names, printers, page counts, and timestamps.",
+    lookFor: "Mostly color and red herrings unless a document supports another signal.",
+  },
+  {
+    name: "visitor_registry",
+    group: "Noise",
+    purpose: "External visitor check-ins, hosts, purposes, and temporary badges.",
+    lookFor: "Can explain strangers, but do not over-weight mystery names alone.",
+  },
+  {
+    name: "git_activity",
+    group: "Noise",
+    purpose: "Repository commit activity by employee.",
+    lookFor: "Useful for work context, weak as physical-location evidence.",
+  },
+  {
+    name: "cafeteria_purchases",
+    group: "Noise",
+    purpose: "Snack bar and vending purchases.",
+    lookFor: "Mostly atmosphere. It can confirm daytime presence, not incident guilt.",
+  },
+  {
+    name: "hvac_sensors",
+    group: "Noise",
+    purpose: "Temperature, humidity, CO2, and zone readings.",
+    lookFor: "Environmental filler unless a timeline question specifically needs sensor context.",
+  },
+];
+
+const TABLE_DOC_GROUPS = Array.from(new Set(TABLE_DOCS.map((doc) => doc.group)));
+
 export function M1Puzzle({ onSolve }: Props) {
   const [db, setDb] = useState<SqlJsDatabase | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tables, setTables] = useState<TableInfo[]>([]);
+  const [docsOpen, setDocsOpen] = useState(false);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [query, setQuery] = useState(STARTER_QUERIES[0].sql);
   const [result, setResult] = useState<QueryResult | null>(null);
@@ -116,6 +250,19 @@ export function M1Puzzle({ onSolve }: Props) {
     }
     init();
   }, []);
+
+  useEffect(() => {
+    if (!docsOpen) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setDocsOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [docsOpen]);
 
   const runQuery = useCallback(() => {
     if (!db || !query.trim()) return;
@@ -227,12 +374,24 @@ export function M1Puzzle({ onSolve }: Props) {
         {/* Schema explorer sidebar */}
         <aside className="space-y-2 lg:sticky lg:top-20 lg:self-start">
           <div className="flex items-center justify-between px-1">
-            <h3 className="font-heading text-xs text-warm-text-muted uppercase tracking-wider">
-              Tables ({tables.length})
-            </h3>
-            <span className="text-[11px] text-warm-text-faint">
-              Click to inspect
-            </span>
+            <div>
+              <h3 className="font-heading text-xs text-warm-text-muted uppercase tracking-wider">
+                Tables ({tables.length})
+              </h3>
+              <span className="text-[11px] text-warm-text-faint">
+                Click to inspect
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDocsOpen(true)}
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-warm-border bg-warm-surface px-2.5 text-[11px] font-medium text-warm-text-muted transition-colors hover:border-warm-border-dark hover:bg-warm-surface-dark hover:text-warm-text focus:outline-none focus:ring-2 focus:ring-warm-accent/25"
+              aria-haspopup="dialog"
+              aria-expanded={docsOpen}
+            >
+              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+              Docs
+            </button>
           </div>
           <div className="max-h-[34vh] overflow-y-auto space-y-1 pr-1 scrollbar-thin lg:max-h-[calc(100vh-180px)]">
             {tables.map((t) => (
@@ -286,29 +445,6 @@ export function M1Puzzle({ onSolve }: Props) {
 
         {/* Query panel */}
         <div className="min-w-0 space-y-4">
-          {/* Starter queries */}
-          <div className="rounded-lg border border-warm-border bg-warm-surface px-3 py-2">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <p className="font-heading text-[11px] text-warm-text-muted uppercase tracking-wider">
-                Starter queries
-              </p>
-              <p className="text-[11px] text-warm-text-faint">
-                Click one to load the SQL editor
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {STARTER_QUERIES.map((sq) => (
-                <button
-                  key={sq.label}
-                  onClick={() => setQuery(sq.sql)}
-                  className="px-3 py-1.5 text-[11px] font-medium rounded-md border border-warm-border text-warm-text-muted hover:text-warm-text hover:border-warm-border-dark transition-colors"
-                >
-                  {sq.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* SQL editor */}
           <div className="rounded-lg border border-warm-border bg-warm-code overflow-hidden">
             <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 border-b border-warm-border bg-warm-code-dark/50">
@@ -491,6 +627,104 @@ export function M1Puzzle({ onSolve }: Props) {
           </div>
         </form>
       </div>
+
+      {docsOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-warm-heading/25"
+          role="presentation"
+          onClick={() => setDocsOpen(false)}
+        >
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="m1-table-docs-title"
+            className="ml-auto flex h-full w-full max-w-xl flex-col border-l border-warm-border bg-warm-surface shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-warm-border bg-warm-surface-dark/45 px-5 py-4">
+              <div>
+                <p className="font-heading text-[11px] uppercase tracking-wider text-warm-accent">
+                  Milestone 1 docs
+                </p>
+                <h2
+                  id="m1-table-docs-title"
+                  className="mt-1 font-heading text-lg text-warm-heading"
+                >
+                  Table guide
+                </h2>
+                <p className="mt-1 max-w-[60ch] text-xs leading-5 text-warm-text-muted">
+                  High-level map of the database dump. Use it to decide which
+                  tables to join, then prove the timeline with queries.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDocsOpen(false)}
+                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-warm-border bg-warm-surface text-warm-text-muted transition-colors hover:bg-warm-surface-dark hover:text-warm-text focus:outline-none focus:ring-2 focus:ring-warm-accent/25"
+                aria-label="Close table guide"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto px-5 py-4">
+              <div className="mb-4 rounded-lg border border-warm-accent/20 bg-warm-accent/5 px-3 py-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-warm-accent">
+                  Join spine
+                </p>
+                <p className="mt-1 text-sm leading-6 text-warm-text-muted">
+                  Start with employees. Join to device_registry for badges,
+                  phones, laptops, and Wi-Fi. Join to hr_directory for tax
+                  numbers, then bank_transactions for money trails.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {TABLE_DOC_GROUPS.map((group) => (
+                  <section key={group}>
+                    <h3 className="mb-2 font-heading text-xs uppercase tracking-wider text-warm-text-muted">
+                      {group}
+                    </h3>
+                    <div className="space-y-2">
+                      {TABLE_DOCS.filter((doc) => doc.group === group).map(
+                        (doc) => {
+                          const tableInfo = tables.find(
+                            (table) => table.name === doc.name
+                          );
+
+                          return (
+                            <div
+                              key={doc.name}
+                              className="rounded-lg border border-warm-border bg-warm-input px-3 py-3"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <p className="font-mono text-xs font-semibold text-warm-heading">
+                                  {doc.name}
+                                </p>
+                                {tableInfo && (
+                                  <span className="rounded-full bg-warm-surface-dark px-2 py-0.5 text-[10px] text-warm-text-faint">
+                                    {tableInfo.rowCount} rows
+                                  </span>
+                                )}
+                              </div>
+                              <p className="mt-2 text-sm leading-5 text-warm-text">
+                                {doc.purpose}
+                              </p>
+                              <p className="mt-1 text-xs leading-5 text-warm-text-muted">
+                                {doc.lookFor}
+                              </p>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }

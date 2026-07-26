@@ -1221,6 +1221,22 @@ function paramsToQuery(paramsText: string) {
   return queryString ? `?${queryString}` : "";
 }
 
+function buildM2EvidencePayload() {
+  return JSON.stringify({
+    minhCleared: true,
+    badgeWasCloned: true,
+    badgeCloneSuspect: "Bảo",
+    placeToken: "ThaoDien",
+    landmarkToken: "Bitexco",
+    kaiLegalName: "Đặng Vũ Khoa",
+    kaiBirthdate: "19930317",
+    flight0600: "VN402-5B-0600",
+    offshoreWire: "Horizon Pacific Consulting",
+    dashboardLink: "https://internal.projectxvietnam.org/theia/41",
+    twinSeed: "Kai had a brother",
+  });
+}
+
 export function M2Puzzle({ onSolve, teamName }: Props) {
   const [workbench, setWorkbench] = useState<Record<string, WorkbenchState>>(
     makeInitialWorkbench
@@ -1229,6 +1245,7 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
   const [docsServiceId, setDocsServiceId] = useState<string | null>(null);
   const [expandedDocs, setExpandedDocs] = useState<Record<string, boolean>>({});
   const [draftLoaded, setDraftLoaded] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const draftKey = useMemo(() => m2DraftKey(teamName), [teamName]);
   const complete = useMemo(
     () =>
@@ -1388,23 +1405,16 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
     }
   }
 
-  function submitEvidence(e: React.FormEvent) {
+  async function submitEvidence(e: React.FormEvent) {
     e.preventDefault();
-    onSolve(
-      JSON.stringify({
-        minhCleared: true,
-        badgeWasCloned: true,
-        badgeCloneSuspect: "Bảo",
-        placeToken: "ThaoDien",
-        landmarkToken: "Bitexco",
-        kaiLegalName: "Đặng Vũ Khoa",
-        kaiBirthdate: "19930317",
-        flight0600: "VN402-5B-0600",
-        offshoreWire: "Horizon Pacific Consulting",
-        dashboardLink: "https://internal.projectxvietnam.org/theia/41",
-        twinSeed: "Kai had a brother",
-      })
-    );
+    if (!complete || submitting) return;
+
+    setSubmitting(true);
+    try {
+      await onSolve(buildM2EvidencePayload());
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -1638,20 +1648,27 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
 
         <form
           onSubmit={submitEvidence}
-          className="mt-4 flex items-center justify-between gap-4"
+          className="mt-4 rounded-xl border border-warm-accent/15 bg-warm-accent/5 px-4 py-3"
         >
-          <p className="text-sm text-warm-text-muted">
-            {complete
-              ? "All case-note sections are ready."
-              : "Complete the missing case-note sections before filing."}
-          </p>
-          <button
-            type="submit"
-            disabled={!complete}
-            className="px-6 py-3 bg-warm-btn text-warm-bg font-semibold rounded-lg hover:bg-warm-btn-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Submit M2 case note
-          </button>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-heading text-[11px] uppercase tracking-wider text-warm-accent">
+                Hidden route ready
+              </p>
+              <p className="mt-1 text-sm leading-6 text-warm-text-muted">
+                {complete
+                  ? "All case-note sections are ready. File the note to unlock the THEIA link recovered from the Mail service."
+                  : "Complete the missing case-note sections before filing. The hidden route from Mail stays locked until the evidence is complete."}
+              </p>
+            </div>
+            <button
+              type="submit"
+              disabled={!complete || submitting}
+              className="shrink-0 rounded-lg bg-warm-btn px-6 py-3 font-semibold text-warm-bg transition-colors hover:bg-warm-btn-hover disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {submitting ? "Filing..." : "Submit M2 case note"}
+            </button>
+          </div>
         </form>
       </section>
 
