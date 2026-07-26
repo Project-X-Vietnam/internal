@@ -181,6 +181,22 @@ const TABLE_DOCS: TableDoc[] = [
 
 const TABLE_DOC_GROUPS = Array.from(new Set(TABLE_DOCS.map((doc) => doc.group)));
 
+export function buildM1CopyContext() {
+  return [
+    "Milestone 1 workspace: Analyst terminal",
+    "Oracle Labs tower database: 20 tables.",
+    "",
+    "Table documentation:",
+    ...TABLE_DOC_GROUPS.flatMap((group) => [
+      "",
+      `${group}:`,
+      ...TABLE_DOCS.filter((doc) => doc.group === group).map(
+        (doc) => `- ${doc.name}: ${doc.purpose}`
+      ),
+    ]),
+  ].join("\n");
+}
+
 export function M1Puzzle({ onSolve }: Props) {
   const [db, setDb] = useState<SqlJsDatabase | null>(null);
   const [loading, setLoading] = useState(true);

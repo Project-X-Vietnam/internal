@@ -144,7 +144,7 @@ const CASE_NOTE_REQUIREMENTS: {
   {
     scope: "Message metadata",
     title: "SMS breadcrumb: ride corroboration",
-    description: "Look for a lightweight signal that supports the mobility trail.",
+    description: "A lightweight signal can support the mobility trail.",
     evidenceKeys: ["telecomMessage"],
   },
   {
@@ -1123,6 +1123,37 @@ const SERVICES: ServiceDoc[] = [
     ],
   },
 ];
+
+export function buildM2CopyContext() {
+  return [
+    "Milestone 2 workspace: City external systems",
+    "Investigators have read access to external provider systems under city police authorization.",
+    "",
+    "Case-note scopes:",
+    ...CASE_NOTE_REQUIREMENTS.map(
+      (requirement, index) =>
+        `${index + 1}. ${requirement.scope}: ${requirement.title}. ${requirement.description}`
+    ),
+    "",
+    "Service documentation:",
+    ...SERVICES.flatMap((service) => [
+      "",
+      `${service.label}`,
+      `Description: ${service.description}`,
+      `Providers: ${service.providers.join(", ")}`,
+      ...service.endpoints.flatMap((endpoint) => [
+        "",
+        `Endpoint: ${endpoint.label}`,
+        `Method/path: ${endpoint.method} ${endpoint.path}`,
+        `Params: ${endpoint.params.join(", ")}`,
+        `Returns: ${endpoint.returns}`,
+        `Response shape: ${endpoint.responseShape.join(" ")}`,
+      ]),
+    ]),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
 
 function makeInitialWorkbench(): Record<string, WorkbenchState> {
   return Object.fromEntries(

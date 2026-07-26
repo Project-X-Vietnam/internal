@@ -1,5 +1,17 @@
 "use client";
 
+export function buildM4CopyContext() {
+  return [
+    "Milestone 4 workspace: AI interrogation",
+    "THEIA is waiting at the supervised station.",
+    "",
+    "Framing:",
+    "She answers in weather and riddles. She grieves beautifully and tells you nothing. Ask her who killed Kai and she gives you poetry.",
+    "THEIA was in the room the whole time. She watched. She recorded. She knows what happened between 21:00 and 23:47: the missing minutes, the locked door, the body that may not be who everyone believes it is.",
+    "But she was built by a man who anticipated this exact interrogation. She will not hand her truth to anyone who has not earned it.",
+  ].join("\n");
+}
+
 export function M4Puzzle() {
   return (
     <div className="space-y-6">

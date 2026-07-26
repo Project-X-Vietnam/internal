@@ -9,6 +9,25 @@ type Props = {
 const HINT_1 =
   "Hint 1: Before you dig, read the Flagged Intelligence section — those witness reports may matter later. Then: the page surface is only the cover. Open Elements, inspect this dashboard, and look for data attributes. One data attribute is encoded. Decode it, then find the element with that id.";
 
+export function buildM3CopyContext() {
+  return [
+    "Milestone 3 workspace: Kai's private dashboard, hidden layer",
+    "The hidden route opens Kai's private THEIA dashboard.",
+    "",
+    "Visible dashboard text:",
+    "- THEIA v3.1.7, Private Instance. user: kai.dang, session: terminated.",
+    "- Prediction Engine: OFFLINE. Last active: 2026-03-17 21:00.",
+    "- Behavioral Models: 9 LOADED. Suspects profiled: all.",
+    "- Dead-man's Switch: ARMED. Trigger: post-mortem auth.",
+    "- Event log: 09:14 kai.dang authenticated. 14:22 behavioral model ANDY updated. 17:05 dead-man's switch parameters finalized. 19:30 launch-night scenario locked. 21:00 kai.dang logged out. 23:47 EMERGENCY_CALL dispatched, floor 41, source THEIA.",
+    "",
+    "Flagged intelligence:",
+    "- Witness, Linh Phạm: saw Kai twice in the same afternoon, with identity variance unresolved.",
+    "- Medical, Dr. Hạnh Lý: Kai's medical file described terminal illness, but the examined body did not match that condition.",
+    "- Internal, Sơn Phan: left a secure-queue printout about large offshore transfers with a warning note.",
+  ].join("\n");
+}
+
 export function M3Puzzle({ onSolve }: Props) {
   const [findings, setFindings] = useState({
     codeword: "",
