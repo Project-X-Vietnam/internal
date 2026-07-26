@@ -138,6 +138,7 @@ export function MilestoneClient({
   const narrativeText = currentChapter
     ? [...currentChapter.summary, currentChapter.takeaway].join("\n\n")
     : milestone.belief;
+  const shouldUseDiscoveredM3Route = milestone.id === 2;
 
   return (
     <div className="min-h-screen bg-warm-bg text-warm-text">
@@ -243,7 +244,18 @@ export function MilestoneClient({
 
             <div className="flex justify-center">
               {narrativeDone ? (
-                milestone.id < 5 ? (
+                shouldUseDiscoveredM3Route ? (
+                  <div className="max-w-xl rounded-xl border border-warm-accent/20 bg-warm-accent/5 px-5 py-4 text-center">
+                    <p className="font-heading text-[11px] uppercase tracking-wider text-warm-accent">
+                      Hidden route unlocked
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-warm-text-muted">
+                      The THEIA link recovered from the Mail service is live
+                      now. Open that route to enter Kai&apos;s private
+                      dashboard.
+                    </p>
+                  </div>
+                ) : milestone.id < 5 ? (
                   <Link
                     href={`/milestone/${milestone.id + 1}`}
                     className="inline-block px-6 py-3 bg-warm-btn text-warm-bg font-semibold rounded-lg hover:bg-warm-btn-hover transition-colors"
