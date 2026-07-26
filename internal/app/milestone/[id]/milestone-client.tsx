@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import { Check, Copy, FileText } from "lucide-react";
 import type { CaseBriefChapter } from "@/lib/case-brief";
 import type { Suspect } from "@/lib/game";
+import { PROLOGUE_LINES } from "@/lib/prologue";
 import { submitAnswer } from "@/lib/actions";
 import { ClueDrawer } from "@/components/game/clue-drawer";
 import { ElapsedTimer } from "@/components/game/elapsed-timer";
 import { Typewriter } from "@/components/ui/typewriter-text";
-import { M1Puzzle } from "@/components/puzzles/m1-puzzle";
-import { M2Puzzle } from "@/components/puzzles/m2-puzzle";
-import { M3Puzzle } from "@/components/puzzles/m3-puzzle";
-import { M4Puzzle } from "@/components/puzzles/m4-puzzle";
-import { M5Puzzle } from "@/components/puzzles/m5-puzzle";
+import { M1Puzzle, buildM1CopyContext } from "@/components/puzzles/m1-puzzle";
+import { M2Puzzle, buildM2CopyContext } from "@/components/puzzles/m2-puzzle";
+import { M3Puzzle, buildM3CopyContext } from "@/components/puzzles/m3-puzzle";
+import { M4Puzzle, buildM4CopyContext } from "@/components/puzzles/m4-puzzle";
+import { M5Puzzle, buildM5CopyContext } from "@/components/puzzles/m5-puzzle";
 
 type MilestoneInfo = {
   id: number;
@@ -33,6 +34,126 @@ type Props = {
   caseBriefChapters: CaseBriefChapter[];
 };
 
+type CopyStatus = "idle" | "copied" | "error";
+
+const PUZZLE_CONTEXT_BUILDERS: Record<number, () => string> = {
+  1: buildM1CopyContext,
+  2: buildM2CopyContext,
+  3: buildM3CopyContext,
+  4: buildM4CopyContext,
+  5: buildM5CopyContext,
+};
+
+const HIDDEN_CONTEXT_CLUE_KEYS = new Set([
+  "m1_suspect_board_mode",
+  "m3_reveal_seen",
+]);
+
+function humanizeKey(key: string) {
+  return key
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function formatSuspectForContext(suspect: Suspect) {
+  return [
+    `${suspect.fullName} (${suspect.name})`,
+    `Role: ${suspect.role}`,
+    `Email: ${suspect.email}`,
+    `Phone: ${suspect.phone}`,
+    `SIM: ${suspect.simId}`,
+    `Badge: ${suspect.badgeId}`,
+    `Office: ${suspect.office}`,
+    `District: ${suspect.district}`,
+    `Profile: ${suspect.profile}`,
+    `Provider preferences: ${suspect.providerPreferences.join("; ")}`,
+    `Backstory: ${suspect.backstory}`,
+  ].join("\n");
+}
+
+function buildMilestoneCopyContext({
+  milestone,
+  teamName,
+  clueTokens,
+  suspects,
+  caseBriefChapters,
+}: {
+  milestone: MilestoneInfo;
+  teamName: string;
+  clueTokens: { key: string; value: string }[];
+  suspects: Suspect[];
+  caseBriefChapters: CaseBriefChapter[];
+}) {
+  const puzzleContext =
+    PUZZLE_CONTEXT_BUILDERS[milestone.id]?.() ??
+    `Milestone ${milestone.id} workspace context is not documented yet.`;
+  const visibleClueTokens = clueTokens.filter(
+    (token) => !HIDDEN_CONTEXT_CLUE_KEYS.has(token.key)
+  );
+
+  return [
+    "THEIA investigation context",
+    "Player-facing context copied from the current milestone.",
+    "",
+    `Team: ${teamName}`,
+    `Milestone: M${milestone.id}, ${milestone.title}`,
+    `Discipline: ${milestone.discipline}`,
+    `Investigation question: ${milestone.question}`,
+    "",
+    "Opening briefing:",
+    ...PROLOGUE_LINES.map((line) => `- ${line}`),
+    "",
+    "Unlocked narrative log:",
+    caseBriefChapters.length
+      ? caseBriefChapters
+          .map((chapter) =>
+            [
+              `${chapter.title}`,
+              ...chapter.summary.map((line) => `- ${line}`),
+              `Takeaway: ${chapter.takeaway}`,
+            ].join("\n")
+          )
+          .join("\n\n")
+      : "No milestone narratives unlocked yet.",
+    "",
+    "Collected clue tokens:",
+    visibleClueTokens.length
+      ? visibleClueTokens
+          .map((token) => `- ${humanizeKey(token.key)}: ${token.value}`)
+          .join("\n")
+      : "No clue tokens collected yet.",
+    "",
+    "Visible suspect dossiers:",
+    suspects.map(formatSuspectForContext).join("\n\n"),
+    "",
+    "Current milestone workspace and documentation:",
+    puzzleContext,
+  ].join("\n");
+}
+
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    const copied = document.execCommand("copy");
+    if (!copied) throw new Error("Copy command failed");
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
 export function MilestoneClient({
   milestone,
   teamName,
@@ -50,6 +171,7 @@ export function MilestoneClient({
   const [selectedSuspectId, setSelectedSuspectId] = useState<string | null>(null);
   const [briefChapters, setBriefChapters] = useState(caseBriefChapters);
   const [narrativeDone, setNarrativeDone] = useState(isSolved);
+  const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,6 +196,24 @@ export function MilestoneClient({
       setFeedback(result.message ?? "Incorrect. Try again.");
     }
     setSubmitting(false);
+  }
+
+  async function handleCopyContext() {
+    try {
+      const contextText = buildMilestoneCopyContext({
+        milestone,
+        teamName,
+        clueTokens,
+        suspects,
+        caseBriefChapters: briefChapters,
+      });
+      await copyTextToClipboard(contextText);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("error");
+    }
+
+    window.setTimeout(() => setCopyStatus("idle"), 1800);
   }
 
   function renderPuzzle() {
@@ -190,13 +330,35 @@ export function MilestoneClient({
               &ldquo;{milestone.question}&rdquo;
             </p>
           </div>
-          <div className="hidden md:block text-right">
-            <p className="text-[11px] text-warm-text-faint uppercase tracking-wider">
-              Current discipline
-            </p>
-            <p className="text-sm text-warm-text-muted">
-              {milestone.discipline}
-            </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center md:justify-end">
+            <div className="text-left md:text-right">
+              <p className="text-[11px] text-warm-text-faint uppercase tracking-wider">
+                Current discipline
+              </p>
+              <p className="text-sm text-warm-text-muted">
+                {milestone.discipline}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyContext}
+              className="inline-flex h-9 w-fit items-center gap-2 rounded-lg border border-warm-border bg-warm-bg px-3 text-xs font-medium text-warm-text-muted transition-colors hover:bg-warm-surface-dark hover:text-warm-text focus:outline-none focus:ring-2 focus:ring-warm-accent/25"
+              aria-label="Copy milestone context for AI prompting"
+              title="Copy milestone context for AI prompting"
+            >
+              {copyStatus === "copied" ? (
+                <Check className="h-4 w-4 text-warm-success" aria-hidden="true" />
+              ) : (
+                <Copy className="h-4 w-4" aria-hidden="true" />
+              )}
+              <span>
+                {copyStatus === "copied"
+                  ? "Copied"
+                  : copyStatus === "error"
+                    ? "Copy failed"
+                    : "Copy context"}
+              </span>
+            </button>
           </div>
         </div>
 

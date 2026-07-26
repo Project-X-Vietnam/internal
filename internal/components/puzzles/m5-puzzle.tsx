@@ -152,6 +152,26 @@ function xorDecrypt(text: string, key: string): string {
     .join("");
 }
 
+export function buildM5CopyContext() {
+  return [
+    "Milestone 5 workspace: Kai's vault",
+    "Urgent, 05:38. Two locks stand between the team and the truth. The 06:00 flight will not wait. Every fragment needed was earned tonight: a codeword, a place, a date, and a name.",
+    "",
+    "Lock 1: Password Assembly",
+    "Starting fragment slots: Legal name, Codeword, Place, Birthdate.",
+    `Transform controls: ${Object.values(TRANSFORM_LABELS).join(", ")}.`,
+    "Separator controls: hyphen, underscore, dot, none.",
+    "",
+    "Lock 2: Cipher Workbench",
+    "Encrypted file area: encrypted_file.b64.",
+    `Inner cipher controls: ${INNER_CIPHERS.join(", ")}.`,
+    "Final plaintext verification area.",
+    "",
+    "Charge board options:",
+    ...CRIME_OPTIONS.map((option) => `- ${option.label}`),
+  ].join("\n");
+}
+
 export function M5Puzzle({ onSolve }: Props) {
   const [lock1Open, setLock1Open] = useState(false);
   const [ciphertextB64, setCiphertextB64] = useState("");

@@ -124,54 +124,63 @@ const INITIAL_EVIDENCE: EvidenceState = {
 };
 
 const CASE_NOTE_REQUIREMENTS: {
+  scope: string;
   title: string;
-  detail: string;
+  description: string;
   evidenceKeys: EvidenceKey[];
 }[] = [
   {
-    title: "A Grab driver remembers a late pickup",
-    detail: "He didn't catch the name. But he remembers the building.",
+    scope: "Ride history",
+    title: "Mobility chain: late trip",
+    description: "Understand whether the badge timeline matches a real-world trip.",
     evidenceKeys: ["rideTrip"],
   },
   {
-    title: "A Viettel technician flagged an anomaly",
-    detail: "One of the SIMs did something unusual that night. He wrote it down.",
+    scope: "Phone records",
+    title: "Phone location: late tower event",
+    description: "Compare phone movement with the story told by the badge logs.",
     evidenceKeys: ["telecomPing"],
   },
   {
-    title: "The technician mentioned one more thing",
-    detail: "Almost forgot. There was something else on that line.",
+    scope: "Message metadata",
+    title: "SMS breadcrumb: ride corroboration",
+    description: "A lightweight signal can support the mobility trail.",
     evidenceKeys: ["telecomMessage"],
   },
   {
-    title: "A Grab driver did the math",
-    detail: "Same driver. He keeps saying the numbers don't work.",
+    scope: "Map distance",
+    title: "Feasibility check: tower vs. dropoff",
+    description: "Measure whether two location claims can fit the same timeline.",
     evidenceKeys: ["mapsDistance"],
   },
   {
-    title: "A nameless seat appears before dawn",
-    detail:
-      "The flight records expose an early departure, a held seat, and a gate record tied to the same booking.",
+    scope: "Flight records",
+    title: "Departure lead: held seat before dawn",
+    description: "Check early departures for a seat that does not behave normally.",
     evidenceKeys: ["airlineManifest"],
   },
   {
-    title: "A compliance officer flagged a wire",
-    detail: "Something cleared that night that shouldn't have. She held the report.",
+    scope: "Banking records",
+    title: "Money trail: seat reservation wire",
+    description: "Understand what funded the unusual reservation.",
     evidenceKeys: ["bankingTransaction"],
   },
   {
-    title: "A mail server admin noticed a ghost",
-    detail: "Something is sitting where it shouldn't be. It was never sent.",
+    scope: "Mail folders",
+    title: "Hidden route: unsent Mail message",
+    description: "Look beyond delivered mail for a route that was never sent.",
     evidenceKeys: ["mailMessage"],
   },
   {
-    title: "A badge audit names the duplicate",
-    detail: "The tower badge was a costume. Someone had authority to make it.",
+    scope: "Badge audit",
+    title: "Badge duplicate: audit attachment",
+    description: "Understand how a badge identity could be reused.",
     evidenceKeys: ["mailAttachment"],
   },
   {
-    title: "A librarian noticed an edit",
-    detail: "Someone kept revising the same page. She wonders what they were trying to erase.",
+    scope: "Public archive",
+    title: "Background seed: revised archive page",
+    description: "Understand the family context around Kai.",
     evidenceKeys: ["archivePage"],
   },
 ];
@@ -1115,6 +1124,37 @@ const SERVICES: ServiceDoc[] = [
   },
 ];
 
+export function buildM2CopyContext() {
+  return [
+    "Milestone 2 workspace: City external systems",
+    "Investigators have read access to external provider systems under city police authorization.",
+    "",
+    "Case-note scopes:",
+    ...CASE_NOTE_REQUIREMENTS.map(
+      (requirement, index) =>
+        `${index + 1}. ${requirement.scope}: ${requirement.title}. ${requirement.description}`
+    ),
+    "",
+    "Service documentation:",
+    ...SERVICES.flatMap((service) => [
+      "",
+      `${service.label}`,
+      `Description: ${service.description}`,
+      `Providers: ${service.providers.join(", ")}`,
+      ...service.endpoints.flatMap((endpoint) => [
+        "",
+        `Endpoint: ${endpoint.label}`,
+        `Method/path: ${endpoint.method} ${endpoint.path}`,
+        `Params: ${endpoint.params.join(", ")}`,
+        `Returns: ${endpoint.returns}`,
+        `Response shape: ${endpoint.responseShape.join(" ")}`,
+      ]),
+    ]),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 function makeInitialWorkbench(): Record<string, WorkbenchState> {
   return Object.fromEntries(
     SERVICES.map((service) => {
@@ -1261,6 +1301,8 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
       ).length,
     [evidence]
   );
+  const missingRequirementCount =
+    CASE_NOTE_REQUIREMENTS.length - completedRequirementCount;
   const docsService = useMemo(
     () => SERVICES.find((service) => service.id === docsServiceId) ?? null,
     [docsServiceId]
@@ -1600,46 +1642,69 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
                 M2 external-evidence case note
               </h3>
               <p className="mt-1 max-w-3xl text-sm leading-6 text-warm-text-muted">
-                Enough evidence means the note can support each claim below with
-                at least one external-provider response. File it when every
-                section is ready.
+                Build the note from the scopes below. Each section needs one
+                captured provider response that supports the claim, then the
+                hidden route can be filed.
               </p>
             </div>
-            <p className="text-xs text-warm-text-muted">
-              {completedRequirementCount}/{CASE_NOTE_REQUIREMENTS.length} ready
-            </p>
+            <div className="rounded-lg border border-warm-border bg-warm-bg px-3 py-2 text-right">
+              <p className="font-heading text-[10px] uppercase tracking-wider text-warm-text-muted">
+                Case sections
+              </p>
+              <p className="mt-0.5 text-sm font-semibold text-warm-heading">
+                {completedRequirementCount}/{CASE_NOTE_REQUIREMENTS.length} ready
+              </p>
+            </div>
           </div>
 
-          <div className="mt-4 grid gap-2 md:grid-cols-2">
-            {CASE_NOTE_REQUIREMENTS.map((requirement) => {
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            {CASE_NOTE_REQUIREMENTS.map((requirement, index) => {
               const ready = requirement.evidenceKeys.every((key) => evidence[key]);
 
               return (
                 <div
                   key={requirement.title}
-                  className={`rounded-lg border px-3 py-3 ${
+                  className={`rounded-lg border px-3.5 py-3.5 ${
                     ready
                       ? "border-warm-success/30 bg-warm-success/5"
                       : "border-warm-border bg-warm-bg"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-warm-heading">
-                      {requirement.title}
-                    </p>
+                  <div className="flex items-start gap-3">
                     <span
-                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
                         ready
-                          ? "bg-warm-success/10 text-warm-success"
-                          : "bg-warm-surface-dark text-warm-text-muted"
+                          ? "border-warm-success/25 bg-warm-success/10 text-warm-success"
+                          : "border-warm-border bg-warm-surface text-warm-text-muted"
                       }`}
                     >
-                      {ready ? "Ready" : "Needed"}
+                      {index + 1}
                     </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-warm-accent">
+                            {requirement.scope}
+                          </p>
+                          <p className="mt-1 text-sm font-semibold leading-5 text-warm-heading">
+                            {requirement.title}
+                          </p>
+                          <p className="mt-1 max-w-xl text-xs leading-5 text-warm-text-muted">
+                            {requirement.description}
+                          </p>
+                        </div>
+                        <span
+                          className={`w-fit shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
+                            ready
+                              ? "bg-warm-success/10 text-warm-success"
+                              : "bg-warm-surface-dark text-warm-text-muted"
+                          }`}
+                        >
+                          {ready ? "Captured" : "Need evidence"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs leading-5 text-warm-text-muted">
-                    {requirement.detail}
-                  </p>
                 </div>
               );
             })}
@@ -1653,12 +1718,14 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-heading text-[11px] uppercase tracking-wider text-warm-accent">
-                Hidden route ready
+                {complete ? "Hidden route ready" : "Hidden route locked"}
               </p>
               <p className="mt-1 text-sm leading-6 text-warm-text-muted">
                 {complete
                   ? "All case-note sections are ready. File the note to unlock the THEIA link recovered from the Mail service."
-                  : "Complete the missing case-note sections before filing. The hidden route from Mail stays locked until the evidence is complete."}
+                  : `Capture the remaining ${missingRequirementCount} case-note section${
+                      missingRequirementCount === 1 ? "" : "s"
+                    } before filing. The Mail route stays locked until the evidence is complete.`}
               </p>
             </div>
             <button
