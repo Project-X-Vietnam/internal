@@ -16,7 +16,7 @@ import { redirect } from "next/navigation";
 export async function loginTeam(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   const code = (formData.get("code") as string)?.trim();
-  let redirectTo = "/hub";
+  let redirectTo = "/artifacts/theia/hub";
 
   if (!name || !code) {
     return { error: "Team name and join code are required." };
@@ -36,7 +36,7 @@ export async function loginTeam(formData: FormData) {
         where: { id: team.id },
         data: { startedAt: new Date(), currentMilestone: 1 },
       });
-      redirectTo = "/prologue";
+      redirectTo = "/artifacts/theia/prologue";
     }
   } catch (error) {
     console.error("Team login failed. Check production database env and migrations.", error);
@@ -211,15 +211,15 @@ export async function loginFacilitator(formData: FormData) {
   const expectedPin = process.env.FACILITATOR_PIN;
 
   if (!expectedPin) {
-    redirect("/facilitator?error=missing-config");
+    redirect("/artifacts/theia/facilitator?error=missing-config");
   }
 
   if (!pin || pin !== expectedPin) {
-    redirect("/facilitator?error=invalid-pin");
+    redirect("/artifacts/theia/facilitator?error=invalid-pin");
   }
 
   await setFacilitatorSession();
-  redirect("/facilitator");
+  redirect("/artifacts/theia/facilitator");
 }
 
 export async function isFacilitatorAuthed() {

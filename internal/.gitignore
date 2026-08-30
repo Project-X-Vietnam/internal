@@ -45,3 +45,6 @@ next-env.d.ts
 # local agent/runtime artifacts
 /.claude/
 /dev.db
+
+# ...but do track the template
+!.env.example

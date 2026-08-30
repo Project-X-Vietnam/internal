@@ -172,7 +172,7 @@ Maps (`/api/mock/maps`, provider `VMap`):
 
 | Step | Request params | Expected signal | isCritical |
 |---|---|---|---|
-| Geocode | `{ "provider": "VMap", "resource": "geocode", "query": "15 Lê Thánh Tôn" }` | Address query returns a matching Thảo Điền location record. | - |
+| Geocode | `{ "provider": "VMap", "resource": "geocodWe", "query": "15 Lê Thánh Tôn" }` | Address query returns a matching Thảo Điền location record. | - |
 | Distance | `{ "provider": "VMap", "resource": "distance", "from": "VT-D1-012", "to": "VT-D2-047" }` | Compared location ids are `6.4 km` apart and in separate districts. | Yes |
 
 Airline (`/api/mock/airline`, provider `Vietnam Airlines`):
