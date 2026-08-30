@@ -4,3 +4,7 @@ dist/
 build/
 out/
 .DS_Store
+
+# untracked local tooling / caches
+.agent/
+.pnpm-store/

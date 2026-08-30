@@ -2,15 +2,15 @@ import { redirect } from "next/navigation";
 import { canAccessMilestone, getTeamWithProgress, hasTeamClue } from "@/lib/actions";
 import { getUnlockedCaseBriefChapters } from "@/lib/case-brief";
 import { MILESTONES, getVisibleSuspects } from "@/lib/game";
-import { MilestoneClient } from "@/app/milestone/[id]/milestone-client";
+import { MilestoneClient } from "@/app/artifacts/theia/milestone/[id]/milestone-client";
 
 export default async function HiddenDashboardPage() {
   const team = await getTeamWithProgress();
-  if (!team) redirect("/");
+  if (!team) redirect("/artifacts/theia");
 
   const allowed = await canAccessMilestone(3);
   const hasDashboardLink = await hasTeamClue("dashboard_link", "/theia/41");
-  if (!allowed || !hasDashboardLink) redirect("/hub");
+  if (!allowed || !hasDashboardLink) redirect("/artifacts/theia/hub");
 
   const milestone = MILESTONES.find((m) => m.id === 3)!;
   const isSolved = team.progress.some((p) => p.milestone === 3 && p.solvedAt);

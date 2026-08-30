@@ -260,6 +260,188 @@ INSERT INTO badge_access (badge_id, floor, direction, ts_utc) VALUES
   ('B-1007', 39, 'OUT', '2026-03-17 17:25:00'),  -- Trang leaves
   ('B-1007', 1,  'OUT', '2026-03-17 17:28:00');
 
+-- Background employee movement (03/17 — normal daily traffic)
+INSERT INTO badge_access (badge_id, floor, direction, ts_utc) VALUES
+  -- E012 Mai (Data Scientist) — arrives 09:15 local, works on 38
+  ('B-1012', 1,  'IN',  '2026-03-17 02:15:00'),
+  ('B-1012', 38, 'IN',  '2026-03-17 02:18:00'),
+  ('B-1012', 38, 'OUT', '2026-03-17 04:10:00'),
+  ('B-1012', 1,  'OUT', '2026-03-17 04:15:00'),
+  ('B-1012', 1,  'IN',  '2026-03-17 05:00:00'),
+  ('B-1012', 38, 'IN',  '2026-03-17 05:03:00'),
+  ('B-1012', 38, 'OUT', '2026-03-17 11:30:00'),
+  ('B-1012', 1,  'OUT', '2026-03-17 11:35:00'),
+
+  -- E014 Yến (HR) — arrives 08:40, works on 40, visits 35 for meeting
+  ('B-1014', 1,  'IN',  '2026-03-17 01:40:00'),
+  ('B-1014', 40, 'IN',  '2026-03-17 01:43:00'),
+  ('B-1014', 40, 'OUT', '2026-03-17 03:00:00'),
+  ('B-1014', 35, 'IN',  '2026-03-17 03:03:00'),
+  ('B-1014', 35, 'OUT', '2026-03-17 04:00:00'),
+  ('B-1014', 40, 'IN',  '2026-03-17 04:03:00'),
+  ('B-1014', 40, 'OUT', '2026-03-17 10:00:00'),
+  ('B-1014', 1,  'OUT', '2026-03-17 10:05:00'),
+
+  -- E017 Tuấn (ML Eng) — arrives 09:10, works on 38, leaves late
+  ('B-1017', 1,  'IN',  '2026-03-17 02:10:00'),
+  ('B-1017', 38, 'IN',  '2026-03-17 02:13:00'),
+  ('B-1017', 38, 'OUT', '2026-03-17 04:20:00'),
+  ('B-1017', 1,  'OUT', '2026-03-17 04:25:00'),
+  ('B-1017', 1,  'IN',  '2026-03-17 05:10:00'),
+  ('B-1017', 38, 'IN',  '2026-03-17 05:13:00'),
+  ('B-1017', 38, 'OUT', '2026-03-17 13:00:00'),
+  ('B-1017', 1,  'OUT', '2026-03-17 13:05:00'),
+
+  -- E018 Ngọc (Product Designer) — 35F, visits 38 briefly
+  ('B-1018', 1,  'IN',  '2026-03-17 02:05:00'),
+  ('B-1018', 35, 'IN',  '2026-03-17 02:08:00'),
+  ('B-1018', 35, 'OUT', '2026-03-17 06:00:00'),
+  ('B-1018', 38, 'IN',  '2026-03-17 06:03:00'),
+  ('B-1018', 38, 'OUT', '2026-03-17 06:30:00'),
+  ('B-1018', 35, 'IN',  '2026-03-17 06:33:00'),
+  ('B-1018', 35, 'OUT', '2026-03-17 10:30:00'),
+  ('B-1018', 1,  'OUT', '2026-03-17 10:35:00'),
+
+  -- E019 Quân (Finance) — 40F all day
+  ('B-1019', 1,  'IN',  '2026-03-17 01:50:00'),
+  ('B-1019', 40, 'IN',  '2026-03-17 01:53:00'),
+  ('B-1019', 40, 'OUT', '2026-03-17 04:00:00'),
+  ('B-1019', 1,  'OUT', '2026-03-17 04:05:00'),
+  ('B-1019', 1,  'IN',  '2026-03-17 04:45:00'),
+  ('B-1019', 40, 'IN',  '2026-03-17 04:48:00'),
+  ('B-1019', 40, 'OUT', '2026-03-17 10:30:00'),
+  ('B-1019', 1,  'OUT', '2026-03-17 10:35:00'),
+
+  -- E020 Lan (Office Manager) — moves around a lot, floors 1/35/40
+  ('B-1020', 1,  'IN',  '2026-03-17 01:30:00'),
+  ('B-1020', 40, 'IN',  '2026-03-17 01:33:00'),
+  ('B-1020', 40, 'OUT', '2026-03-17 02:30:00'),
+  ('B-1020', 35, 'IN',  '2026-03-17 02:33:00'),
+  ('B-1020', 35, 'OUT', '2026-03-17 03:30:00'),
+  ('B-1020', 40, 'IN',  '2026-03-17 03:33:00'),
+  ('B-1020', 40, 'OUT', '2026-03-17 04:00:00'),
+  ('B-1020', 1,  'OUT', '2026-03-17 04:05:00'),
+  ('B-1020', 1,  'IN',  '2026-03-17 05:00:00'),
+  ('B-1020', 40, 'IN',  '2026-03-17 05:03:00'),
+  ('B-1020', 40, 'OUT', '2026-03-17 09:00:00'),
+  ('B-1020', 39, 'IN',  '2026-03-17 09:03:00'),
+  ('B-1020', 39, 'OUT', '2026-03-17 10:00:00'),
+  ('B-1020', 1,  'OUT', '2026-03-17 10:05:00'),
+
+  -- E021 Việt (QA) — 38F, leaves at normal time
+  ('B-1021', 1,  'IN',  '2026-03-17 02:00:00'),
+  ('B-1021', 38, 'IN',  '2026-03-17 02:03:00'),
+  ('B-1021', 38, 'OUT', '2026-03-17 04:15:00'),
+  ('B-1021', 1,  'OUT', '2026-03-17 04:20:00'),
+  ('B-1021', 1,  'IN',  '2026-03-17 05:15:00'),
+  ('B-1021', 38, 'IN',  '2026-03-17 05:18:00'),
+  ('B-1021', 38, 'OUT', '2026-03-17 11:00:00'),
+  ('B-1021', 1,  'OUT', '2026-03-17 11:05:00'),
+
+  -- E022 Hà (Legal) — 40F, short day
+  ('B-1022', 1,  'IN',  '2026-03-17 02:30:00'),
+  ('B-1022', 40, 'IN',  '2026-03-17 02:33:00'),
+  ('B-1022', 40, 'OUT', '2026-03-17 09:30:00'),
+  ('B-1022', 1,  'OUT', '2026-03-17 09:35:00'),
+
+  -- E023 Dũng (Infrastructure) — 38F, arrives late
+  ('B-1023', 1,  'IN',  '2026-03-17 03:00:00'),
+  ('B-1023', 38, 'IN',  '2026-03-17 03:03:00'),
+  ('B-1023', 38, 'OUT', '2026-03-17 12:00:00'),
+  ('B-1023', 1,  'OUT', '2026-03-17 12:05:00'),
+
+  -- E024 Vy (Marketing) — 40F
+  ('B-1024', 1,  'IN',  '2026-03-17 02:00:00'),
+  ('B-1024', 40, 'IN',  '2026-03-17 02:03:00'),
+  ('B-1024', 40, 'OUT', '2026-03-17 04:00:00'),
+  ('B-1024', 1,  'OUT', '2026-03-17 04:05:00'),
+  ('B-1024', 1,  'IN',  '2026-03-17 05:00:00'),
+  ('B-1024', 40, 'IN',  '2026-03-17 05:03:00'),
+  ('B-1024', 40, 'OUT', '2026-03-17 10:00:00'),
+  ('B-1024', 39, 'IN',  '2026-03-17 10:03:00'),
+  ('B-1024', 39, 'OUT', '2026-03-17 10:15:00'),
+  ('B-1024', 1,  'OUT', '2026-03-17 10:20:00'),
+
+  -- Security guards E015/E016 on rounds (night shift 18:00+)
+  ('B-1015', 1,  'IN',  '2026-03-17 11:00:00'),
+  ('B-1015', 2,  'IN',  '2026-03-17 11:03:00'),
+  ('B-1015', 2,  'OUT', '2026-03-17 11:30:00'),
+  ('B-1015', 38, 'IN',  '2026-03-17 11:33:00'),
+  ('B-1015', 38, 'OUT', '2026-03-17 11:45:00'),
+  ('B-1015', 35, 'IN',  '2026-03-17 11:48:00'),
+  ('B-1015', 35, 'OUT', '2026-03-17 12:00:00'),
+  ('B-1015', 40, 'IN',  '2026-03-17 12:03:00'),
+  ('B-1015', 40, 'OUT', '2026-03-17 12:15:00'),
+  ('B-1015', 2,  'IN',  '2026-03-17 12:18:00'),
+  ('B-1015', 2,  'OUT', '2026-03-17 14:00:00'),
+  ('B-1015', 39, 'IN',  '2026-03-17 14:03:00'),
+  ('B-1015', 39, 'OUT', '2026-03-17 14:15:00'),
+  ('B-1015', 38, 'IN',  '2026-03-17 14:18:00'),
+  ('B-1015', 38, 'OUT', '2026-03-17 14:30:00'),
+  ('B-1015', 2,  'IN',  '2026-03-17 14:33:00'),
+
+  ('B-1016', 1,  'IN',  '2026-03-17 11:00:00'),
+  ('B-1016', 2,  'IN',  '2026-03-17 11:03:00'),
+  ('B-1016', 2,  'OUT', '2026-03-17 12:30:00'),
+  ('B-1016', 1,  'IN',  '2026-03-17 12:33:00'),
+  ('B-1016', 1,  'OUT', '2026-03-17 12:45:00'),
+  ('B-1016', 2,  'IN',  '2026-03-17 12:48:00'),
+  ('B-1016', 2,  'OUT', '2026-03-17 15:00:00'),
+  ('B-1016', 39, 'IN',  '2026-03-17 15:03:00'),
+  ('B-1016', 39, 'OUT', '2026-03-17 15:15:00'),
+  ('B-1016', 2,  'IN',  '2026-03-17 15:18:00'),
+
+  -- E006 Phúc (Board Chair) — arrives late, goes to 41 for board pre-meeting, leaves early
+  ('B-1006', 1,  'IN',  '2026-03-17 02:00:00'),
+  ('B-1006', 41, 'IN',  '2026-03-17 02:03:00'),
+  ('B-1006', 41, 'OUT', '2026-03-17 04:30:00'),
+  ('B-1006', 1,  'OUT', '2026-03-17 04:35:00'),
+  ('B-1006', 1,  'IN',  '2026-03-17 05:30:00'),
+  ('B-1006', 41, 'IN',  '2026-03-17 05:33:00'),
+  ('B-1006', 41, 'OUT', '2026-03-17 08:00:00'),
+  ('B-1006', 1,  'OUT', '2026-03-17 08:05:00'),
+
+  -- E008 Dr. Hạnh (Physician) — comes in mid-morning, medical floor (2F)
+  ('B-1008', 1,  'IN',  '2026-03-17 03:00:00'),
+  ('B-1008', 2,  'IN',  '2026-03-17 03:03:00'),
+  ('B-1008', 2,  'OUT', '2026-03-17 06:00:00'),
+  ('B-1008', 41, 'IN',  '2026-03-17 06:03:00'),
+  ('B-1008', 41, 'OUT', '2026-03-17 06:20:00'),
+  ('B-1008', 2,  'IN',  '2026-03-17 06:23:00'),
+  ('B-1008', 2,  'OUT', '2026-03-17 09:00:00'),
+  ('B-1008', 1,  'OUT', '2026-03-17 09:05:00');
+
+-- Previous-day badge traffic (03/16 — normal weekday for context)
+INSERT INTO badge_access (badge_id, floor, direction, ts_utc) VALUES
+  ('B-1001', 1,  'IN',  '2026-03-16 01:10:00'),
+  ('B-1001', 41, 'IN',  '2026-03-16 01:13:00'),
+  ('B-1001', 41, 'OUT', '2026-03-16 11:00:00'),
+  ('B-1001', 1,  'OUT', '2026-03-16 11:05:00'),
+  ('B-1002', 1,  'IN',  '2026-03-16 01:25:00'),
+  ('B-1002', 38, 'IN',  '2026-03-16 01:28:00'),
+  ('B-1002', 38, 'OUT', '2026-03-16 11:30:00'),
+  ('B-1002', 1,  'OUT', '2026-03-16 11:35:00'),
+  ('B-1003', 1,  'IN',  '2026-03-16 01:40:00'),
+  ('B-1003', 40, 'IN',  '2026-03-16 01:43:00'),
+  ('B-1003', 40, 'OUT', '2026-03-16 10:00:00'),
+  ('B-1003', 1,  'OUT', '2026-03-16 10:05:00'),
+  ('B-1004', 1,  'IN',  '2026-03-16 00:50:00'),
+  ('B-1004', 2,  'IN',  '2026-03-16 00:53:00'),
+  ('B-1004', 2,  'OUT', '2026-03-16 10:30:00'),
+  ('B-1004', 1,  'OUT', '2026-03-16 10:35:00'),
+  ('B-1009', 1,  'IN',  '2026-03-16 02:30:00'),
+  ('B-1009', 38, 'IN',  '2026-03-16 02:33:00'),
+  ('B-1009', 38, 'OUT', '2026-03-16 14:00:00'),
+  ('B-1009', 1,  'OUT', '2026-03-16 14:05:00'),
+  ('B-1010', 1,  'IN',  '2026-03-16 02:10:00'),
+  ('B-1010', 38, 'IN',  '2026-03-16 02:13:00'),
+  ('B-1010', 38, 'OUT', '2026-03-16 11:00:00'),
+  ('B-1010', 1,  'OUT', '2026-03-16 11:05:00'),
+  ('B-1013', 1,  'IN',  '2026-03-16 01:45:00'),
+  ('B-1013', 38, 'IN',  '2026-03-16 01:48:00'),
+  ('B-1013', 38, 'OUT', '2026-03-16 12:00:00'),
+  ('B-1013', 1,  'OUT', '2026-03-16 12:05:00');
+
 
 -- ============================================================
 -- TABLE 5: phone_logs
@@ -326,6 +508,79 @@ INSERT INTO phone_logs (sim_id, tower_id, ts_local, duration_sec, call_type) VAL
   ('SIM-4407', 'VT-D1-012', '2026-03-17 23:30:00', NULL, 'PING'),
   ('SIM-4407', 'VT-D1-012', '2026-03-18 00:30:00', NULL, 'PING');
 
+-- Background phone activity (other employees, 03/17)
+INSERT INTO phone_logs (sim_id, tower_id, ts_local, duration_sec, call_type) VALUES
+  -- Thảo (SIM-4410) — normal day, goes home evening
+  ('SIM-4410', 'VT-D1-012', '2026-03-17 09:15:00', NULL,  'PING'),
+  ('SIM-4410', 'VT-D1-012', '2026-03-17 10:30:00', 45,    'SMS_OUT'),
+  ('SIM-4410', 'VT-D1-012', '2026-03-17 12:00:00', 120,   'VOICE_OUT'),
+  ('SIM-4410', 'VT-D1-012', '2026-03-17 15:00:00', NULL,   'DATA'),
+  ('SIM-4410', 'VT-D1-012', '2026-03-17 18:00:00', NULL,   'PING'),
+  ('SIM-4410', 'VT-TD-003', '2026-03-17 18:45:00', NULL,   'PING'),
+
+  -- Hùng (SIM-4411) — leaves at 18:30, goes to Tân Bình
+  ('SIM-4411', 'VT-D1-012', '2026-03-17 09:20:00', NULL,   'PING'),
+  ('SIM-4411', 'VT-D1-012', '2026-03-17 13:00:00', 90,     'VOICE_IN'),
+  ('SIM-4411', 'VT-D1-012', '2026-03-17 16:00:00', NULL,   'DATA'),
+  ('SIM-4411', 'VT-D1-012', '2026-03-17 18:30:00', NULL,   'PING'),
+  ('SIM-4411', 'VT-TB-019', '2026-03-17 19:15:00', NULL,   'PING'),
+
+  -- Mai (SIM-4412) — data-heavy usage
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 09:15:00', NULL,   'PING'),
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 10:00:00', NULL,   'DATA'),
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 11:00:00', NULL,   'DATA'),
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 14:00:00', NULL,   'DATA'),
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 16:00:00', 60,     'VOICE_OUT'),
+  ('SIM-4412', 'VT-D1-012', '2026-03-17 18:30:00', NULL,   'PING'),
+  ('SIM-4412', 'VT-D5-022', '2026-03-17 19:20:00', NULL,   'PING'),
+
+  -- Đạt (SIM-4413) — DevOps, leaves at 19:00
+  ('SIM-4413', 'VT-D1-012', '2026-03-17 08:50:00', NULL,   'PING'),
+  ('SIM-4413', 'VT-D1-012', '2026-03-17 12:30:00', NULL,   'DATA'),
+  ('SIM-4413', 'VT-D1-012', '2026-03-17 15:30:00', 200,    'VOICE_OUT'),
+  ('SIM-4413', 'VT-D1-012', '2026-03-17 19:00:00', NULL,   'PING'),
+  ('SIM-4413', 'VT-D1-012', '2026-03-17 19:30:00', NULL,   'PING'),
+
+  -- Tuấn (SIM-4417) — stays late working on ML
+  ('SIM-4417', 'VT-D1-012', '2026-03-17 09:10:00', NULL,   'PING'),
+  ('SIM-4417', 'VT-D1-012', '2026-03-17 12:00:00', NULL,   'DATA'),
+  ('SIM-4417', 'VT-D1-012', '2026-03-17 18:00:00', NULL,   'DATA'),
+  ('SIM-4417', 'VT-D1-012', '2026-03-17 20:00:00', 30,     'SMS_OUT'),
+  ('SIM-4417', 'VT-PN-011', '2026-03-17 20:45:00', NULL,   'PING'),
+
+  -- Yến (SIM-4414, HR) — normal hours
+  ('SIM-4414', 'VT-D1-012', '2026-03-17 08:40:00', NULL,   'PING'),
+  ('SIM-4414', 'VT-D1-012', '2026-03-17 10:00:00', 180,    'VOICE_OUT'),
+  ('SIM-4414', 'VT-D1-012', '2026-03-17 14:00:00', 45,     'SMS_IN'),
+  ('SIM-4414', 'VT-D1-012', '2026-03-17 17:00:00', NULL,   'PING'),
+
+  -- Quân (SIM-4419, Finance)
+  ('SIM-4419', 'VT-D1-012', '2026-03-17 08:50:00', NULL,   'PING'),
+  ('SIM-4419', 'VT-D1-012', '2026-03-17 11:00:00', NULL,   'DATA'),
+  ('SIM-4419', 'VT-D1-012', '2026-03-17 17:30:00', NULL,   'PING'),
+  ('SIM-4419', 'VT-D7-033', '2026-03-17 18:15:00', NULL,   'PING'),
+
+  -- Vy (SIM-4424, Marketing) — lots of calls
+  ('SIM-4424', 'VT-D1-012', '2026-03-17 09:00:00', NULL,   'PING'),
+  ('SIM-4424', 'VT-D1-012', '2026-03-17 09:30:00', 300,    'VOICE_OUT'),
+  ('SIM-4424', 'VT-D1-012', '2026-03-17 11:00:00', 180,    'VOICE_OUT'),
+  ('SIM-4424', 'VT-D1-012', '2026-03-17 14:30:00', 240,    'VOICE_OUT'),
+  ('SIM-4424', 'VT-D1-012', '2026-03-17 17:00:00', NULL,   'PING'),
+  ('SIM-4424', 'VT-D2-047', '2026-03-17 17:45:00', NULL,   'PING'),
+
+  -- Phúc (SIM-4406, Board Chair) — limited time at tower
+  ('SIM-4406', 'VT-D2-047', '2026-03-17 08:30:00', NULL,   'PING'),
+  ('SIM-4406', 'VT-D1-012', '2026-03-17 09:00:00', NULL,   'PING'),
+  ('SIM-4406', 'VT-D1-012', '2026-03-17 11:00:00', 600,    'VOICE_OUT'),
+  ('SIM-4406', 'VT-D1-012', '2026-03-17 14:30:00', NULL,   'PING'),
+  ('SIM-4406', 'VT-D1-012', '2026-03-17 15:00:00', NULL,   'PING'),
+  ('SIM-4406', 'VT-D2-047', '2026-03-17 15:45:00', NULL,   'PING'),
+
+  -- Dr. Hạnh (SIM-4408) — minimal phone use
+  ('SIM-4408', 'VT-D1-012', '2026-03-17 10:00:00', NULL,   'PING'),
+  ('SIM-4408', 'VT-D1-012', '2026-03-17 13:00:00', 90,     'VOICE_IN'),
+  ('SIM-4408', 'VT-D1-012', '2026-03-17 16:00:00', NULL,   'PING');
+
 
 -- ============================================================
 -- TABLE 6: bank_transactions
@@ -376,6 +631,74 @@ INSERT INTO bank_transactions (tax_no, amount, currency, counterparty, descripti
   ('TX-2289901',  22000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
   ('TX-2289901',  -6500000,  'VND', 'D4 Apartment Rent',       'Monthly rent',            '2026-03-05 10:00:00'),
   ('TX-2289901',  -1200000,  'VND', 'The Coffee House',        'March coffees',           '2026-03-17 07:30:00');
+
+-- Additional employee financial records
+INSERT INTO bank_transactions (tax_no, amount, currency, counterparty, description, ts_local) VALUES
+  -- Thảo (TX-8801234) — senior dev
+  ('TX-8801234',  38000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-8801234', -10000000,  'VND', 'BIDV Mortgage',           'Apartment mortgage D1',   '2026-03-05 10:00:00'),
+  ('TX-8801234',  -1500000,  'VND', 'FPT Telecom',             'Internet + TV',           '2026-03-07 08:00:00'),
+  ('TX-8801234',   -650000,  'VND', 'Tiki.vn',                 'Online shopping',         '2026-03-12 20:00:00'),
+
+  -- Hùng (TX-7745678) — backend eng
+  ('TX-7745678',  32000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-7745678',  -7000000,  'VND', 'Tân Bình Landlord',       'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-7745678',  -2300000,  'VND', 'Thế Giới Di Động',        'Phone accessories',       '2026-03-09 15:00:00'),
+
+  -- Mai (TX-6690123) — data scientist
+  ('TX-6690123',  35000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-6690123',  -9000000,  'VND', 'D5 Landlord',             'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-6690123',  -4500000,  'VND', 'Coursera',                'ML specialization',       '2026-03-08 11:00:00'),
+  ('TX-6690123',  -1800000,  'VND', 'The Refinery Saigon',     'Team dinner',             '2026-03-14 19:30:00'),
+
+  -- Đạt (TX-5534567) — DevOps
+  ('TX-5534567',  42000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-5534567', -12000000,  'VND', 'Pasteur Apartment',       'Monthly rent D1',         '2026-03-05 10:00:00'),
+  ('TX-5534567',  -3200000,  'VND', 'AWS Personal',            'Side project hosting',    '2026-03-10 09:00:00'),
+
+  -- Yến (TX-4478901) — HR Manager
+  ('TX-4478901',  30000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-4478901',  -8500000,  'VND', 'D1 Apartment Rent',       'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-4478901',  -2800000,  'VND', 'Gymbox HCMC',             'Quarterly membership',    '2026-03-02 07:00:00'),
+
+  -- Tuấn (TX-1112345) — ML engineer
+  ('TX-1112345',  30000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-1112345',  -7500000,  'VND', 'Phú Nhuận Rent',          'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-1112345',  -5000000,  'VND', 'Lambda GPU Cloud',        'Personal ML training',    '2026-03-11 22:00:00'),
+
+  -- Quân (TX-8890123) — Finance Controller
+  ('TX-8890123',  40000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-8890123', -15000000,  'VND', 'D7 Villa Mortgage',       'Monthly mortgage',        '2026-03-05 10:00:00'),
+  ('TX-8890123',  -3500000,  'VND', 'Saigon Country Club',     'Monthly dues',            '2026-03-01 12:00:00'),
+
+  -- Sơn (TX-9923456) — junior engineer
+  ('TX-9923456',  18000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-9923456',  -3000000,  'VND', 'KTX Bách Khoa',           'Dormitory fee',           '2026-03-01 09:00:00'),
+  ('TX-9923456',   -800000,  'VND', 'Steam Vietnam',            'Games',                   '2026-03-08 21:00:00'),
+  ('TX-9923456',  -1200000,  'VND', 'Shopee',                   'Mechanical keyboard',     '2026-03-13 23:00:00'),
+
+  -- Linh (TX-4478234) — Head of Product
+  ('TX-4478234',  55000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-4478234', -14000000,  'VND', 'D3 Apartment Rent',       'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-4478234',  -4200000,  'VND', 'Vietnam Airlines',        'Domestic flight HAN',     '2026-03-06 14:00:00'),
+  ('TX-4478234',  -1600000,  'VND', 'Maison Marou',            'Team chocolate gifts',    '2026-03-16 16:00:00'),
+
+  -- Hà (TX-5523456) — Legal Counsel
+  ('TX-5523456',  42000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-5523456', -11000000,  'VND', 'D1 Condo Mortgage',       'Monthly mortgage',        '2026-03-05 10:00:00'),
+  ('TX-5523456',  -6800000,  'VND', 'Vietnam Bar Association',  'Annual license renewal',  '2026-03-02 09:00:00'),
+
+  -- Vy (TX-3312345) — Marketing Lead
+  ('TX-3312345',  28000000,  'VND', 'Oracle Labs Payroll',     'March salary',            '2026-03-01 09:00:00'),
+  ('TX-3312345',  -8000000,  'VND', 'D2 Apartment Rent',       'Monthly rent',            '2026-03-05 10:00:00'),
+  ('TX-3312345',  -2200000,  'VND', 'Google Ads',              'Campaign spend (personal)', '2026-03-10 10:00:00'),
+
+  -- February salary context (key suspects only)
+  ('TX-8839201',  85000000,  'VND', 'Oracle Labs Payroll',     'February salary',         '2026-02-01 09:00:00'),
+  ('TX-7712445',  45000000,  'VND', 'Oracle Labs Payroll',     'February salary',         '2026-02-01 09:00:00'),
+  ('TX-6634890',  65000000,  'VND', 'Oracle Labs Payroll',     'February salary',         '2026-02-01 09:00:00'),
+  ('TX-5590123',  28000000,  'VND', 'Oracle Labs Payroll',     'February salary',         '2026-02-01 09:00:00'),
+  ('TX-3312567', -200000,    'USD', 'Singapore Holdco Pte',    'Feb distribution',        '2026-02-15 04:00:00');
 
 
 -- ============================================================
@@ -489,6 +812,78 @@ INSERT INTO system_events (username, event, app, ts_local) VALUES
   ('son.phan',    'LOGIN',  'GitLab',         '2026-03-17 23:45:00'),
   ('son.phan',    'LOGOUT', 'GitLab',         '2026-03-18 00:05:00');
 
+-- Additional system events (background employees, 03/17)
+INSERT INTO system_events (username, event, app, ts_local) VALUES
+  ('thao.dinh',   'LOGIN',  'Slack',          '2026-03-17 09:18:00'),
+  ('thao.dinh',   'LOGIN',  'Figma',          '2026-03-17 09:20:00'),
+  ('thao.dinh',   'LOGOUT', 'Figma',          '2026-03-17 17:55:00'),
+  ('thao.dinh',   'LOGOUT', 'Slack',          '2026-03-17 18:00:00'),
+  ('hung.le',     'LOGIN',  'GitLab',         '2026-03-17 09:22:00'),
+  ('hung.le',     'LOGIN',  'Slack',          '2026-03-17 09:23:00'),
+  ('hung.le',     'LOGOUT', 'GitLab',         '2026-03-17 18:25:00'),
+  ('hung.le',     'LOGOUT', 'Slack',          '2026-03-17 18:28:00'),
+  ('mai.ngo',     'LOGIN',  'Jupyter',        '2026-03-17 09:18:00'),
+  ('mai.ngo',     'LOGIN',  'Slack',          '2026-03-17 09:20:00'),
+  ('mai.ngo',     'MFA_VERIFY', 'Jupyter',    '2026-03-17 09:18:00'),
+  ('mai.ngo',     'LOGOUT', 'Jupyter',        '2026-03-17 18:30:00'),
+  ('mai.ngo',     'LOGOUT', 'Slack',          '2026-03-17 18:32:00'),
+  ('dat.truong',  'LOGIN',  'GitLab',         '2026-03-17 08:55:00'),
+  ('dat.truong',  'LOGIN',  'Grafana',        '2026-03-17 09:00:00'),
+  ('dat.truong',  'LOGIN',  'ArgoCD',         '2026-03-17 09:05:00'),
+  ('dat.truong',  'LOGOUT', 'ArgoCD',         '2026-03-17 19:00:00'),
+  ('dat.truong',  'LOGOUT', 'Grafana',        '2026-03-17 19:00:00'),
+  ('dat.truong',  'LOGOUT', 'GitLab',         '2026-03-17 19:05:00'),
+  ('tuan.do',     'LOGIN',  'GitLab',         '2026-03-17 09:12:00'),
+  ('tuan.do',     'LOGIN',  'Jupyter',        '2026-03-17 09:15:00'),
+  ('tuan.do',     'LOGIN',  'Wandb',          '2026-03-17 09:20:00'),
+  ('tuan.do',     'LOGOUT', 'Wandb',          '2026-03-17 20:00:00'),
+  ('tuan.do',     'LOGOUT', 'Jupyter',        '2026-03-17 20:00:00'),
+  ('tuan.do',     'LOGOUT', 'GitLab',         '2026-03-17 20:05:00'),
+  ('ngoc.bui',    'LOGIN',  'Figma',          '2026-03-17 09:10:00'),
+  ('ngoc.bui',    'LOGIN',  'Slack',          '2026-03-17 09:12:00'),
+  ('ngoc.bui',    'LOGOUT', 'Figma',          '2026-03-17 17:30:00'),
+  ('ngoc.bui',    'LOGOUT', 'Slack',          '2026-03-17 17:32:00'),
+  ('yen.hoang',   'LOGIN',  'BambooHR',       '2026-03-17 08:42:00'),
+  ('yen.hoang',   'LOGIN',  'Slack',          '2026-03-17 08:45:00'),
+  ('yen.hoang',   'LOGOUT', 'BambooHR',       '2026-03-17 17:00:00'),
+  ('yen.hoang',   'LOGOUT', 'Slack',          '2026-03-17 17:02:00'),
+  ('quan.ly',     'LOGIN',  'Finance-Portal', '2026-03-17 08:52:00'),
+  ('quan.ly',     'LOGIN',  'Slack',          '2026-03-17 08:55:00'),
+  ('quan.ly',     'LOGIN',  'QuickBooks',     '2026-03-17 09:00:00'),
+  ('quan.ly',     'LOGOUT', 'QuickBooks',     '2026-03-17 17:25:00'),
+  ('quan.ly',     'LOGOUT', 'Finance-Portal', '2026-03-17 17:28:00'),
+  ('quan.ly',     'LOGOUT', 'Slack',          '2026-03-17 17:30:00'),
+  ('viet.hoang',  'LOGIN',  'GitLab',         '2026-03-17 09:05:00'),
+  ('viet.hoang',  'LOGIN',  'TestRail',       '2026-03-17 09:10:00'),
+  ('viet.hoang',  'LOGOUT', 'TestRail',       '2026-03-17 18:00:00'),
+  ('viet.hoang',  'LOGOUT', 'GitLab',         '2026-03-17 18:02:00'),
+  ('ha.tran',     'LOGIN',  'DocuSign',       '2026-03-17 09:32:00'),
+  ('ha.tran',     'LOGIN',  'Slack',          '2026-03-17 09:35:00'),
+  ('ha.tran',     'LOGOUT', 'DocuSign',       '2026-03-17 16:30:00'),
+  ('ha.tran',     'LOGOUT', 'Slack',          '2026-03-17 16:32:00'),
+  ('vy.le',       'LOGIN',  'HubSpot',        '2026-03-17 09:02:00'),
+  ('vy.le',       'LOGIN',  'Slack',          '2026-03-17 09:05:00'),
+  ('vy.le',       'LOGIN',  'Canva',          '2026-03-17 10:00:00'),
+  ('vy.le',       'LOGOUT', 'Canva',          '2026-03-17 16:45:00'),
+  ('vy.le',       'LOGOUT', 'HubSpot',        '2026-03-17 17:00:00'),
+  ('vy.le',       'LOGOUT', 'Slack',          '2026-03-17 17:02:00'),
+  ('lan.nguyen',  'LOGIN',  'Slack',          '2026-03-17 08:32:00'),
+  ('lan.nguyen',  'LOGIN',  'Notion',         '2026-03-17 08:35:00'),
+  ('lan.nguyen',  'LOGOUT', 'Notion',         '2026-03-17 17:00:00'),
+  ('lan.nguyen',  'LOGOUT', 'Slack',          '2026-03-17 17:02:00'),
+  ('dung.pham',   'LOGIN',  'GitLab',         '2026-03-17 10:02:00'),
+  ('dung.pham',   'LOGIN',  'AWS-Console',    '2026-03-17 10:05:00'),
+  ('dung.pham',   'LOGOUT', 'AWS-Console',    '2026-03-17 19:00:00'),
+  ('dung.pham',   'LOGOUT', 'GitLab',         '2026-03-17 19:02:00'),
+  -- 03/16 system events (previous day context)
+  ('kai.dang',    'LOGIN',  'THEIA-Admin',    '2026-03-16 08:15:00'),
+  ('kai.dang',    'LOGOUT', 'THEIA-Admin',    '2026-03-16 18:05:00'),
+  ('minh.tran',   'LOGIN',  'GitLab',         '2026-03-16 08:30:00'),
+  ('minh.tran',   'LOGOUT', 'GitLab',         '2026-03-16 18:35:00'),
+  ('son.phan',    'LOGIN',  'GitLab',         '2026-03-16 09:30:00'),
+  ('son.phan',    'LOGOUT', 'GitLab',         '2026-03-16 21:00:00'),
+  ('minh.tran',   'PASSWORD_RESET', 'THEIA-Admin', '2026-03-16 11:00:00');
+
 
 -- ============================================================
 -- TABLE 10: theia_call_log
@@ -598,6 +993,40 @@ INSERT INTO parking_gate (plate, owner, direction, ts_local) VALUES
   ('51A-345.67', 'Bảo Nguyễn',  'EXIT',  '2026-03-18 01:30:00');
   -- Note: Kai's car never exits the garage.
 
+-- Additional parking records (more employees, motorcycles)
+INSERT INTO parking_gate (plate, owner, direction, ts_local) VALUES
+  ('59C2-567.89', 'Hùng Lê',       'ENTER', '2026-03-17 09:18:00'),
+  ('59C2-567.89', 'Hùng Lê',       'EXIT',  '2026-03-17 18:32:00'),
+  ('51A-890.12',  'Mai Ngô',        'ENTER', '2026-03-17 09:12:00'),
+  ('51A-890.12',  'Mai Ngô',        'EXIT',  '2026-03-17 18:35:00'),
+  ('59C1-234.56', 'Tuấn Đỗ',      'ENTER', '2026-03-17 09:08:00'),
+  ('59C1-234.56', 'Tuấn Đỗ',      'EXIT',  '2026-03-17 20:10:00'),
+  ('51A-456.01',  'Quân Lý',       'ENTER', '2026-03-17 08:48:00'),
+  ('51A-456.01',  'Quân Lý',       'EXIT',  '2026-03-17 17:35:00'),
+  ('59C1-789.12', 'Sơn Phan',      'ENTER', '2026-03-17 09:28:00'),
+  ('59C1-789.12', 'Sơn Phan',      'EXIT',  '2026-03-17 22:08:00'),
+  ('51A-345.99',  'Yến Hoàng',     'ENTER', '2026-03-17 08:38:00'),
+  ('51A-345.99',  'Yến Hoàng',     'EXIT',  '2026-03-17 17:08:00'),
+  ('59C2-111.22', 'Ngọc Bùi',     'ENTER', '2026-03-17 09:02:00'),
+  ('59C2-111.22', 'Ngọc Bùi',     'EXIT',  '2026-03-17 17:38:00'),
+  ('51A-222.33',  'Hà Trần',       'ENTER', '2026-03-17 09:28:00'),
+  ('51A-222.33',  'Hà Trần',       'EXIT',  '2026-03-17 16:38:00'),
+  ('59C1-444.55', 'Dũng Phạm',    'ENTER', '2026-03-17 09:58:00'),
+  ('59C1-444.55', 'Dũng Phạm',    'EXIT',  '2026-03-17 19:08:00'),
+  ('51A-666.77',  'Vy Lê',         'ENTER', '2026-03-17 08:58:00'),
+  ('51A-666.77',  'Vy Lê',         'EXIT',  '2026-03-17 17:22:00'),
+  ('51A-888.99',  'Lan Nguyễn',    'ENTER', '2026-03-17 08:28:00'),
+  ('51A-888.99',  'Lan Nguyễn',    'EXIT',  '2026-03-17 17:08:00'),
+  ('51A-333.44',  'Phúc Hoàng',    'ENTER', '2026-03-17 08:55:00'),
+  ('51A-333.44',  'Phúc Hoàng',    'EXIT',  '2026-03-17 15:10:00'),
+  ('51A-777.88',  'Việt Hoàng',    'ENTER', '2026-03-17 09:00:00'),
+  ('51A-777.88',  'Việt Hoàng',    'EXIT',  '2026-03-17 18:05:00'),
+  -- Visitor vehicles
+  ('51A-901.23',  'Visitor — VNG',  'ENTER', '2026-03-17 09:55:00'),
+  ('51A-901.23',  'Visitor — VNG',  'EXIT',  '2026-03-17 11:35:00'),
+  ('51A-012.34',  'Visitor — PwC',  'ENTER', '2026-03-17 13:55:00'),
+  ('51A-012.34',  'Visitor — PwC',  'EXIT',  '2026-03-17 16:35:00');
+
 
 -- ============================================================
 -- TABLE 14: wifi_sessions  🟥 DECOY-TRAP
@@ -639,6 +1068,26 @@ INSERT INTO wifi_sessions (mac_addr, ap_name, ap_floor, connect_ts, disconnect_t
   ('AA:BB:CC:05:05:05', 'OL-AP-35-A',  35, '2026-03-17 09:03:00', '2026-03-17 17:15:00', 314572800),
   ('AA:BB:CC:05:05:05', 'OL-AP-39-A',  39, '2026-03-17 17:18:00', '2026-03-18 00:12:00', 41943040);
 
+-- Additional wifi sessions (more employees, more floors)
+INSERT INTO wifi_sessions (mac_addr, ap_name, ap_floor, connect_ts, disconnect_ts, bytes_tx) VALUES
+  ('AA:BB:CC:12:12:12', 'OL-AP-38-A',  38, '2026-03-17 09:18:00', '2026-03-17 18:30:00', 629145600),
+  ('AA:BB:CC:14:14:14', 'OL-AP-40-A',  40, '2026-03-17 08:43:00', '2026-03-17 17:00:00', 104857600),
+  ('AA:BB:CC:14:14:14', 'OL-AP-35-A',  35, '2026-03-17 10:03:00', '2026-03-17 11:00:00', 20971520),
+  ('AA:BB:CC:18:18:18', 'OL-AP-35-A',  35, '2026-03-17 09:08:00', '2026-03-17 13:00:00', 157286400),
+  ('AA:BB:CC:18:18:18', 'OL-AP-38-A',  38, '2026-03-17 13:03:00', '2026-03-17 13:30:00', 10485760),
+  ('AA:BB:CC:18:18:18', 'OL-AP-35-A',  35, '2026-03-17 13:33:00', '2026-03-17 17:30:00', 125829120),
+  ('AA:BB:CC:19:19:19', 'OL-AP-40-A',  40, '2026-03-17 08:53:00', '2026-03-17 17:28:00', 83886080),
+  ('AA:BB:CC:21:21:21', 'OL-AP-38-A',  38, '2026-03-17 09:03:00', '2026-03-17 18:00:00', 377487360),
+  ('AA:BB:CC:23:23:23', 'OL-AP-38-A',  38, '2026-03-17 10:03:00', '2026-03-17 19:00:00', 461373440),
+  ('AA:BB:CC:24:24:24', 'OL-AP-40-A',  40, '2026-03-17 09:03:00', '2026-03-17 17:00:00', 146800640),
+  -- Trang's laptop bouncing between exec (41) and party floor (39)
+  ('AA:BB:CC:07:07:07', 'OL-AP-41-A',  41, '2026-03-17 08:23:00', '2026-03-17 17:00:00', 188743680),
+  ('AA:BB:CC:07:07:07', 'OL-AP-39-A',  39, '2026-03-17 17:03:00', '2026-03-18 00:28:00', 31457280),
+  -- Bảo's device — no laptop but phone wifi
+  ('AA:BB:CC:04:04:04', 'OL-AP-02-A',   2, '2026-03-17 07:58:00', '2026-03-17 20:00:00', 52428800),
+  ('AA:BB:CC:04:04:04', 'OL-AP-39-A',  39, '2026-03-17 20:05:00', '2026-03-17 20:30:00', 5242880),
+  ('AA:BB:CC:04:04:04', 'OL-AP-02-A',   2, '2026-03-17 20:35:00', '2026-03-18 01:30:00', 41943040);
+
 
 -- ============================================================
 -- TABLE 15: helpdesk_tickets  🟥 NOISE (motive bait)
@@ -667,6 +1116,22 @@ INSERT INTO helpdesk_tickets (emp_id, subject, category, priority, status, creat
   ('E005', 'Product analytics dashboard not loading',         'SOFTWARE', 'HIGH',   'RESOLVED',  '2026-03-11 14:00:00', '2026-03-11 17:00:00', 'Postgres connection pool exhausted. Fixed.'),
   ('E004', 'Request: badge duplication for VIP guest access',  'SECURITY', 'NORMAL', 'RESOLVED',  '2026-03-15 13:00:00', '2026-03-15 15:00:00', 'Security head self-approved. Badge B-1002 duplicated.');
 
+-- Additional helpdesk tickets
+INSERT INTO helpdesk_tickets (emp_id, subject, category, priority, status, created_at, resolved_at, notes) VALUES
+  ('E011', 'Docker image build fails on M2 Mac',              'DEVOPS',   'NORMAL', 'RESOLVED',  '2026-03-11 09:00:00', '2026-03-11 14:00:00', 'ARM64 compatibility issue. Switched to multi-arch build.'),
+  ('E018', 'Figma sync plugin not loading',                    'SOFTWARE', 'LOW',    'RESOLVED',  '2026-03-12 10:00:00', '2026-03-12 11:30:00', 'Cleared browser cache. Plugin restored.'),
+  ('E020', 'Meeting room 39-Event AV setup for launch party', 'FACILITIES','HIGH',   'RESOLVED',  '2026-03-16 09:00:00', '2026-03-17 12:00:00', 'Projector, sound system, and streaming gear tested and ready.'),
+  ('E024', 'HubSpot API rate limit exceeded',                  'SOFTWARE', 'NORMAL', 'OPEN',      '2026-03-17 11:00:00', NULL, 'Marketing automation sending too many requests. Investigating.'),
+  ('E012', 'Request 8TB SSD for data processing workstation', 'HARDWARE', 'NORMAL', 'OPEN',      '2026-03-14 09:00:00', NULL, 'Procurement reviewing. Budget approved by E002.'),
+  ('E021', 'TestRail license expiring end of month',           'SOFTWARE', 'HIGH',   'OPEN',      '2026-03-15 09:00:00', NULL, 'Renewal quote received. Waiting on finance approval from E019.'),
+  ('E023', 'VPN tunnel to staging env dropping intermittently','NETWORK',  'HIGH',   'RESOLVED',  '2026-03-13 14:00:00', '2026-03-14 10:00:00', 'MTU mismatch on WireGuard. Fixed configuration.'),
+  ('E014', 'New hire onboarding — laptop provision for E025', 'HARDWARE', 'NORMAL', 'OPEN',      '2026-03-16 14:00:00', NULL, 'New developer starting April 1. MacBook Pro ordered.'),
+  ('E010', 'Slack notification delays on macOS',               'SOFTWARE', 'LOW',    'RESOLVED',  '2026-03-10 15:00:00', '2026-03-10 16:00:00', 'macOS Focus Mode was blocking. User resolved.'),
+  ('E019', 'QuickBooks export formatting broken',              'SOFTWARE', 'NORMAL', 'RESOLVED',  '2026-03-09 10:00:00', '2026-03-09 14:00:00', 'CSV encoding issue. Set UTF-8 export.'),
+  ('E007', 'CEO laptop screen cracked — needs replacement',   'HARDWARE', 'URGENT', 'RESOLVED',  '2026-03-08 09:00:00', '2026-03-08 17:00:00', 'Replaced with spare MacBook Pro. Data migrated.'),
+  ('E015', 'Badge reader on floor 35 intermittent',            'SECURITY', 'HIGH',   'RESOLVED',  '2026-03-16 20:00:00', '2026-03-17 08:00:00', 'Loose cable connector. Reseated and tested OK.'),
+  ('E004', 'Camera system firmware update — floors 38-41',    'SECURITY', 'NORMAL', 'RESOLVED',  '2026-03-14 09:00:00', '2026-03-15 09:00:00', 'Firmware updated during overnight window. All cameras verified.');
+
 
 -- ============================================================
 -- TABLE 16: printer_jobs  🟥 NOISE
@@ -694,6 +1159,24 @@ INSERT INTO printer_jobs (emp_id, printer, doc_name, pages, ts_local, status) VA
   ('E009', 'PR-38-01', 'son_notes_whistleblower_draft.txt',    2,  '2026-03-16 22:00:00', 'COMPLETED'),
   ('E012', 'PR-38-01', 'Anomaly_Detection_Model_Results.pdf',  18, '2026-03-15 15:00:00', 'COMPLETED');
 
+-- Additional print jobs
+INSERT INTO printer_jobs (emp_id, printer, doc_name, pages, ts_local, status) VALUES
+  ('E014', 'PR-40-01', 'Q1_Hiring_Pipeline_Report.xlsx',       4,  '2026-03-17 10:00:00', 'COMPLETED'),
+  ('E014', 'PR-40-01', 'Employee_Satisfaction_Survey.pdf',      8,  '2026-03-16 14:00:00', 'COMPLETED'),
+  ('E020', 'PR-40-01', 'Office_Supply_Inventory.xlsx',          2,  '2026-03-17 08:30:00', 'COMPLETED'),
+  ('E020', 'PR-40-01', 'Launch_Party_Catering_Order.pdf',       3,  '2026-03-16 10:00:00', 'COMPLETED'),
+  ('E018', 'PR-35-01', 'THEIA_UI_Mockups_v12.pdf',             22, '2026-03-17 11:00:00', 'COMPLETED'),
+  ('E010', 'PR-38-01', 'Frontend_Bundle_Analysis.txt',          6,  '2026-03-17 14:00:00', 'COMPLETED'),
+  ('E011', 'PR-38-01', 'API_Endpoint_Documentation.md',        14, '2026-03-16 16:00:00', 'COMPLETED'),
+  ('E024', 'PR-40-01', 'Launch_Press_Release_DRAFT.docx',       4,  '2026-03-17 09:30:00', 'COMPLETED'),
+  ('E024', 'PR-40-01', 'Media_Contact_List_2026.xlsx',          2,  '2026-03-15 11:00:00', 'COMPLETED'),
+  ('E021', 'PR-38-01', 'QA_Test_Results_Sprint_47.pdf',        11, '2026-03-16 15:00:00', 'COMPLETED'),
+  ('E017', 'PR-38-01', 'Model_Benchmark_Comparison.csv',        3,  '2026-03-15 18:00:00', 'COMPLETED'),
+  ('E006', 'PR-41-01', 'Board_Meeting_Agenda_March.pdf',        2,  '2026-03-17 09:00:00', 'COMPLETED'),
+  ('E008', 'PR-02-01', 'Emergency_Response_Protocol.pdf',       8,  '2026-03-14 11:00:00', 'COMPLETED'),
+  ('E023', 'PR-38-01', 'Infrastructure_Cost_Report.xlsx',       5,  '2026-03-16 09:00:00', 'COMPLETED'),
+  ('E002', 'PR-38-01', 'Personal_Notes_Encrypted.pdf',          1,  '2026-03-17 22:00:00', 'COMPLETED');
+
 
 -- ============================================================
 -- TABLE 17: visitor_registry  🟥 DECOY
@@ -717,6 +1200,17 @@ INSERT INTO visitor_registry (visitor_name, company, host_emp_id, purpose, check
   ('Trần Minh Quân',   'Deloitte Vietnam',      'E019', 'Audit preparation',         '2026-03-17 14:00:00', '2026-03-17 17:00:00', 'VIS-004'),
   ('Unknown — refused', NULL,                    'E004', 'Would not state. Security.', '2026-03-17 19:30:00', '2026-03-17 20:00:00', 'VIS-005'),
   ('Phạm Đức Anh',     'FPT Software',          'E013', 'Infrastructure review',     '2026-03-16 10:00:00', '2026-03-16 16:00:00', 'VIS-006');
+
+-- Additional visitors
+INSERT INTO visitor_registry (visitor_name, company, host_emp_id, purpose, check_in, check_out, badge_temp) VALUES
+  ('Hoàng Minh Châu',  'Viettel Solutions',     'E002', 'API integration review',    '2026-03-17 10:30:00', '2026-03-17 12:00:00', 'VIS-007'),
+  ('Ngô Thị Bích',     'PwC Vietnam',           'E019', 'Quarterly financial review', '2026-03-17 14:00:00', '2026-03-17 16:30:00', 'VIS-008'),
+  ('Vũ Quốc Huy',      'Saigon Innovation Hub', 'E024', 'Marketing partnership',     '2026-03-17 11:00:00', '2026-03-17 12:30:00', 'VIS-009'),
+  ('Trần Thị Hằng',    'VNG Corporation',        'E005', 'Product benchmark demo',    '2026-03-16 14:00:00', '2026-03-16 16:00:00', 'VIS-010'),
+  ('Lê Hoàng Nam',      'Baker McKenzie',        'E022', 'IP filing consultation',    '2026-03-15 10:00:00', '2026-03-15 12:00:00', 'VIS-011'),
+  ('Phạm Thị Lan',      'Jobhopin',              'E014', 'Recruitment platform demo', '2026-03-15 14:00:00', '2026-03-15 15:30:00', 'VIS-012'),
+  ('Nguyễn Đình Toàn',  'AWS Vietnam',           'E013', 'Cloud architecture review', '2026-03-17 15:00:00', '2026-03-17 17:00:00', 'VIS-013'),
+  ('Đỗ Thanh Tùng',     'Personal',              'E003', 'Personal — lunch meeting',  '2026-03-17 11:30:00', '2026-03-17 13:00:00', 'VIS-014');
 
 
 -- ============================================================
@@ -745,6 +1239,28 @@ INSERT INTO git_activity (emp_id, repo, branch, commit_msg, additions, deletions
   ('E011', 'theia-api',      'main',           'feat: rate limiting middleware',             78,  23, '2026-03-17 17:00:00'),
   ('E017', 'theia-ml',       'experiment/v4',  'experiment: fine-tune with new dataset',   312,  45, '2026-03-17 19:30:00'),
   ('E012', 'theia-analytics', 'main',          'feat: anomaly scoring pipeline',           145,  32, '2026-03-17 15:00:00');
+
+-- Additional git activity (more engineers, more repos, earlier dates)
+INSERT INTO git_activity (emp_id, repo, branch, commit_msg, additions, deletions, commit_ts) VALUES
+  ('E010', 'theia-dashboard', 'feat/charts',    'feat: add real-time metrics charts',       89,  12, '2026-03-17 10:30:00'),
+  ('E010', 'theia-dashboard', 'feat/charts',    'fix: chart resize on mobile viewport',     14,   8, '2026-03-17 14:00:00'),
+  ('E021', 'theia-api',       'test/e2e',       'test: add e2e tests for auth flow',       156,   0, '2026-03-17 10:00:00'),
+  ('E021', 'theia-api',       'test/e2e',       'test: add e2e tests for search endpoint', 98,    0, '2026-03-17 14:30:00'),
+  ('E023', 'theia-deploy',    'main',           'ops: add health check endpoint',           34,   5, '2026-03-17 11:00:00'),
+  ('E023', 'theia-deploy',    'main',           'ops: configure autoscaling rules',         22,  11, '2026-03-17 14:00:00'),
+  ('E011', 'theia-api',       'feat/websocket', 'feat: websocket notification system',     212,  18, '2026-03-17 11:00:00'),
+  ('E012', 'theia-analytics', 'main',          'fix: null handling in scoring pipeline',    8,   3, '2026-03-17 16:30:00'),
+  ('E017', 'theia-ml',       'experiment/v4',  'feat: new tokenizer for Vietnamese text',  478,  92, '2026-03-17 14:00:00'),
+  ('E002', 'theia-core',     'main',           'docs: update API changelog for launch',    34,    2, '2026-03-17 20:00:00'),
+  ('E009', 'theia-core',     'feat/logging',   'feat: add request tracing headers',         67,  11, '2026-03-17 19:00:00'),
+  -- Previous day commits (03/16)
+  ('E002', 'theia-core',     'main',           'fix: edge case in model fallback logic',   23,   9, '2026-03-16 14:00:00'),
+  ('E002', 'theia-core',     'main',           'perf: optimize inference cache hits',       56,  34, '2026-03-16 17:00:00'),
+  ('E010', 'theia-dashboard', 'main',          'feat: dark mode support',                  145,  67, '2026-03-16 15:00:00'),
+  ('E013', 'theia-deploy',   'main',           'ops: upgrade nginx to 1.25.4',             12,  12, '2026-03-16 11:00:00'),
+  ('E009', 'theia-core',     'feat/logging',   'feat: add log level filtering',             45,   3, '2026-03-16 20:00:00'),
+  ('E011', 'theia-api',      'main',           'refactor: extract auth middleware',          89,  67, '2026-03-16 16:00:00'),
+  ('E023', 'infra-terraform', 'main',          'ops: add staging environment config',       78,   0, '2026-03-16 10:00:00');
 
 
 -- ============================================================
@@ -777,6 +1293,40 @@ INSERT INTO cafeteria_purchases (emp_id, item, amount, ts_local) VALUES
   ('E017', 'Cà phê trứng',           45000,  '2026-03-17 09:15:00'),
   ('E004', 'Nước suối',              10000,  '2026-03-17 08:00:00'),
   ('E004', 'Cơm tấm',               50000,  '2026-03-17 12:00:00');
+
+-- Additional cafeteria purchases (more employees, more variety)
+INSERT INTO cafeteria_purchases (emp_id, item, amount, ts_local) VALUES
+  ('E011', 'Cà phê sữa đá',          35000,  '2026-03-17 09:25:00'),
+  ('E011', 'Cơm gà xối mỡ',         55000,  '2026-03-17 12:15:00'),
+  ('E012', 'Trà đào cam sả',         42000,  '2026-03-17 09:20:00'),
+  ('E012', 'Mì Quảng',               50000,  '2026-03-17 12:00:00'),
+  ('E014', 'Nước ép cà rốt',         38000,  '2026-03-17 08:45:00'),
+  ('E014', 'Salad cá hồi',           75000,  '2026-03-17 12:30:00'),
+  ('E018', 'Matcha latte',            48000,  '2026-03-17 09:15:00'),
+  ('E018', 'Bánh mì pate',           35000,  '2026-03-17 12:00:00'),
+  ('E019', 'Espresso',                35000,  '2026-03-17 09:00:00'),
+  ('E019', 'Bún chả Hà Nội',        60000,  '2026-03-17 12:15:00'),
+  ('E020', 'Trà sữa trân châu',     45000,  '2026-03-17 10:00:00'),
+  ('E020', 'Cơm tấm sườn',          50000,  '2026-03-17 12:00:00'),
+  ('E021', 'Cà phê đen đá',          25000,  '2026-03-17 09:10:00'),
+  ('E021', 'Phở gà',                  50000,  '2026-03-17 12:00:00'),
+  ('E022', 'Trà ô long',             40000,  '2026-03-17 09:35:00'),
+  ('E023', 'Monster Energy',          38000,  '2026-03-17 10:10:00'),
+  ('E023', 'Bún bò Nam Bộ',         55000,  '2026-03-17 12:30:00'),
+  ('E023', 'Cà phê sữa đá',          35000,  '2026-03-17 15:00:00'),
+  ('E024', 'Nước dừa tươi',          30000,  '2026-03-17 09:05:00'),
+  ('E024', 'Cơm chiên dương châu',  48000,  '2026-03-17 12:00:00'),
+  ('E006', 'Espresso double shot',    55000,  '2026-03-17 09:15:00'),
+  ('E008', 'Trà gừng',               25000,  '2026-03-17 10:05:00'),
+  ('E015', 'Cà phê đen nóng',        20000,  '2026-03-17 18:15:00'),
+  ('E016', 'Nước suối',              10000,  '2026-03-17 18:15:00'),
+  ('E015', 'Mì gói tôm chua cay',   15000,  '2026-03-17 22:00:00'),
+  -- Previous day (03/16)
+  ('E001', 'Cà phê sữa đá',          35000,  '2026-03-16 08:20:00'),
+  ('E002', 'Trà đá',                  10000,  '2026-03-16 08:30:00'),
+  ('E002', 'Bún riêu',                55000,  '2026-03-16 12:15:00'),
+  ('E009', 'Cà phê đen đá',          25000,  '2026-03-16 09:30:00'),
+  ('E009', 'Monster Energy',          38000,  '2026-03-16 21:00:00');
 
 
 -- ============================================================
@@ -812,3 +1362,31 @@ INSERT INTO hvac_sensors (floor, zone, temp_c, humidity, co2_ppm, ts_local) VALU
   (2,  'Security-Ops', 23.0, 55, 410, '2026-03-17 20:00:00'),
   (1,  'Lobby',        24.5, 60, 380, '2026-03-17 08:00:00'),
   (1,  'Lobby',        25.0, 62, 450, '2026-03-17 20:00:00');
+
+-- Additional HVAC sensor readings (more floors, more granularity)
+INSERT INTO hvac_sensors (floor, zone, temp_c, humidity, co2_ppm, ts_local) VALUES
+  (35, 'Product-Open',  22.5, 54, 520, '2026-03-17 08:00:00'),
+  (35, 'Product-Open',  23.0, 56, 580, '2026-03-17 12:00:00'),
+  (35, 'Product-Open',  23.2, 55, 560, '2026-03-17 16:00:00'),
+  (35, 'Product-Open',  21.8, 52, 410, '2026-03-17 20:00:00'),
+  (40, 'Ops-Open',      22.8, 57, 490, '2026-03-17 08:00:00'),
+  (40, 'Ops-Open',      23.4, 59, 550, '2026-03-17 12:00:00'),
+  (40, 'Ops-Open',      23.6, 58, 540, '2026-03-17 16:00:00'),
+  (40, 'Ops-Open',      22.2, 54, 420, '2026-03-17 20:00:00'),
+  (41, 'Board-Room',    22.0, 50, 390, '2026-03-17 08:00:00'),
+  (41, 'Board-Room',    23.8, 55, 550, '2026-03-17 10:00:00'),
+  (41, 'Board-Room',    22.5, 52, 420, '2026-03-17 14:00:00'),
+  (41, 'Board-Room',    22.0, 50, 380, '2026-03-17 20:00:00'),
+  (38, 'Eng-Open',      22.5, 56, 590, '2026-03-17 08:00:00'),
+  (38, 'Eng-Open',      23.5, 58, 710, '2026-03-17 12:00:00'),
+  (38, 'Server-Room',   18.2, 35, 350, '2026-03-17 08:00:00'),
+  (38, 'Server-Room',   18.4, 36, 355, '2026-03-17 12:00:00'),
+  (38, 'Server-Room',   18.1, 34, 348, '2026-03-17 16:00:00'),
+  (38, 'Server-Room',   18.3, 35, 352, '2026-03-17 20:00:00'),
+  (38, 'Server-Room',   18.2, 35, 350, '2026-03-18 00:00:00'),
+  (1,  'Lobby',         24.0, 58, 350, '2026-03-17 12:00:00'),
+  (1,  'Lobby',         24.8, 61, 420, '2026-03-17 16:00:00'),
+  (2,  'Security-Ops',  23.0, 55, 405, '2026-03-17 12:00:00'),
+  (2,  'Security-Ops',  23.1, 56, 415, '2026-03-17 16:00:00'),
+  (2,  'Medical-Suite', 22.0, 45, 380, '2026-03-17 10:00:00'),
+  (2,  'Medical-Suite', 22.0, 45, 385, '2026-03-17 14:00:00');

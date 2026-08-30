@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "theia-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "internal", "dev"],
+      "port": 3010,
+      "autoPort": false
+    }
+  ]
+}

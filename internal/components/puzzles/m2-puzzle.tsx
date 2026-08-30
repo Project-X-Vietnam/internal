@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Select } from "@/components/ui/select";
+import { Select } from "@/components/ui/theia-select";
 
 type Props = {
   onSolve: (answer: string) => void | Promise<void>;

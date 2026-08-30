@@ -3,11 +3,24 @@ import type { Config } from "tailwindcss";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
+const plugin = require("tailwindcss/plugin");
+
+/**
+ * Hover variants that only apply to a real hover-capable pointer.
+ *
+ * Plain `hover:` / `group-hover:` also fire on touch, where `:hover` sticks to
+ * whatever was last tapped until something else is tapped — which is what would
+ * otherwise leave the sidebar's hover-revealed labels stuck open after a tap.
+ */
+const pointerHoverVariants = plugin(({ addVariant }: any) => {
+  addVariant("pointer-hover", "@media (hover: hover) { &:hover }");
+  addVariant("group-pointer-hover", "@media (hover: hover) { :merge(.group):hover & }");
+});
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
 function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
 
@@ -34,6 +47,7 @@ const config: Config = {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "border-strong": "hsl(var(--border-strong))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -100,16 +114,22 @@ const config: Config = {
           "btn-hover": "#7A5545",
         },
       },
+      // `--radius` is redefined inside `.portal` (see globals.css), so these
+      // three keys resolve near-square on platform surfaces and keep THEIA's
+      // softer artifact look everywhere else.
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "var(--radius-sm)",
+        // Large media surfaces only — see `--radius-media` in globals.css.
+        media: "var(--radius-media)",
       },
       fontFamily: {
         body: ["var(--font-body)", "Inter", "sans-serif"],
         heading: ["var(--font-heading)", "Special Elite", "cursive"],
         sans: ["var(--font-body)", "Inter", "sans-serif"],
         display: ["var(--font-heading)", "Special Elite", "cursive"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
       backgroundImage: {
         "gradient-hero-light": "linear-gradient(to bottom, #FFFFFF, #F0F9FF)",
@@ -135,6 +155,12 @@ const config: Config = {
         "scale-in": {
           from: { opacity: "0", transform: "scale(0.9)" },
           to: { opacity: "1", transform: "scale(1)" },
+        },
+        // Directory gallery tiles. Shorter rise than fade-in-up: a grid of
+        // twelve travelling 30px reads as the page settling, not as arrival.
+        "tile-in": {
+          from: { opacity: "0", transform: "translateY(12px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
@@ -166,6 +192,9 @@ const config: Config = {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
         "scale-in": "scale-in 0.5s ease-out forwards",
+        // `both`, so a staggered delay holds the from-state instead of letting
+        // the tile flash in at full opacity before its turn.
+        "tile-in": "tile-in 0.5s cubic-bezier(0.22,1,0.36,1) both",
         float: "float 6s ease-in-out infinite",
         "float-delayed": "float 6s ease-in-out 2s infinite",
         "float-slow": "float 8s ease-in-out infinite",
@@ -175,6 +204,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors, pointerHoverVariants],
 };
 export default config;

@@ -19,6 +19,7 @@
 10. [Technical Implementation](#10-technical-implementation)
 11. [Code Patterns](#11-code-patterns)
 12. [Accessibility](#12-accessibility)
+13. [Portal Surface Grammar](#13-portal-surface-grammar)
 
 ---
 
@@ -1005,6 +1006,89 @@ export default function MainComponent({ isDark }: ComponentProps) {
 
 ---
 
+---
+
+# 13. PORTAL SURFACE GRAMMAR
+
+> **Scope:** the internal platform surfaces — `/`, `/directory`, `/me`,
+> `/admin/members`, `/artifacts`, `/signin`, `/pending`. **Not** THEIA or the
+> in-fiction prop routes, which keep the softer, dark artifact look on purpose.
+
+Sections 1–12 define the brand. This section defines the *structure* the portal
+puts that brand into: a flat, ruled layout in which hairlines do the separating.
+Colour is unchanged — blue `#0E56FA`, cyan `#17CAFA`, navy `#01001F`.
+
+## 13.1 The five rules
+
+| Rule | What it means |
+|---|---|
+| **Hairlines separate, boxes don't** | A 1px rule plus a small mono label opens a section. Reach for a bordered panel only when content must genuinely be boxed off (empty states, callouts). |
+| **Near-square corners** | `--radius` is `5px` inside `.portal` (`3px` small, `6px` large). Controls and rows never exceed that; pills are reserved for avatars. The one exception is `--radius-media` (`12px`), for full-height media panels only — see 13.6. |
+| **No shadows** | Depth comes from borders. No variant of Button, Input or Badge casts a shadow, and hover changes colour rather than elevation. |
+| **Quiet large type** | Headings are weight 500, not bold, with tracking that tightens as size grows (≈ −1% at body size, −4% at display size). |
+| **One page column** | Every signed-in route renders in the same `max-w-5xl` column beside the sidebar, so page title, section labels and row titles share one left edge across routes. |
+
+## 13.2 Scoping
+
+`.portal` wraps every platform surface and redefines `--radius` there. `:root`
+keeps `0.625rem`, so THEIA's `rounded-lg`/`rounded-xl` and its shadows render
+exactly as they always have. **Do not move the flat radius to `:root`** — that
+would silently reshape the artifact.
+
+## 13.3 Tokens added
+
+```css
+--border-strong   /* outlines a surface against the page */
+--border          /* separates rows inside a surface — barely there */
+--radius-sm: 3px; --radius: 5px; --radius-lg: 6px;   /* inside .portal */
+--radius-media: 12px;                                /* large media only */
+--font-mono       /* JetBrains Mono, metadata only */
+```
+
+`--border` and `--border-strong` are a deliberate two-tier system: row dividers
+must be fainter than surface outlines or a ruled list reads as a table.
+
+## 13.4 Type utilities
+
+| Class | Use |
+|---|---|
+| `.type-display` | Page title (h1) |
+| `.type-title` / `.type-heading` | Section and row titles |
+| `.type-body` / `.type-small` | Prose and dense row text |
+| `.type-meta` | Metadata — dates, counts, statuses. Mono. |
+| `.type-label` | Section eyebrow under a rule. Mono, uppercase. |
+
+These live in `@layer components`, so a Tailwind colour utility still wins:
+`.type-label.text-primary` renders brand blue, not the default muted grey.
+
+## 13.5 Layout primitives
+
+`components/platform/page.tsx` — `PageShell`, `PageHeader`, `Section`,
+`RuleList`, `Row`, `Panel`, `AuthShell`, `AuthSplitShell` — plus `PortalLayout`
+in `components/platform/nav.tsx` and `Sidebar` in
+`components/platform/sidebar.tsx`. Build new platform surfaces out of these
+rather than hand-rolling a container; that is what keeps routes aligned with
+each other.
+
+**Metadata goes in mono and right-aligns.** Counts, dates and statuses sit at the
+far right of a row or section header, on the title's baseline.
+
+### Navigation
+
+A fixed 15rem sidebar from `lg` up; an off-canvas drawer below it, opened from a
+sticky bar. `PortalLayout` insets the content column by the sidebar width, and
+`PageShell` is **left-anchored, not centred** — beside a fixed rail a centred
+column drifts further from the nav the wider the display gets.
+
+Everything in the rail sits on one 22px left edge: the brand mark, the nav
+icons, the account avatar and the sign-out icon. That is why the sidebar header
+uses `px-3` with a `px-2.5` brand link rather than a plain `px-4`.
+
+Nav rows mark the active route with a **filled ground**, not an underline — in a
+vertical list an underline reads as a divider. Adding a nav item means adding to
+`LINKS` in `nav.tsx` and an icon to `ICONS` in `sidebar.tsx`; keep icons at 16px
+and `strokeWidth={1.75}`.
+
 # APPENDIX: QUICK REFERENCE
 
 ## Color Hex Codes
@@ -1053,9 +1137,30 @@ className="animate-gradient-x bg-[length:200%_auto]"
 className="hover:scale-[1.02] transition-transform"
 ```
 
+## 13.6 Sign-in
+
+Sign-in is a 50:50 split at `lg` and above: the form on the left, a media
+carousel on the right (`AuthSplitShell` + `AuthCarousel`). Below `lg` the panel
+is dropped rather than stacked — on a phone it would push the actual task below
+the fold — and the carousel renders nothing at all there, so no image is
+fetched.
+
+The panel is the one surface allowed `--radius-media` (12px). A full-height
+photograph at 5px reads as a rendering artifact rather than a decision; controls
+and rows still never go past 6px.
+
+**Two things to keep in mind when changing the slides:**
+
+1. **`/signin` is the only page served to unauthenticated visitors.** Anything
+   in this carousel is public. The default set is programme and cohort
+   photography that already ships in this public repo; individual portraits and
+   shots with personal content in frame are deliberately excluded.
+2. **Autoplay needs a pause control** (WCAG 2.2.2) and must stop under
+   `prefers-reduced-motion`. Both are handled in `AuthCarousel` — don't
+   reimplement a slideshow without them.
+
 ---
 
 > **Document maintained by:** Product Team  
 > **Last updated:** January 2025  
 > **Contact:** Product Department or info.projectxvietnam@gmail.com
-

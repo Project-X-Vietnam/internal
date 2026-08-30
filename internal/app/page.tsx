@@ -1,91 +1,82 @@
-"use client";
+import Link from "next/link";
 
-import { useState } from "react";
-import { loginTeam } from "@/lib/actions";
+import { PortalLayout } from "@/components/platform/nav";
+import { FOCUS, PageHeader, Panel, Row, RuleList, Section } from "@/components/platform/page";
+import { requireApprovedMember } from "@/lib/auth-guards";
+import { countApprovedMembers } from "@/lib/members";
+import { joinGaps, profileGaps } from "@/lib/onboarding";
+import { countPublishedResources } from "@/lib/resources";
+import { cn } from "@/lib/utils";
 
-export default function LandingPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+/**
+ * Platform home — the index of the three surfaces. Follows the PJX design system
+ * (globals.css tokens), not THEIA's look.
+ */
+export default async function HomePage() {
+  const member = await requireApprovedMember();
+  const [memberCount, resourceCount] = await Promise.all([
+    countApprovedMembers(),
+    countPublishedResources(),
+  ]);
 
-  async function handleSubmit(formData: FormData) {
-    setLoading(true);
-    setError(null);
-    const result = await loginTeam(formData);
-    if (result?.error) {
-      setError(result.error);
-      setLoading(false);
-    }
-  }
+  const first = member.name.split(/\s+/)[0];
+
+  // The optional half of onboarding, nudged rather than enforced. Two gaps at
+  // most: a list of four reads as a chore and gets ignored wholesale.
+  const gaps = profileGaps(member).slice(0, 2);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-warm-bg text-warm-text relative overflow-hidden">
-      {/* Subtle texture overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-30"
-        style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9BBAA' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }}
+    <PortalLayout member={member} active="/">
+      <PageHeader
+        eyebrow="Project X Vietnam"
+        title={`Welcome back, ${first}`}
+        description="The team's own space — who we are, what we know, and what we've built."
       />
 
-      <div className="relative z-10 w-full max-w-sm mx-auto px-6">
-        {/* Timestamp */}
-        <div className="text-center mb-12">
-          <p className="font-mono text-xs tracking-[0.3em] text-warm-text-muted mb-6">
-            23 : 47
+      {gaps.length > 0 && (
+        <Panel dashed className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <p className="type-small text-muted-foreground">
+            Your profile is missing {joinGaps(gaps)}.{" "}
+            <span className="text-foreground">People find you by what&rsquo;s written here.</span>
           </p>
-          <h1 className="font-heading text-4xl md:text-5xl text-warm-heading tracking-tight mb-3">
-            THEIA
-          </h1>
-          <p className="text-sm text-warm-text-muted max-w-xs mx-auto leading-relaxed">
-            Oracle Labs. Launch night. Something went wrong.
-          </p>
-        </div>
-
-        {/* Login form */}
-        <form action={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-xs font-medium text-warm-text-muted mb-1.5 uppercase tracking-wider">
-              Team name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              autoComplete="off"
-              className="w-full px-4 py-3 bg-warm-input border border-warm-border rounded-lg text-warm-text placeholder:text-warm-text-faint focus:outline-none focus:border-warm-accent/50 focus:ring-1 focus:ring-warm-accent/20 transition-colors"
-              placeholder="Enter team name"
-            />
-          </div>
-          <div>
-            <label htmlFor="code" className="block text-xs font-medium text-warm-text-muted mb-1.5 uppercase tracking-wider">
-              Join code
-            </label>
-            <input
-              id="code"
-              name="code"
-              type="text"
-              required
-              autoComplete="off"
-              className="w-full px-4 py-3 bg-warm-input border border-warm-border rounded-lg text-warm-text placeholder:text-warm-text-faint focus:outline-none focus:border-warm-accent/50 focus:ring-1 focus:ring-warm-accent/20 transition-colors"
-              placeholder="Enter join code"
-            />
-          </div>
-
-          {error && (
-            <p className="text-sm text-warm-error text-center">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 mt-2 bg-warm-btn text-warm-bg font-semibold rounded-lg hover:bg-warm-btn-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          <Link
+            href="/me"
+            className={cn(
+              "type-small shrink-0 text-primary underline-offset-4 hover:underline",
+              FOCUS,
+            )}
           >
-            {loading ? "Entering..." : "Begin investigation"}
-          </button>
-        </form>
+            Finish your profile &rarr;
+          </Link>
+        </Panel>
+      )}
 
-        <p className="text-center text-xs text-warm-text-faint mt-8">
-          A Project X Vietnam experience
-        </p>
-      </div>
-    </div>
+      <Section label="Surfaces" meta="3">
+        <RuleList>
+          <Row
+            href="/directory"
+            title="Team directory"
+            description="Departments, roles, cohorts and ownership — who to ask about what."
+            meta={`${memberCount} ${memberCount === 1 ? "member" : "members"}`}
+          />
+          <Row
+            href="/resources"
+            title="Knowledge & resources"
+            description="Brand assets, templates, playbooks and onboarding docs, in one place."
+            meta={
+              resourceCount === 0
+                ? "Empty"
+                : `${resourceCount} ${resourceCount === 1 ? "item" : "items"}`
+            }
+          />
+          <Row
+            href="/artifacts"
+            title="Artifacts"
+            description="One-off internal builds — bonding games, experiments, retired tools."
+            meta="1 build"
+          />
+        </RuleList>
+      </Section>
+    </PortalLayout>
   );
 }

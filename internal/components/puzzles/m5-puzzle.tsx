@@ -9,7 +9,7 @@ import {
   Terminal,
 } from "lucide-react";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { Select } from "@/components/ui/select";
+import { Select } from "@/components/ui/theia-select";
 
 type Props = {
   onSolve: (answer: string) => void;
