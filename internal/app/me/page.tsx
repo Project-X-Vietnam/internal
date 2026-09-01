@@ -2,16 +2,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Avatar } from "@/components/platform/avatar";
+import { EngagementFields } from "@/components/platform/engagement-fields";
 import { LootboxFields } from "@/components/platform/lootbox-fields";
 import { PortalLayout } from "@/components/platform/nav";
-import { PageHeader, Section } from "@/components/platform/page";
+import { PageHeader, Panel, Section } from "@/components/platform/page";
 import { SelectField } from "@/components/platform/select-field";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { requireApprovedMember } from "@/lib/auth-guards";
-import { parseLootbox } from "@/lib/lootbox";
+import { LOOTBOX_ENABLED, parseLootbox } from "@/lib/lootbox";
 import { updateOwnProfile } from "@/lib/member-actions";
 import { listDepartments } from "@/lib/members";
+import {
+  addOwnEngagement,
+  deleteOwnEngagement,
+} from "@/lib/network-actions";
+import {
+  engagementContext,
+  engagementHeadline,
+  listEngagementsFor,
+  listOrganizations,
+  listPrograms,
+  yearSpan,
+} from "@/lib/network";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Your profile" };
@@ -23,7 +36,12 @@ const HINT = "type-meta mt-1.5";
 
 export default async function MyProfilePage() {
   const member = await requireApprovedMember();
-  const departments = await listDepartments();
+  const [departments, engagements, programs, organizations] = await Promise.all([
+    listDepartments(),
+    listEngagementsFor(member.id),
+    listPrograms(),
+    listOrganizations(),
+  ]);
   const links = (member.links ?? {}) as Links;
   const lootbox = parseLootbox(member.lootbox);
 
@@ -182,20 +200,22 @@ export default async function MyProfilePage() {
           </div>
         </Section>
 
-        <Section label="Lootbox">
-          <p className="type-small mt-3 max-w-2xl text-muted-foreground">
-            Six things that are actually yours — a game, a drink, a pet, a bad habit. This is
-            the only part of your profile that isn&rsquo;t about work, so don&rsquo;t make it
-            about work.
-          </p>
+        {LOOTBOX_ENABLED && (
+          <Section label="Lootbox">
+            <p className="type-small mt-3 max-w-2xl text-muted-foreground">
+              Six things that are actually yours — a game, a drink, a pet, a bad habit. This is
+              the only part of your profile that isn&rsquo;t about work, so don&rsquo;t make it
+              about work.
+            </p>
 
-          <LootboxFields items={lootbox} />
+            <LootboxFields items={lootbox} />
 
-          <p className={cn(HINT, "max-w-2xl")}>
-            Images need to be a public https:// link — a transparent PNG floats best. Clear both
-            fields to drop an item.
-          </p>
-        </Section>
+            <p className={cn(HINT, "max-w-2xl")}>
+              Images need to be a public https:// link — a transparent PNG floats best. Clear both
+              fields to drop an item.
+            </p>
+          </Section>
+        )}
 
         <div className="rule mt-14 flex items-center gap-3 pt-6">
           <Button type="submit">Save profile</Button>
@@ -204,6 +224,66 @@ export default async function MyProfilePage() {
           </Button>
         </div>
       </form>
+
+      {/* Outside the profile form — these rows are their own records with their
+          own actions, and a form inside a form isn't HTML. The Role section
+          above is *now*; this is every year before it. */}
+      <Section label="Role history" meta={engagements.length > 0 ? String(engagements.length) : undefined}>
+        <p className="type-small mt-3 max-w-2xl text-muted-foreground">
+          Where you&rsquo;ve been across PJX — cohorts, programs, roles. This is what makes you
+          findable in the network years after you hand over.
+        </p>
+
+        {engagements.length > 0 && (
+          <ol className="mt-4 max-w-2xl">
+            {engagements.map((engagement) => (
+              <li
+                key={engagement.id}
+                className="rule-subtle flex flex-wrap items-start gap-x-6 gap-y-1 py-3"
+              >
+                <span className="type-meta w-32 shrink-0 pt-0.5 tabular-nums">
+                  {yearSpan(engagement.startYear, engagement.endYear)}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="type-small font-medium">{engagementHeadline(engagement)}</p>
+                  {engagementContext(engagement) && (
+                    <p className="type-small mt-0.5 text-muted-foreground">
+                      {engagementContext(engagement)}
+                    </p>
+                  )}
+                </div>
+                <form
+                  action={async () => {
+                    "use server";
+                    await deleteOwnEngagement(engagement.id);
+                  }}
+                >
+                  <Button type="submit" size="sm" variant="ghost">
+                    Remove
+                  </Button>
+                </form>
+              </li>
+            ))}
+          </ol>
+        )}
+
+        <Panel className="mt-5 max-w-2xl">
+          <p className="type-label">Add an engagement</p>
+          <form action={addOwnEngagement} className="mt-4">
+            <EngagementFields
+              idPrefix="own-engagement"
+              programs={programs}
+              departments={departments}
+              organizationNames={organizations.map((organization) => organization.name)}
+            />
+            <div className="mt-4">
+              <Button type="submit" variant="outline">
+                Add to history
+              </Button>
+            </div>
+          </form>
+        </Panel>
+      </Section>
     </PortalLayout>
   );
 }

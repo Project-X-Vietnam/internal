@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Archive, BookOpen, FileText, Home, ShieldCheck, User, Users } from "lucide-react";
+import { Archive, BookOpen, FileText, Home, Network, ShieldCheck, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -17,6 +17,7 @@ const ICONS = {
   archive: Archive,
   admin: ShieldCheck,
   doc: FileText,
+  network: Network,
 } as const;
 
 export type NavItem = {
@@ -124,7 +125,11 @@ export function Sidebar({
   const pathname = usePathname();
 
   // A menu that survives navigation would cover the page you just asked for.
-  useEffect(() => setMenu(false), [pathname]);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setMenu(false);
+  }
 
   useEffect(() => {
     if (!menu) return;

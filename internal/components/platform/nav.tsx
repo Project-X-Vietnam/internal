@@ -69,6 +69,12 @@ export async function PortalLayout({
           badge: pending || undefined,
         },
         {
+          href: "/admin/network",
+          label: "Admin \u00b7 Network",
+          icon: "network",
+          section: "admin",
+        },
+        {
           href: "/admin/resources",
           label: "Admin \u00b7 Resources",
           icon: "doc",

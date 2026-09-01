@@ -16,6 +16,9 @@ const THEIA_MOVED_PATHS = [
 ] as const;
 
 const nextConfig: NextConfig = {
+  // Lets a second `next dev` run beside the main one (the .next dir is locked
+  // per-instance). Unset, this is the default `.next` — production is unaffected.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   async redirects() {
     return [
       ...THEIA_MOVED_PATHS.map((path) => ({

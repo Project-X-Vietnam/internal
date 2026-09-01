@@ -8,11 +8,11 @@ It exists to hold three things:
 
 | Area | What belongs here |
 |---|---|
-| **Team repo & directory** | Who's on the team, departments, roles, cohorts, ownership — who to ask about what |
+| **Team repo & directory / network** | Who's on the team, departments, roles, cohorts, ownership — who to ask about what. Plus **network memory**: everyone who has ever touched PJX (fellows, speakers, mentors, trainers, advisors, partner representatives), their engagements per year and program, and explicit admin-curated connections |
 | **Knowledge & resource hub** | Brand assets, templates, program playbooks, style guides, onboarding docs — the material currently scattered across markdown files and Lark |
 | **Artifacts** | One-off internal builds: bonding games, experiments, retired tools. Kept alive and browsable, clearly separated from live team resources |
 
-**What it is deliberately not:** an ERP, a CRM, an HRIS, or a full operations suite. No payroll, no approval chains, no ticketing system, no finance. If a proposed feature starts to look like one of those, stop and ask before building it.
+**What it is deliberately not:** an ERP, an HRIS, or a full operations suite. No payroll, no approval chains, no ticketing system, no finance. Network *memory* is in scope (who touched PJX, in what role, when, how it went); CRM *workflows* are not — no pipelines, no outreach sequences, no email sync, no reminders. If a proposed feature starts to look like any of those, stop and ask before building it.
 
 Anything **public-facing** — programs, applications, mentors, partners, recruitment of new volunteers — belongs in the separate `Project-X-Vietnam/landing-page` repo instead.
 

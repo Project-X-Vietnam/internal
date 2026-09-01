@@ -18,6 +18,18 @@ export type LootboxItem = {
   image?: string;
 };
 
+/**
+ * Master switch. Flip to `true` to bring the lootbox back everywhere — the
+ * gallery sheet, the profile page, the /me editor, the onboarding step and the
+ * home-page nudge all read this one constant.
+ *
+ * Hidden rather than deleted, and nothing is dropped from the database: existing
+ * lootboxes sit untouched in `Member.lootbox` and reappear intact when this is
+ * turned back on. Writes are suppressed while it is off (see lib/member-actions),
+ * so a profile save can't quietly wipe them.
+ */
+export const LOOTBOX_ENABLED = false;
+
 export const LOOTBOX_MAX = 6;
 const LABEL_MAX = 48;
 

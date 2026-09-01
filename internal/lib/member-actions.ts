@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 
 import { assertAdmin, getCurrentMember } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { resolveExpertiseIds } from "@/lib/expertise";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { MemberRole, MemberStatus } from "@/lib/generated/prisma/enums";
-import { lootboxFromForm } from "@/lib/lootbox";
+import { LOOTBOX_ENABLED, lootboxFromForm } from "@/lib/lootbox";
 import { coreComplete, firstIncompleteStep, isStep, nextStep } from "@/lib/onboarding";
-import { slugify } from "@/lib/utils";
 
 /**
  * Mutations, exposed as server actions. Every export here is a public endpoint the
@@ -101,31 +101,6 @@ async function requireProfileWriter() {
   return member;
 }
 
-/**
- * Free-text tags, deduped by slug. Created on demand so the vocabulary grows
- * from actual use rather than from a list an admin has to maintain.
- */
-async function resolveExpertiseIds(raw: string | null) {
-  const labels = (raw ?? "")
-    .split(",")
-    .map((entry) => entry.trim())
-    .filter(Boolean)
-    .slice(0, 12);
-
-  const tagIds: string[] = [];
-  for (const label of labels) {
-    const slug = slugify(label);
-    if (!slug || tagIds.length >= 12) continue;
-    const tag = await db.expertiseTag.upsert({
-      where: { slug },
-      update: {},
-      create: { slug, label },
-    });
-    if (!tagIds.includes(tag.id)) tagIds.push(tag.id);
-  }
-  return tagIds;
-}
-
 function revalidateProfile(memberId: string) {
   revalidatePath("/me");
   revalidatePath("/directory");
@@ -145,10 +120,6 @@ export async function updateOwnProfile(formData: FormData) {
   };
   const hasLinks = Object.values(links).some(Boolean);
 
-  // Written on every save, including when it comes back empty — that is how
-  // someone clears an item out again.
-  const lootbox = lootboxFromForm(formData);
-
   await db.member.update({
     where: { id: member.id },
     data: {
@@ -159,7 +130,12 @@ export async function updateOwnProfile(formData: FormData) {
       location: optional(formData, "location"),
       timezone: optional(formData, "timezone"),
       links: hasLinks ? links : undefined,
-      lootbox,
+      // Written on every save when the feature is on, including when it comes
+      // back empty — that is how someone clears an item out again. Omitted
+      // entirely while it is off: the form no longer renders those fields, so
+      // `lootboxFromForm` would read an empty FormData and silently wipe a
+      // lootbox the member still has stored.
+      ...(LOOTBOX_ENABLED ? { lootbox: lootboxFromForm(formData) } : {}),
       expertise: { set: tagIds.map((id) => ({ id })) },
     },
   });

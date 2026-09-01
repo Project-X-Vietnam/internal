@@ -24,6 +24,14 @@ const departments = [
   { name: "People", slug: "people" },
 ];
 
+// The two annual programs engagements are scoped to. Structure, not people —
+// their editions (program × year) are created on demand by the admin network
+// UI, never seeded.
+const programs = [
+  { name: "SFP Recruitment", slug: "sfp-recruitment" },
+  { name: "Summer Fellowship Program", slug: "summer-fellowship-program" },
+];
+
 // Knowledge-hub shelves. Structure, like departments — the material that goes on
 // them is written in the admin UI at /admin/resources.
 const collections = [
@@ -110,6 +118,19 @@ try {
   }
 
   console.log(`Seeded ${departments.length} departments`);
+
+  for (const [index, program] of programs.entries()) {
+    await pool.query(
+      `
+        INSERT INTO "Program" ("id", "name", "slug", "sortOrder")
+        VALUES (concat('prog_', $2::text), $1, $2, $3)
+        ON CONFLICT ("slug") DO NOTHING
+      `,
+      [program.name, program.slug, index]
+    );
+  }
+
+  console.log(`Seeded ${programs.length} programs`);
 
   for (const [index, collection] of collections.entries()) {
     await pool.query(

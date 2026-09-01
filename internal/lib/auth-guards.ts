@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { MemberRole, MemberStatus } from "@/lib/generated/prisma/enums";
+import { MemberRole, MemberStatus, PersonKind } from "@/lib/generated/prisma/enums";
 import { coreComplete } from "@/lib/onboarding";
 
 /**
@@ -25,10 +25,16 @@ export async function getCurrentMember() {
   const email = session?.user?.email?.toLowerCase();
   if (!email) return null;
 
-  return db.member.findUnique({
+  const member = await db.member.findUnique({
     where: { email },
     include: MEMBER_INCLUDE,
   });
+
+  // The column is nullable only for CONTACT rows, and this row was found *by*
+  // email — narrowing here keeps `email` a plain string on every signed-in
+  // surface instead of a null-check that can't ever fire.
+  if (!member?.email) return null;
+  return { ...member, email: member.email };
 }
 
 /**
@@ -66,5 +72,9 @@ export async function assertAdmin() {
 }
 
 export async function countPendingMembers() {
-  return db.member.count({ where: { status: MemberStatus.PENDING } });
+  // Contacts also sit at PENDING (it is the safe non-APPROVED default), but
+  // they never asked to get in — the approval queue is for accounts.
+  return db.member.count({
+    where: { status: MemberStatus.PENDING, kind: PersonKind.ACCOUNT },
+  });
 }
