@@ -1,3 +1,5 @@
+import { LOOTBOX_ENABLED } from "@/lib/lootbox";
+
 /**
  * The shape of the /welcome flow, and the one definition of "complete".
  *
@@ -17,8 +19,18 @@
  *                     them, so they are nudged, never enforced.
  */
 
-export const STEPS = ["role", "about", "lootbox", "reach"] as const;
-export type OnboardingStep = (typeof STEPS)[number];
+const ALL_STEPS = ["role", "about", "lootbox", "reach"] as const;
+
+/** The type stays the full set even when a step is switched off, so STEP_META,
+ *  the media map and the step branches all keep compiling untouched. */
+export type OnboardingStep = (typeof ALL_STEPS)[number];
+
+/** The steps actually shown, in order. Filtering here is what makes the flow
+ *  "3 of 3" rather than "3 of 4 with a hole in it" — the progress bar, next/prev
+ *  and `isStep` all derive from this one array. */
+export const STEPS: readonly OnboardingStep[] = ALL_STEPS.filter(
+  (step) => step !== "lootbox" || LOOTBOX_ENABLED,
+);
 
 export const STEP_META: Record<
   OnboardingStep,
@@ -76,7 +88,9 @@ export function coreComplete(member: OnboardingMember) {
 export function firstIncompleteStep(member: OnboardingMember): OnboardingStep {
   if (!filled(member.title) || !member.departmentId) return "role";
   if (member.expertise.length === 0) return "about";
-  return "lootbox";
+  // Everything required is answered, so resume at the first optional step —
+  // looked up rather than named, since which one that is depends on what's on.
+  return STEPS.find((step) => !STEP_META[step].required) ?? STEPS[STEPS.length - 1];
 }
 
 export function nextStep(step: OnboardingStep): OnboardingStep | null {
@@ -103,7 +117,9 @@ export function profileGaps(member: OnboardingMember): string[] {
   const gaps: string[] = [];
 
   if (!filled(member.bio)) gaps.push("a bio");
-  if (!Array.isArray(member.lootbox) || member.lootbox.length === 0) gaps.push("a lootbox");
+  if (LOOTBOX_ENABLED && (!Array.isArray(member.lootbox) || member.lootbox.length === 0)) {
+    gaps.push("a lootbox");
+  }
   if (!Object.values(links).some((value) => filled(value as string))) gaps.push("any links");
   if (!filled(member.location) && !filled(member.timezone)) gaps.push("where you are");
 

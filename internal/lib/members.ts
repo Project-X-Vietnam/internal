@@ -5,7 +5,7 @@
  * in lib/member-actions.ts, where each one asserts its own authorization.
  */
 import { db } from "@/lib/db";
-import { MemberStatus } from "@/lib/generated/prisma/enums";
+import { MemberStatus, PersonKind } from "@/lib/generated/prisma/enums";
 
 // --- Reads ---
 
@@ -29,6 +29,9 @@ export async function listApprovedMembers(filters: DirectoryFilters = {}) {
 
   return db.member.findMany({
     where: {
+      // kind is belt-and-braces here — contacts are never APPROVED — but the
+      // Team scope's definition is "approved accounts", so say so.
+      kind: PersonKind.ACCOUNT,
       status: MemberStatus.APPROVED,
       ...(department ? { department: { slug: department } } : {}),
       ...(cohort ? { cohort } : {}),
@@ -73,7 +76,9 @@ export async function getMemberById(id: string) {
 }
 
 export async function listMembersForAdmin() {
+  // Accounts only: this page is about access. Contacts live in /admin/network.
   return db.member.findMany({
+    where: { kind: PersonKind.ACCOUNT },
     include: { department: true, approvedBy: { select: { name: true } } },
     orderBy: [{ status: "asc" }, { requestedAt: "desc" }],
   });

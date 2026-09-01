@@ -81,16 +81,34 @@ enum MemberRole {
   MEMBER
 }
 
+// One row per human, forever. ACCOUNT rows sign in with Google and pass through
+// the status approval flow; CONTACT rows are network memory — speakers, mentors,
+// partners — created by an admin and unable to sign in. When a contact later
+// signs in with a matching email, lib/auth.ts flips them to ACCOUNT (status
+// still PENDING, so approval stays an admin decision) and their history rides
+// along instead of splitting across two records.
+enum PersonKind {
+  ACCOUNT
+  CONTACT
+}
+
 model Member {
   id        String  @id @default(cuid())
-  email     String  @unique
+  // Nullable for CONTACT rows — an admin logging a 2024 speaker often has no
+  // address. Every ACCOUNT row has one; Google is the source.
+  email     String? @unique
   googleSub String? @unique // stable Google account id; email can change
   name      String
   avatarUrl String? // Google-hosted URL, never an upload
 
+  kind   PersonKind   @default(ACCOUNT)
   status MemberStatus @default(PENDING)
   role   MemberRole   @default(MEMBER)
 
+  // The present-day snapshot, kept scalar so directory tiles need no join and
+  // the /welcome flow stays as it is. History — including how these fields
+  // looked in past years — lives in Engagement rows; the migration seeded one
+  // from these columns so the timeline starts populated.
   title        String? // free text, e.g. "Program Lead"
   cohort       String? // e.g. "2026 Fellows"
   departmentId String?
@@ -103,6 +121,17 @@ model Member {
   timezone String? // IANA, e.g. "Asia/Ho_Chi_Minh"
 
   expertise ExpertiseTag[] // "ask me about"
+
+  // ADMIN-ONLY, like every `note` field in the network models: context on the
+  // person themselves ("prefers email", "keen to mentor again"). Written knowing
+  // the subject may someday read it. Server code must never select it for a
+  // non-admin caller.
+  note String?
+
+  engagements     Engagement[] @relation("EngagementPerson")
+  engagementEdits Engagement[] @relation("EngagementEditor")
+  connectionsA    Connection[] @relation("ConnectionA")
+  connectionsB    Connection[] @relation("ConnectionB")
 
   // Set when someone reaches the end of /welcome. Distinct from a complete
   // profile: it records that they were *offered* the optional steps and chose,
@@ -119,6 +148,7 @@ model Member {
   updatedAt    DateTime  @updatedAt
 
   @@index([status])
+  @@index([kind])
   @@index([departmentId])
 }
 
@@ -129,7 +159,8 @@ model Department {
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
 
-  members Member[]
+  members     Member[]
+  engagements Engagement[]
 }
 
 model ExpertiseTag {
@@ -139,6 +170,126 @@ model ExpertiseTag {
   createdAt DateTime @default(now())
 
   members Member[]
+}
+
+// ---------------------------------------------------------------------------
+// Platform: network memory.
+//
+// PJX turns its team over every year, so "who have we worked with, in what
+// role, and how did it go" must live in rows rather than in the outgoing
+// cohort's heads. The atom is the Engagement: person × role × optional program
+// edition × time. A person's directory profile is just their engagements read
+// back; the Network directory scope is everyone who ever held one.
+//
+// Deliberate boundaries, agreed 2026-09:
+//  - Connections between people are EXPLICIT, written by an admin. Sharing a
+//    program edition is never treated as knowing each other.
+//  - Every `note` here is admin-only, like Member.note above.
+//  - This is network memory, not a CRM: no pipelines, no outreach workflows.
+//
+// This repo is PUBLIC: same rule as members — real people and organizations are
+// never seeded from committed files.
+// ---------------------------------------------------------------------------
+
+enum EngagementRole {
+  TEAM // core team — `title` carries the specifics: "President", "Program Lead"
+  FELLOW
+  SPEAKER
+  MENTOR
+  TRAINER
+  ADVISOR
+  PARTNER // representative of a partner organization — organizationId required (enforced in the action)
+  OTHER
+}
+
+model Program {
+  id        String @id @default(cuid())
+  name      String @unique // "SFP Recruitment", "Summer Fellowship Program"
+  slug      String @unique
+  sortOrder Int    @default(0)
+
+  editions ProgramEdition[]
+}
+
+// One annual run of a program — "Summer Fellowship Program 2025". Created on
+// demand the first time an engagement names that program-year, not curated.
+model ProgramEdition {
+  id        String  @id @default(cuid())
+  programId String
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  year      Int
+  label     String? // display override; defaults to "<program> <year>"
+
+  engagements Engagement[]
+
+  @@unique([programId, year])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  website   String?
+  note      String? // ADMIN-ONLY
+  createdAt DateTime @default(now())
+
+  engagements Engagement[]
+}
+
+model Engagement {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation("EngagementPerson", fields: [memberId], references: [id], onDelete: Cascade)
+
+  role  EngagementRole
+  title String? // "President", "Judge, final round", the session they spoke at…
+
+  departmentId   String?
+  department     Department?   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  // Their affiliation at the time — required for PARTNER (who they represented),
+  // optional context for anyone else (the company a mentor came from).
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  editionId      String?
+  edition        ProgramEdition? @relation(fields: [editionId], references: [id], onDelete: SetNull)
+
+  // Years, not dates: PJX runs in annual cycles and that is how anyone would
+  // describe a role ("President 2025–", "Speaker, SFP 2024"). When an edition is
+  // set, startYear mirrors its year so ordering never needs the join.
+  startYear Int
+  endYear   Int? // null = ongoing; equal to startYear for a single-year engagement
+
+  note String? // ADMIN-ONLY: how it went, would we work with them again
+
+  createdById String?
+  createdBy   Member?  @relation("EngagementEditor", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([editionId])
+  @@index([role, startYear])
+}
+
+// An explicit, admin-written edge between two people. `label` is what members
+// see ("introduced them to PJX", "colleagues at VNG"); it is required because an
+// edge that can't say how they know each other records nothing.
+model Connection {
+  id  String @id @default(cuid())
+  // Ordered aId < bId by the action, so one pair can't hide behind two rows.
+  aId String
+  bId String
+  a   Member @relation("ConnectionA", fields: [aId], references: [id], onDelete: Cascade)
+  b   Member @relation("ConnectionB", fields: [bId], references: [id], onDelete: Cascade)
+
+  label String
+  note  String? // ADMIN-ONLY
+
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@unique([aId, bId, label])
+  @@index([aId])
+  @@index([bId])
 }
 
 // ---------------------------------------------------------------------------

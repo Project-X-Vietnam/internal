@@ -5,7 +5,7 @@ Alias of [AGENTS.md](./AGENTS.md). Read that file — it is the authoritative gu
 ## 30-second orientation
 
 - **This is the PJX internal team platform** (members only). Public-facing work goes in the separate `landing-page` repo.
-- **Intended purpose:** team repo & directory, knowledge & resource hub, artifacts. Not an ERP or CRM.
+- **Intended purpose:** team repo & directory + network memory, knowledge & resource hub, artifacts. Not an ERP — and network *memory* only, never CRM workflows (no pipelines, outreach, or email sync).
 - **What's actually built today:** only THEIA, an AI treasure-hunt bonding game. It's an *Artifact*, not the platform. Don't extend it to host new features.
 - **The app is nested one level down** — work in `internal/`, not the repo root.
 

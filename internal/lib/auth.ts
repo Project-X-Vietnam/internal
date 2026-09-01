@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
 import { db } from "@/lib/db";
-import { MemberRole, MemberStatus } from "@/lib/generated/prisma/enums";
+import { MemberRole, MemberStatus, PersonKind } from "@/lib/generated/prisma/enums";
 
 /** Emails auto-approved as ADMIN on first sign-in — otherwise nobody can approve the first admin. */
 function bootstrapAdminEmails(): string[] {
@@ -65,6 +65,11 @@ async function upsertMemberFromGoogle(input: {
       avatarUrl,
       email,
       googleSub: googleSub ?? existing.googleSub,
+      // The contact→account upgrade: a network contact who signs in with a
+      // matching email becomes an account on the same row, so their engagement
+      // history rides along. Status is untouched — a contact carries PENDING,
+      // so whether they get in stays the admin queue's decision.
+      kind: PersonKind.ACCOUNT,
       lastSeenAt: new Date(),
       ...promote,
     },

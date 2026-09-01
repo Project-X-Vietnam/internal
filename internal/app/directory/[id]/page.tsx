@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Avatar } from "@/components/platform/avatar";
 import { Lootbox } from "@/components/platform/lootbox";
 import { MemberPortrait } from "@/components/platform/member-portrait";
 import { PortalLayout } from "@/components/platform/nav";
@@ -9,10 +10,17 @@ import { FOCUS, PageHeader, Section } from "@/components/platform/page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { requireApprovedMember } from "@/lib/auth-guards";
-import { MemberStatus } from "@/lib/generated/prisma/enums";
-import { parseLootbox } from "@/lib/lootbox";
+import { MemberRole, PersonKind } from "@/lib/generated/prisma/enums";
+import { LOOTBOX_ENABLED, parseLootbox } from "@/lib/lootbox";
 import { portraitFor } from "@/lib/member-photos";
 import { getMemberById } from "@/lib/members";
+import {
+  engagementContext,
+  engagementHeadline,
+  getNetworkPerson,
+  getNotesForAdmin,
+  yearSpan,
+} from "@/lib/network";
 import { cn } from "@/lib/utils";
 
 type Params = { params: Promise<{ id: string }> };
@@ -41,13 +49,29 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
   );
 }
 
+/** The "admin only" marker in front of a note — notes never render for members. */
+function AdminNote({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="type-small mt-1.5 flex flex-wrap items-baseline gap-x-2 text-muted-foreground">
+      <Badge variant="warning">admin only</Badge>
+      <span className="min-w-0">{children}</span>
+    </p>
+  );
+}
+
 export default async function MemberProfilePage({ params }: Params) {
   const viewer = await requireApprovedMember();
   const { id } = await params;
 
-  const member = await getMemberById(id);
-  // Pending, rejected and suspended people are not part of the directory.
-  if (!member || member.status !== MemberStatus.APPROVED) notFound();
+  // Approved accounts and network contacts; pending, rejected and suspended
+  // accounts are not part of any directory.
+  const person = await getNetworkPerson(id);
+  if (!person) notFound();
+  const { member, engagements, connections } = person;
+
+  const isAdmin = viewer.role === MemberRole.ADMIN;
+  // Fetched only for admins — the public read physically can't select notes.
+  const notes = isAdmin ? await getNotesForAdmin(member.id) : null;
 
   const links = (member.links ?? {}) as Links;
   const linkEntries = (Object.keys(LINK_LABELS) as (keyof Links)[])
@@ -56,6 +80,7 @@ export default async function MemberProfilePage({ params }: Params) {
 
   const lootbox = parseLootbox(member.lootbox);
   const isViewer = viewer.id === member.id;
+  const isContact = member.kind === PersonKind.CONTACT;
 
   const subtitle = [member.title, member.department?.name].filter(Boolean).join(" · ");
   // A section is only worth a rule and a label if it has something under it.
@@ -79,19 +104,31 @@ export default async function MemberProfilePage({ params }: Params) {
             />
           </div>
           <div className="min-w-0 flex-1">
-            {subtitle && <p className="type-body text-muted-foreground">{subtitle}</p>}
-            <p className="type-small mt-1">
-              <a
-                href={`mailto:${member.email}`}
-                className={cn("text-primary underline-offset-4 hover:underline", FOCUS)}
-              >
-                {member.email}
-              </a>
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              {subtitle && <p className="type-body text-muted-foreground">{subtitle}</p>}
+              {/* Says why this profile has no Lark handle to ping: they're part
+                  of the network, not the current team. */}
+              {isContact && <Badge variant="outline">Network contact</Badge>}
+            </div>
+            {member.email && (
+              <p className="type-small mt-1">
+                <a
+                  href={`mailto:${member.email}`}
+                  className={cn("text-primary underline-offset-4 hover:underline", FOCUS)}
+                >
+                  {member.email}
+                </a>
+              </p>
+            )}
           </div>
           {isViewer && (
             <Button asChild variant="outline" size="sm">
               <Link href="/me">Edit profile</Link>
+            </Button>
+          )}
+          {isAdmin && !isViewer && (
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/admin/network/${member.id}`}>Manage in network</Link>
             </Button>
           )}
         </div>
@@ -114,6 +151,76 @@ export default async function MemberProfilePage({ params }: Params) {
                 >
                   <Badge>{tag.label}</Badge>
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {(engagements.length > 0 || isViewer) && (
+        <Section label="History" meta={engagements.length > 0 ? String(engagements.length) : undefined}>
+          {engagements.length === 0 ? (
+            <p className="type-small mt-3 text-muted-foreground">
+              Your role history is empty —{" "}
+              <Link href="/me" className={cn("text-primary underline-offset-4 hover:underline", FOCUS)}>
+                add where you&rsquo;ve been
+              </Link>
+              .
+            </p>
+          ) : (
+            <ol className="mt-1">
+              {engagements.map((engagement) => (
+                <li
+                  key={engagement.id}
+                  className="rule-subtle flex flex-col gap-x-6 py-3 sm:flex-row"
+                >
+                  <span className="type-meta w-32 shrink-0 pt-0.5 tabular-nums">
+                    {yearSpan(engagement.startYear, engagement.endYear)}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="type-small font-medium">{engagementHeadline(engagement)}</p>
+                    {engagementContext(engagement) && (
+                      <p className="type-small mt-0.5 text-muted-foreground">
+                        {engagementContext(engagement)}
+                      </p>
+                    )}
+                    {notes?.engagements.get(engagement.id) && (
+                      <AdminNote>{notes.engagements.get(engagement.id)}</AdminNote>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+        </Section>
+      )}
+
+      {connections.length > 0 && (
+        <Section label="Connections" meta={String(connections.length)}>
+          {/* Every row here was written by an admin on purpose. Sharing a
+              program year is deliberately NOT a connection. */}
+          <ul className="mt-1">
+            {connections.map((connection) => (
+              <li
+                key={connection.id}
+                className="rule-subtle flex flex-wrap items-center gap-x-4 gap-y-2 py-3"
+              >
+                <Avatar name={connection.other.name} src={connection.other.avatarUrl} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/directory/${connection.other.id}`}
+                    className={cn(
+                      "type-small font-medium underline-offset-4 hover:text-primary hover:underline",
+                      FOCUS,
+                    )}
+                  >
+                    {connection.other.name}
+                  </Link>
+                  <p className="type-small mt-0.5 text-muted-foreground">{connection.label}</p>
+                  {notes?.connections.get(connection.id) && (
+                    <AdminNote>{notes.connections.get(connection.id)}</AdminNote>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -154,9 +261,15 @@ export default async function MemberProfilePage({ params }: Params) {
         </Section>
       )}
 
+      {notes?.person && (
+        <Section label="Admin notes">
+          <AdminNote>{notes.person}</AdminNote>
+        </Section>
+      )}
+
       {/* An empty lootbox is shown only to its owner: a prompt to fill it in is
           useful to them and dead weight on the other twenty-nine profiles. */}
-      {(lootbox.length > 0 || isViewer) && (
+      {LOOTBOX_ENABLED && (lootbox.length > 0 || isViewer) && (
         <Section label="Lootbox">
           <Lootbox
             name={member.name}
