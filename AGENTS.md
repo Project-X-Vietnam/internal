@@ -150,7 +150,7 @@ Everything requires an approved member session except `/signin`, `/pending`, `/a
 |---|---|
 | `/` | **Platform home** |
 | `/signin`, `/pending` | Google sign-in; awaiting-approval screen |
-| `/directory`, `/directory/[id]` | **Team directory** — search, filters, profiles |
+| `/directory`, `/directory/[id]` | **Team directory** — search, filters, profiles. `?scope=network` is the network memory scope; `&view=graph` draws it as a map (layout in `lib/network-graph.ts`, server-side) |
 | `/resources`, `/resources/[slug]` | **Knowledge hub** — published docs and links, grouped by collection |
 | `/me` | Edit your own profile |
 | `/admin/members` | Approval queue + roles (admins only) |

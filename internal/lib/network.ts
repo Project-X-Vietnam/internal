@@ -91,6 +91,19 @@ export async function listConnectionsFor(memberId: string) {
   }));
 }
 
+/**
+ * Explicit edges among a set of people — what the map draws between two person
+ * nodes. Public shape, like listConnectionsFor: the admin note is never selected.
+ */
+export async function listConnectionsAmong(memberIds: string[]) {
+  if (memberIds.length < 2) return [];
+  return db.connection.findMany({
+    where: { aId: { in: memberIds }, bId: { in: memberIds } },
+    select: { id: true, aId: true, bId: true, label: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 // --- The network directory ---
 
 /**
