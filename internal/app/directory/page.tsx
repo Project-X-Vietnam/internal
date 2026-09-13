@@ -4,8 +4,14 @@ import Link from "next/link";
 import { Avatar } from "@/components/platform/avatar";
 import { DirectoryGallery, type GalleryMember } from "@/components/platform/directory-gallery";
 import { PortalLayout } from "@/components/platform/nav";
+import { NetworkGraph } from "@/components/platform/network-graph";
 import { NetworkList } from "@/components/platform/network-list";
 import { type NetworkSheetPerson } from "@/components/platform/network-sheet";
+import {
+  networkHref,
+  NetworkViewToggle,
+  type NetworkView,
+} from "@/components/platform/network-view-toggle";
 import { FOCUS, PageHeader, Panel, RuleList, Section } from "@/components/platform/page";
 import { SelectField } from "@/components/platform/select-field";
 import { directoryHref, ViewToggle, type DirectoryView } from "@/components/platform/view-toggle";
@@ -26,12 +32,14 @@ import {
   engagementContext,
   engagementHeadline,
   latestEngagementSummary,
+  listConnectionsAmong,
   listNetworkPeople,
   listNetworkYears,
   listPrograms,
   ROLE_LABELS,
   yearSpan,
 } from "@/lib/network";
+import { buildNetworkGraph } from "@/lib/network-graph";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Directory" };
@@ -119,12 +127,24 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
   );
 
   if (scope === "network") {
+    const networkView: NetworkView = filters.view === "graph" ? "graph" : "list";
     const [people, years, programs] = await Promise.all([
       listNetworkPeople(filters),
       listNetworkYears(),
       listPrograms(),
     ]);
     const filtered = Boolean(filters.q || filters.role || filters.year || filters.program);
+
+    // The map is the same query drawn differently: the filters above decide
+    // who is on it, and only the explicit connections among those people are
+    // fetched on top.
+    const graph =
+      networkView === "graph"
+        ? buildNetworkGraph(
+            people,
+            await listConnectionsAmong(people.map((person) => person.id)),
+          )
+        : null;
 
     // Same idea as `gallery` below: only what the rows and the sheet render,
     // pre-formatted, because the display helpers live in lib/network.ts, which
@@ -157,60 +177,69 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
         {header}
 
         <Section label="Filter">
-          <form className="mt-3 flex flex-wrap items-center gap-2" role="search">
-            <input type="hidden" name="scope" value="network" />
+          {/* Same arrangement as the Team scope: filters wrap within their own
+              group, the view toggle stays pinned to the right of the first line. */}
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-x-6">
+            <form className="flex min-w-0 flex-1 flex-wrap items-center gap-2" role="search">
+              <input type="hidden" name="scope" value="network" />
+              {networkView === "graph" && <input type="hidden" name="view" value="graph" />}
 
-            <Input
-              type="search"
-              name="q"
-              defaultValue={filters.q ?? ""}
-              placeholder="Search name, organization, expertise…"
-              aria-label="Search the network"
-              className="h-9 w-full sm:w-56"
-            />
+              <Input
+                type="search"
+                name="q"
+                defaultValue={filters.q ?? ""}
+                placeholder="Search name, organization, expertise…"
+                aria-label="Search the network"
+                className="h-9 w-full sm:w-56"
+              />
 
-            <SelectField
-              name="role"
-              defaultValue={filters.role ?? ""}
-              aria-label="Filter by role"
-              className="w-auto min-w-32"
-              options={[
-                { value: "", label: "Any role" },
-                ...Object.entries(ROLE_LABELS).map(([value, label]) => ({ value, label })),
-              ]}
-            />
+              <SelectField
+                name="role"
+                defaultValue={filters.role ?? ""}
+                aria-label="Filter by role"
+                className="w-auto min-w-32"
+                options={[
+                  { value: "", label: "Any role" },
+                  ...Object.entries(ROLE_LABELS).map(([value, label]) => ({ value, label })),
+                ]}
+              />
 
-            <SelectField
-              name="year"
-              defaultValue={filters.year ?? ""}
-              aria-label="Filter by year"
-              className="w-auto min-w-28"
-              options={[
-                { value: "", label: "Any year" },
-                ...years.map((year) => ({ value: String(year), label: String(year) })),
-              ]}
-            />
+              <SelectField
+                name="year"
+                defaultValue={filters.year ?? ""}
+                aria-label="Filter by year"
+                className="w-auto min-w-28"
+                options={[
+                  { value: "", label: "Any year" },
+                  ...years.map((year) => ({ value: String(year), label: String(year) })),
+                ]}
+              />
 
-            <SelectField
-              name="program"
-              defaultValue={filters.program ?? ""}
-              aria-label="Filter by program"
-              className="w-auto min-w-32"
-              options={[
-                { value: "", label: "Any program" },
-                ...programs.map((program) => ({ value: program.slug, label: program.name })),
-              ]}
-            />
+              <SelectField
+                name="program"
+                defaultValue={filters.program ?? ""}
+                aria-label="Filter by program"
+                className="w-auto min-w-32"
+                options={[
+                  { value: "", label: "Any program" },
+                  ...programs.map((program) => ({ value: program.slug, label: program.name })),
+                ]}
+              />
 
-            <Button type="submit" variant="outline">
-              Apply
-            </Button>
-            {filtered && (
-              <Button asChild variant="ghost">
-                <Link href="/directory?scope=network">Clear</Link>
+              <Button type="submit" variant="outline">
+                Apply
               </Button>
-            )}
-          </form>
+              {filtered && (
+                <Button asChild variant="ghost">
+                  <Link href={networkHref({}, networkView)}>Clear</Link>
+                </Button>
+              )}
+            </form>
+
+            <div className="shrink-0">
+              <NetworkViewToggle filters={filters} view={networkView} />
+            </div>
+          </div>
         </Section>
 
         <Section
@@ -242,6 +271,13 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
                 )}
               </p>
             </Panel>
+          ) : graph ? (
+            <NetworkGraph
+              graph={graph}
+              people={sheetPeople}
+              viewerId={member.id}
+              isAdmin={member.role === MemberRole.ADMIN}
+            />
           ) : (
             <NetworkList
               people={sheetPeople}
