@@ -1,11 +1,37 @@
+# dependencies
 node_modules/
-.next/
-dist/
-build/
-out/
-.DS_Store
+/.pnp
+.pnp.*
 
-# untracked local tooling / caches
+# build output
+/.next*/
+/out/
+/build/
+/dist/
+/coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# generated Prisma client
+/lib/generated/prisma
+
+# env files — never commit real values; the template is tracked
+.env*
+!.env.example
+
+# network backfill data — real people; THIS REPO IS PUBLIC, never commit it
+/prisma/backfill/
+
+# local tooling / caches / leftovers
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vercel
+/dev.db
 .agent/
 .pnpm-store/
 .claude/settings.local.json
+.claude/worktrees/

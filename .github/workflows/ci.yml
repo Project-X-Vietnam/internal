@@ -9,11 +9,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    # The Next.js app is nested one level down — see AGENTS.md.
-    working-directory: internal
-
 jobs:
   check:
     name: typecheck · lint · smoke
@@ -22,14 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Version comes from the "packageManager" field in internal/package.json.
+      # Version comes from the "packageManager" field in package.json.
       - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: internal/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       # postinstall runs `prisma generate`, which needs no database.
       - run: pnpm install --frozen-lockfile

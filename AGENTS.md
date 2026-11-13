@@ -22,7 +22,7 @@ Anything **public-facing** — programs, applications, mentors, partners, recrui
 
 THEIA is **an Artifact, not the platform.** It has served its purpose as an event. The intended shape is for it to live under an Artifacts section alongside other past internal builds, with the team directory and knowledge hub as the platform's primary surfaces.
 
-**That move has now happened.** THEIA's game shell lives under `/artifacts/theia`, the app root serves a platform home, and `/artifacts` is the Artifacts index. THEIA still works; old links 307-redirect to the new paths (see `internal/next.config.ts`). So:
+**That move has now happened.** THEIA's game shell lives under `/artifacts/theia`, the app root serves a platform home, and `/artifacts` is the Artifacts index. THEIA still works; old links 307-redirect to the new paths (see `next.config.ts`). So:
 
 - The **team directory** is built (`/directory`), behind Google sign-in with an admin approval queue. The **knowledge hub** is built (`/resources`), authored by admins at `/admin/resources`.
 - When building new platform features, do **not** extend THEIA's routes, models, or navigation to host them. Build the new module alongside, under its own route group.
@@ -36,33 +36,32 @@ THEIA is **an Artifact, not the platform.** It has served its purpose as an even
 - Seed scripts may create *structure* (departments, roles) but never *people*.
 - Assume anything committed here is world-readable, permanently.
 
-## Repo layout — the nesting quirk
+## Repo layout
 
-The Next.js app is **one level down**, at `internal/` inside the repo root. The root holds only docs, CI and editor/agent config — there is no root `package.json`, and nothing at the root is read by any build.
+The Next.js app **is** the repo: `package.json` sits at the root and every pnpm command runs there.
 
 ```
-internal/                      ← repo root
+.
 ├── AGENTS.md                  ← this file (CLAUDE.md is an alias)
-├── README.md                  Quickstart
+├── README.md                  Quickstart + command table
 ├── .github/workflows/ci.yml   typecheck · lint · smoke on push / PR
 ├── .claude/launch.json        Dev-server presets for the Claude desktop app
 ├── .nvmrc                     Node 22
-└── internal/                  ← THE ACTUAL APP — every pnpm command runs here
-    ├── package.json           pins pnpm via "packageManager"
-    ├── app/  components/  lib/  prisma/  scripts/  public/  types/
-    ├── docker-compose.yml     local Postgres for development (pnpm db:up)
-    ├── next.config.ts  tailwind.config.ts  eslint.config.mjs  tsconfig.json
-    ├── BRIEF.md  DESIGN_SYSTEM.md
-    └── ANSWER_KEY.md  MILESTONES.md  STORY_PLOT.md  PJX_AI_…_Plot.md   ← spoilers, see Guardrails
+├── package.json               pins pnpm via "packageManager"
+├── app/  components/  lib/  prisma/  scripts/  public/  types/
+├── docker-compose.yml         local Postgres for development (pnpm db:up)
+├── next.config.ts  tailwind.config.ts  eslint.config.mjs  tsconfig.json
+├── BRIEF.md  DESIGN_SYSTEM.md
+└── ANSWER_KEY.md  MILESTONES.md  STORY_PLOT.md  PJX_AI_…_Plot.md   ← spoilers, see Guardrails
 ```
 
-The earlier flat-layout leftovers (root `tailwind.config.js`, `postcss.config.js`, `components.json`, npm and pnpm lockfiles) and the salvage artifacts from the `node_modules` incident (`changes_non_deps.patch`, `SALVAGE_NON_DEPS.md`, `PATCH_NOTES.md`) were removed in the 2026-11 repo cleanup. They are still in git history if ever needed.
+Until 2026-11 the app sat one level down at `internal/internal/`, a leftover of an older flat layout whose orphaned root configs (`tailwind.config.js`, `postcss.config.js`, `components.json`, stray lockfiles) and `node_modules`-incident salvage files (`changes_non_deps.patch`, `SALVAGE_NON_DEPS.md`, `PATCH_NOTES.md`) were removed in the 2026-11 repo cleanup. The app was then moved up to the root in a rename-only commit. Older branches may still have the nested layout; git's rename detection handles rebasing them. All of it is in git history if ever needed.
 
-Keep it that way: **no new top-level files** unless they are repo-wide (docs, CI, agent config). App code and config belong in `internal/`.
+Keep the root to app code and config plus repo-wide files (docs, CI, agent config) — no second lockfile, no duplicate configs.
 
 ## Commands
 
-All commands run from `internal/internal/`:
+All commands run from the repo root:
 
 ```bash
 pnpm dev          # prisma generate && next dev -p 3010
@@ -76,7 +75,7 @@ pnpm db:deploy    # node scripts/deploy-db.mjs — migrate deploy, then seed (gu
 pnpm db:seed      # node prisma/seed.mjs (guarded)
 ```
 
-Or from the repo root: `pnpm --dir internal dev` (this is what `.claude/launch.json` does).
+`.claude/launch.json` runs the same `pnpm dev` for the Claude desktop app's preview.
 
 `pnpm build` runs migrations **and the seed** against whatever `DATABASE_URL` points at. Locally the production guard (see "Databases") stops it from reaching a remote host; use `pnpm build:local` to check that the app compiles.
 
@@ -84,7 +83,7 @@ Or from the repo root: `pnpm --dir internal dev` (this is what `.claude/launch.j
 
 `.github/workflows/ci.yml` runs `pnpm install --frozen-lockfile` → `typecheck` → `lint` → `smoke` on every push to `main`/`dev` and every PR. No database is involved (`prisma generate` needs none). All three steps are blocking: a lint error fails the PR, so keep `pnpm lint` at zero errors. Warnings don't fail it — the few that remain are `<img>` tags on arbitrary image URLs, which `next/image` would need `remotePatterns` for.
 
-Toolchain is pinned in `internal/package.json`: `"packageManager": "pnpm@10.x"` (read by Vercel, CI and corepack) and `"engines": { "node": ">=22" }`. `.nvmrc` at the root says the same.
+Toolchain is pinned in `package.json`: `"packageManager": "pnpm@10.x"` (read by Vercel, CI and corepack) and `"engines": { "node": ">=22" }`. `.nvmrc` at the root says the same.
 
 ## Stack
 
@@ -113,7 +112,7 @@ FACILITATOR_PIN         Gate for the THEIA facilitator console
 SESSION_SECRET          HMAC key for THEIA's facilitator cookie; falls back to FACILITATOR_PIN
 ```
 
-`.env*` is gitignored. Copy `internal/.env.example` (tracked via a `!.env.example` negation) to `.env` and fill it in — never commit real values. `.env.local` overrides `.env` everywhere (Next.js, Prisma CLI and the scripts all load them in that order), so keep one file unless you know why you need two.
+`.env*` is gitignored. Copy `.env.example` (tracked via a `!.env.example` negation) to `.env` and fill it in — never commit real values. `.env.local` overrides `.env` everywhere (Next.js, Prisma CLI and the scripts all load them in that order), so keep one file unless you know why you need two.
 
 ### Databases — local by default, production by exception
 
@@ -121,7 +120,7 @@ There are three ways to reach a database, and the default for every developer is
 
 | | What | How |
 |---|---|---|
-| **Local** (default) | Your own Postgres 17 in Docker, from `internal/docker-compose.yml`, on `127.0.0.1:54329` | `pnpm db:up` → `pnpm db:reset` (migrate + seed). `.env.example` already points here. Break it freely; `pnpm db:nuke` deletes it. |
+| **Local** (default) | Your own Postgres 17 in Docker, from `docker-compose.yml`, on `127.0.0.1:54329` | `pnpm db:up` → `pnpm db:reset` (migrate + seed). `.env.example` already points here. Break it freely; `pnpm db:nuke` deletes it. |
 | **Read-only production** | The role `pjx_readonly` on the hosted DB — `SELECT` only, server-enforced read-only transactions, 30s statement cap | Owner runs `scripts/sql/readonly-role.sql` once; the connection string lives in the team password manager, **never** in a `.env`. Use it with `psql` or a GUI to look at real data. |
 | **Read-write production** | The owner connection string | Vercel only (`pnpm build` runs migrations + seed there). Locally, every writing script refuses a non-local host unless `ALLOW_REMOTE_DB=1` is set. |
 
@@ -139,7 +138,7 @@ pnpm db:down      # stop; data kept     pnpm db:nuke  # stop; data deleted
 
 ## Data model
 
-`internal/prisma/schema.prisma` holds three unrelated groups — THEIA, platform identity, and the knowledge hub. **Never join THEIA to the others** — the platform's `Member` is a person, THEIA's `Team` is a game session that merely uses the word.
+`prisma/schema.prisma` holds three unrelated groups — THEIA, platform identity, and the knowledge hub. **Never join THEIA to the others** — the platform's `Member` is a person, THEIA's `Team` is a game session that merely uses the word.
 
 Platform: **`Member`** (identity, status, role, profile), **`Department`**, **`ExpertiseTag`** (implicit m-n "ask me about").
 
@@ -215,10 +214,10 @@ Four committed files carry **the solution to THEIA** and each says so in its own
 
 | File | Contains |
 |---|---|
-| `internal/ANSWER_KEY.md` | Milestone answers, clue tokens, final reveal |
-| `internal/PJX_AI_Treasure_Hunt_THEIA_Plot.md` | Full plot and designer-only solution |
-| `internal/MILESTONES.md` | Per-milestone solutions and clue chains |
-| `internal/STORY_PLOT.md` | Narrative reveals |
+| `ANSWER_KEY.md` | Milestone answers, clue tokens, final reveal |
+| `PJX_AI_Treasure_Hunt_THEIA_Plot.md` | Full plot and designer-only solution |
+| `MILESTONES.md` | Per-milestone solutions and clue chains |
+| `STORY_PLOT.md` | Narrative reveals |
 
 `BRIEF.md` explicitly instructs that the plot file be kept out of the client bundle and away from AI assistants reading the repo freely.
 
@@ -237,12 +236,12 @@ They are committed, so nothing mechanically stops you from opening them. The rul
 
 - Run `git status` before every commit.
 - **If thousands of files appear, stop** and fix `.gitignore` first.
-- Never commit `node_modules/`, `.next*/`, `dist/`, `build/`, `out/`, `.DS_Store`, lockfiles other than `internal/pnpm-lock.yaml`, or media over 50MB.
+- Never commit `node_modules/`, `.next*/`, `dist/`, `build/`, `out/`, `.DS_Store`, lockfiles other than `pnpm-lock.yaml`, or media over 50MB.
 - If something goes wrong, salvage with `git diff --name-only` + `git diff > fix.patch` onto a fresh branch — never try to push the bad tree.
 
-pnpm is the only package manager. There is one lockfile, `internal/pnpm-lock.yaml`; a `package-lock.json` appearing anywhere means someone ran `npm install` — delete it, don't commit it.
+pnpm is the only package manager. There is one lockfile, `pnpm-lock.yaml`; a `package-lock.json` appearing anywhere means someone ran `npm install` — delete it, don't commit it.
 
-Local leftovers you may see in a working tree that are gitignored and safe to delete: `internal/dev.db` (SQLite from before Postgres), `internal/.env.*.bak`, `.pnpm-store/` at either level (a stray store; the real one is `~/Library/pnpm/store`), and `internal/.claude/`.
+Local leftovers you may see in a working tree that are gitignored and safe to delete: `dev.db` (SQLite from before Postgres), `.env.*.bak`, `.pnpm-store/` (a stray store; the real one is `~/Library/pnpm/store`) and `.claude/settings.local.json`.
 
 ### Working state
 
@@ -250,7 +249,7 @@ The repo is usually mid-flight, with several feature branches open. Check `git s
 
 ## Design system
 
-PJX has **one** design system across both products. This repo's copy is `internal/DESIGN_SYSTEM.md`; the canonical version is `PJX_UI_STYLE_GUIDE.md` in the landing-page repo. They are the same document (3-line diff) — if brand tokens change, update both or the products drift.
+PJX has **one** design system across both products. This repo's copy is `DESIGN_SYSTEM.md`; the canonical version is `PJX_UI_STYLE_GUIDE.md` in the landing-page repo. They are the same document (3-line diff) — if brand tokens change, update both or the products drift.
 
 Brand colors: `#0E56FA` blue, `#17CAFA` cyan, `#01001F` deep navy.
 
