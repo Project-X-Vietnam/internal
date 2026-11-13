@@ -16,5 +16,5 @@ pnpm typecheck  # the build does not typecheck for you
 
 ## Two hard rules
 
-1. **Never read, quote, or summarize the THEIA spoiler files** — `ANSWER_KEY.md`, `PJX_AI_Treasure_Hunt_THEIA_Plot.md`, `MILESTONES.md`, `STORY_PLOT.md` (all at the repo root). They hold the game's solutions. `BRIEF.md` is the safe one — use it for structure.
+1. **Never read, quote, or summarize the THEIA spoiler files** — `ANSWER_KEY.md`, `PJX_AI_Treasure_Hunt_THEIA_Plot.md`, `MILESTONES.md`, `STORY_PLOT.md` (all under `docs/theia/`). They hold the game's solutions. `docs/BRIEF.md` is the safe one — use it for structure.
 2. **Run `git status` before every commit.** `node_modules/` was once committed to `main`; if thousands of files appear, stop and fix `.gitignore`. See "Commit hygiene" in AGENTS.md.

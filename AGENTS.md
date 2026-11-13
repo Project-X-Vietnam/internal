@@ -51,8 +51,10 @@ The Next.js app **is** the repo: `package.json` sits at the root and every pnpm 
 ├── app/  components/  lib/  prisma/  scripts/  public/  types/
 ├── docker-compose.yml         local Postgres for development (pnpm db:up)
 ├── next.config.ts  tailwind.config.ts  eslint.config.mjs  tsconfig.json
-├── BRIEF.md  DESIGN_SYSTEM.md
-└── ANSWER_KEY.md  MILESTONES.md  STORY_PLOT.md  PJX_AI_…_Plot.md   ← spoilers, see Guardrails
+└── docs/
+    ├── BRIEF.md  DESIGN_SYSTEM.md          safe to read
+    └── theia/                             facilitator prompt + ANSWER_KEY.md  MILESTONES.md
+                                           STORY_PLOT.md  PJX_AI_…_Plot.md   ← spoilers, see Guardrails
 ```
 
 Until 2026-11 the app sat one level down at `internal/internal/`, a leftover of an older flat layout whose orphaned root configs (`tailwind.config.js`, `postcss.config.js`, `components.json`, stray lockfiles) and `node_modules`-incident salvage files (`changes_non_deps.patch`, `SALVAGE_NON_DEPS.md`, `PATCH_NOTES.md`) were removed in the 2026-11 repo cleanup. The app was then moved up to the root in a rename-only commit. Older branches may still have the nested layout; git's rename detection handles rebasing them. All of it is in git history if ever needed.
@@ -214,21 +216,21 @@ Four committed files carry **the solution to THEIA** and each says so in its own
 
 | File | Contains |
 |---|---|
-| `ANSWER_KEY.md` | Milestone answers, clue tokens, final reveal |
-| `PJX_AI_Treasure_Hunt_THEIA_Plot.md` | Full plot and designer-only solution |
-| `MILESTONES.md` | Per-milestone solutions and clue chains |
-| `STORY_PLOT.md` | Narrative reveals |
+| `docs/theia/ANSWER_KEY.md` | Milestone answers, clue tokens, final reveal |
+| `docs/theia/PJX_AI_Treasure_Hunt_THEIA_Plot.md` | Full plot and designer-only solution |
+| `docs/theia/MILESTONES.md` | Per-milestone solutions and clue chains |
+| `docs/theia/STORY_PLOT.md` | Narrative reveals |
 
-`BRIEF.md` explicitly instructs that the plot file be kept out of the client bundle and away from AI assistants reading the repo freely.
+`docs/BRIEF.md` explicitly instructs that the plot file be kept out of the client bundle and away from AI assistants reading the repo freely.
 
 They are committed, so nothing mechanically stops you from opening them. The rules are:
 
-- Never read them to "understand the game" — `BRIEF.md` explains the structure without spoilers.
+- Never read them to "understand the game" — `docs/BRIEF.md` explains the structure without spoilers.
 - Never quote, summarize, or paraphrase their contents in output, commits, or comments.
 - Never import them into anything that reaches the client bundle.
 - If a task genuinely requires them (e.g. fixing a wrong answer key), say so and confirm first.
 
-`BRIEF.md` is the safe one — it covers architecture, hosting and cost model without giving away answers. Start there.
+`docs/BRIEF.md` is the safe one — it covers architecture, hosting and cost model without giving away answers. Start there.
 
 ### Commit hygiene
 
@@ -249,7 +251,7 @@ The repo is usually mid-flight, with several feature branches open. Check `git s
 
 ## Design system
 
-PJX has **one** design system across both products. This repo's copy is `DESIGN_SYSTEM.md`; the canonical version is `PJX_UI_STYLE_GUIDE.md` in the landing-page repo. They are the same document (3-line diff) — if brand tokens change, update both or the products drift.
+PJX has **one** design system across both products. This repo's copy is `docs/DESIGN_SYSTEM.md`; the canonical version is `PJX_UI_STYLE_GUIDE.md` in the landing-page repo. They are the same document (3-line diff) — if brand tokens change, update both or the products drift.
 
 Brand colors: `#0E56FA` blue, `#17CAFA` cyan, `#01001F` deep navy.
 

@@ -105,7 +105,7 @@ const sourceChecks = [
     phrases: ["inside Bitexco"],
   },
   {
-    file: "ANSWER_KEY.md",
+    file: "docs/theia/ANSWER_KEY.md",
     phrases: ["DangVuKhoa_ORACLE-EYES_ocxetiB_19930317"],
   },
 ];
