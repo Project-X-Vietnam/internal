@@ -4,7 +4,7 @@
     {
       "name": "theia-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--dir", "internal", "dev"],
+      "runtimeArgs": ["dev"],
       "port": 3010,
       "autoPort": false
     },
@@ -14,8 +14,6 @@
       "runtimeArgs": [
         "NEXT_DIST_DIR=.next-network",
         "pnpm",
-        "--dir",
-        "internal",
         "exec",
         "next",
         "dev",
