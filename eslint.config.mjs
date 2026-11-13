@@ -22,6 +22,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Generated Prisma client — not ours to lint.
     "lib/generated/**",
+    // Agent config, skills and worktrees (other checkouts of this repo live
+    // under .claude/worktrees) and stray package stores are not app code.
+    ".claude/**",
+    ".pnpm-store/**",
   ]),
 ]);
 

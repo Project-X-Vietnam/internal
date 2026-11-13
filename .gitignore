@@ -34,4 +34,5 @@ yarn-error.log*
 .agent/
 .pnpm-store/
 .claude/settings.local.json
+.claude/skills/
 .claude/worktrees/
