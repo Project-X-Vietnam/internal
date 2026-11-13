@@ -37,4 +37,4 @@ role (`scripts/sql/readonly-role.sql`), never a developer `.env`.
 `pnpm typecheck`, `pnpm lint` and `pnpm smoke` are what CI runs.
 
 Everything else — purpose, guardrails, data model, routes — is in
-[AGENTS.md](AGENTS.md). `BRIEF.md` and `DESIGN_SYSTEM.md` are safe to read.
+[AGENTS.md](AGENTS.md). `docs/BRIEF.md` and `docs/DESIGN_SYSTEM.md` are safe to read; everything under `docs/theia/` is THEIA spoiler material.

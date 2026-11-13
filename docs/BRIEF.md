@@ -6,7 +6,7 @@ A **hybrid** (partly browser, partly human-run) team detective treasure hunt for
 
 **Design thesis:** technical barriers are low in the AI era; the real skill is logical thinking, forming hypotheses, and asking better questions. The game rewards reasoning, not memorization.
 
-> Full narrative + designer-only solution lives in `PJX_AI_Treasure_Hunt_THEIA_Plot.md`. **Keep that file OUT of the client bundle / any repo the vibecoding AI reads freely — it contains the solution.**
+> Full narrative + designer-only solution lives in `theia/PJX_AI_Treasure_Hunt_THEIA_Plot.md` (next to this file). **Keep that file OUT of the client bundle / any repo the vibecoding AI reads freely — it contains the solution.**
 
 ---
 
