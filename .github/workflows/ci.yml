@@ -36,10 +36,6 @@ jobs:
 
       - run: pnpm typecheck
 
-      # Reported, not enforced, until the pre-existing lint backlog in
-      # app/legacy and components/ is cleared. Flip this off once `pnpm lint`
-      # is clean on main.
       - run: pnpm lint
-        continue-on-error: true
 
       - run: pnpm smoke

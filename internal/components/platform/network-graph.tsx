@@ -61,7 +61,9 @@ const MAX_ZOOM = 5;
 type Transform = { x: number; y: number; k: number };
 const IDENTITY: Transform = { x: 0, y: 0, k: 1 };
 
-type Tooltip = { id: string; x: number; y: number };
+/** Tooltip anchor in frame pixels; `frameWidth` is captured with it so render
+ * never has to read the frame ref. */
+type Tooltip = { id: string; x: number; y: number; frameWidth: number };
 
 /** Text with a halo in the card colour, so a name stays legible over lines. */
 const HALO = { paintOrder: "stroke" as const, strokeLinejoin: "round" as const };
@@ -238,7 +240,12 @@ export function NetworkGraph({
     if (!frame) return;
     const rect = frame.getBoundingClientRect();
     if ("clientX" in event) {
-      setTooltip({ id, x: event.clientX - rect.left, y: event.clientY - rect.top });
+      setTooltip({
+        id,
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+        frameWidth: rect.width,
+      });
     } else {
       // Keyboard focus: anchor the tooltip to the node itself.
       const node = nodeById.get(id);
@@ -252,6 +259,7 @@ export function NetworkGraph({
         id,
         x: svgRect.left - rect.left + offsetX + (node.x * transform.k + transform.x) * scale,
         y: svgRect.top - rect.top + offsetY + (node.y * transform.k + transform.y) * scale,
+        frameWidth: rect.width,
       });
     }
   };
@@ -260,7 +268,9 @@ export function NetworkGraph({
     if (!frame) return;
     const rect = frame.getBoundingClientRect();
     setTooltip((current) =>
-      current ? { ...current, x: event.clientX - rect.left, y: event.clientY - rect.top } : current,
+      current
+        ? { ...current, x: event.clientX - rect.left, y: event.clientY - rect.top, frameWidth: rect.width }
+        : current,
     );
   };
   const leave = () => {
@@ -307,9 +317,7 @@ export function NetworkGraph({
   const nameShown = (id: string) => showEveryName || (active !== null && lit(id));
 
   const tooltipNode = tooltip ? nodeById.get(tooltip.id) : null;
-  const tooltipOnRight = tooltip && frameRef.current
-    ? tooltip.x > frameRef.current.clientWidth * 0.6
-    : false;
+  const tooltipOnRight = tooltip ? tooltip.x > tooltip.frameWidth * 0.6 : false;
 
   return (
     <>
@@ -416,7 +424,7 @@ export function NetworkGraph({
             className="pointer-events-none absolute z-10 max-w-64 rounded-md bg-popover px-2.5 py-1.5 shadow-[0_8px_24px_-8px_hsl(var(--foreground)/0.3)]"
             style={
               tooltipOnRight
-                ? { right: frameRef.current!.clientWidth - tooltip.x + 12, top: tooltip.y + 12 }
+                ? { right: tooltip.frameWidth - tooltip.x + 12, top: tooltip.y + 12 }
                 : { left: tooltip.x + 12, top: tooltip.y + 12 }
             }
           >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, Mail, Phone, ScanLine, X } from "lucide-react";
@@ -176,23 +176,17 @@ export function ClueDrawer({
   selectedSuspectId,
   onSelectSuspect,
 }: Props) {
-  const [localSelectedId, setLocalSelectedId] = useState<string | null>(
-    selectedSuspectId
-  );
   const visibleClues = clueTokens.filter(
     (token) => !HIDDEN_CLUE_KEYS.has(token.key)
   );
   const selectedSuspect = useMemo(
-    () => suspects.find((suspect) => suspect.id === localSelectedId) ?? null,
-    [localSelectedId, suspects]
+    () => suspects.find((suspect) => suspect.id === selectedSuspectId) ?? null,
+    [selectedSuspectId, suspects]
   );
 
-  useEffect(() => {
-    setLocalSelectedId(selectedSuspectId);
-  }, [selectedSuspectId]);
-
+  // Selection is owned by the parent (both callers pass their setState as
+  // `onSelectSuspect`), so the drawer reads it straight from props.
   function selectSuspect(id: string | null) {
-    setLocalSelectedId(id);
     onSelectSuspect(id);
   }
 

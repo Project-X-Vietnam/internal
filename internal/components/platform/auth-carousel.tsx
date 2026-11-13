@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import { FOCUS } from "@/components/platform/page";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,16 @@ export type Slide = { src: string; alt: string; caption: string };
 
 const INTERVAL = 6000;
 const WIDE = "(min-width: 1024px)";
+
+/** The current slot plus every slot that has been shown so far. */
+type Deck = { index: number; seen: number[] };
+
+function goTo(deck: Deck, index: number): Deck {
+  return {
+    index,
+    seen: deck.seen.includes(index) ? deck.seen : [...deck.seen, index],
+  };
+}
 
 /**
  * The media panel beside the sign-in form.
@@ -25,7 +35,6 @@ const WIDE = "(min-width: 1024px)";
  *   than content, so nothing here is announced live.
  */
 export function AuthCarousel({ slides }: { slides: Slide[] }) {
-  const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
 
@@ -37,12 +46,9 @@ export function AuthCarousel({ slides }: { slides: Slide[] }) {
   // Every slide sits inside the viewport, so `loading="lazy"` would still fetch
   // all of them on first paint — roughly half a megabyte, on the one page this
   // platform serves to the public. Mounting an image only once its slot has
-  // been reached keeps first paint to a single photograph.
-  const [seen, setSeen] = useState<number[]>([0]);
-
-  useEffect(() => {
-    setSeen((current) => (current.includes(index) ? current : [...current, index]));
-  }, [index]);
+  // been reached keeps first paint to a single photograph. `seen` moves with
+  // `index` in one reducer so it can never lag a render behind.
+  const [{ index, seen }, show] = useReducer(goTo, { index: 0, seen: [0] });
 
   useEffect(() => {
     const wideQuery = window.matchMedia(WIDE);
@@ -64,14 +70,9 @@ export function AuthCarousel({ slides }: { slides: Slide[] }) {
   // dwell rather than cutting it short.
   useEffect(() => {
     if (!wide || paused || reduced || slides.length < 2) return;
-    const id = window.setTimeout(
-      () => setIndex((current) => (current + 1) % slides.length),
-      INTERVAL,
-    );
+    const id = window.setTimeout(() => show((index + 1) % slides.length), INTERVAL);
     return () => window.clearTimeout(id);
   }, [index, wide, paused, reduced, slides.length]);
-
-  const show = useCallback((next: number) => setIndex(next), []);
 
   if (slides.length === 0) return null;
 

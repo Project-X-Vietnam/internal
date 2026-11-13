@@ -91,18 +91,18 @@ export default function WelcomePage() {
                 Hi everyone,
               </p>
               <p>
-                I'm <strong>Liam Lee</strong>, President of Project X Vietnam. I'm excited to have you with us this year.
+                I&apos;m <strong>Liam Lee</strong>, President of Project X Vietnam. I&apos;m excited to have you with us this year.
               </p>
               <div className="relative my-6 pl-5 pr-5 py-4 border-l-4 border-primary/70 bg-primary/5 dark:bg-primary/10 rounded-r-lg">
                 <p className="mb-3">
-                  Through years of participating, working, and learning across different organizations like Project X Vietnam, I've come to believe that <strong>the first touchpoint in any journey is one of the most important moments</strong> you'll experience.
+                  Through years of participating, working, and learning across different organizations like Project X Vietnam, I&apos;ve come to believe that <strong>the first touchpoint in any journey is one of the most important moments</strong> you&apos;ll experience.
                 </p>
                 <p className="mb-0 text-slate-600 dark:text-slate-300">
-                  It's the moment where you start forming beliefs about the community you've entered. It's where you begin to sense whether this is a place you can <em>trust</em>, whether you can <em>speak honestly</em>, whether your <em>effort will matter</em>, and whether <em>growth is actually possible</em> here.
+                  It&apos;s the moment where you start forming beliefs about the community you&apos;ve entered. It&apos;s where you begin to sense whether this is a place you can <em>trust</em>, whether you can <em>speak honestly</em>, whether your <em>effort will matter</em>, and whether <em>growth is actually possible</em> here.
                 </p>
               </div>
               <p>
-                That's why our core team wanted to make this onboarding moment <strong>intentional</strong>. We didn't want it to feel transactional, rushed, or purely informational. As a tech organization, we believe technology should not only scale processes — but also <strong>create meaning, reflection, and connection</strong>.
+                That&apos;s why our core team wanted to make this onboarding moment <strong>intentional</strong>. We didn&apos;t want it to feel transactional, rushed, or purely informational. As a tech organization, we believe technology should not only scale processes — but also <strong>create meaning, reflection, and connection</strong>.
               </p>
               <p>
                 <em><strong>This page, and this message, are part of that intention.</strong></em>
@@ -111,7 +111,7 @@ export default function WelcomePage() {
                 Before going further, I invite you to watch a short video - <em>one of my favorite</em>.
               </p>
               <p>
-                It's a short but powerful snippet from <em>someone</em> whose journey has fueled my passion for technology — and strengthened my belief in <strong>the incredible potential of young people</strong>.
+                It&apos;s a short but powerful snippet from <em>someone</em> whose journey has fueled my passion for technology — and strengthened my belief in <strong>the incredible potential of young people</strong>.
               </p>
             </div>
 
@@ -134,13 +134,13 @@ export default function WelcomePage() {
 
             <div className={`font-display prose prose-lg max-w-none ${isDark ? "prose-invert" : ""} text-base md:text-lg text-justify space-y-4`}>
               <p>
-                Yes, the "someone" in the video is none other than <strong>Steve Jobs</strong> — a remarkable innovator who went beyond pure science to bring human-centered, accessible technology to the world. His work didn't just create products; it inspired <em>ambition</em>, <em>curiosity</em>, and <em>belief</em>.
+                Yes, the &quot;someone&quot; in the video is none other than <strong>Steve Jobs</strong> — a remarkable innovator who went beyond pure science to bring human-centered, accessible technology to the world. His work didn&apos;t just create products; it inspired <em>ambition</em>, <em>curiosity</em>, and <em>belief</em>.
               </p>
               <p>
-                Many people we know today — Elon Musk, Mark Zuckerberg, Jeff Bezos — once found their spark in Steve's ideas.
+                Many people we know today — Elon Musk, Mark Zuckerberg, Jeff Bezos — once found their spark in Steve&apos;s ideas.
               </p>
               <p>
-                After watching the video, some of you may feel an immediate resonance, perhaps seeing parts of yourself reflected in it. And if you don't, <strong>that's completely okay</strong>. Not everyone experiences clarity at the same time. For many people, meaning doesn't arrive in a single moment — it unfolds slowly, through experience, failure, and reflection. That gradual discovery is what makes the idea of <em>"life"</em> feel deep and personal.
+                After watching the video, some of you may feel an immediate resonance, perhaps seeing parts of yourself reflected in it. And if you don&apos;t, <strong>that&apos;s completely okay</strong>. Not everyone experiences clarity at the same time. For many people, meaning doesn&apos;t arrive in a single moment — it unfolds slowly, through experience, failure, and reflection. That gradual discovery is what makes the idea of <em>&quot;life&quot;</em> feel deep and personal.
               </p>
               <div className="py-6 flex items-center gap-4">
                 <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
@@ -148,10 +148,10 @@ export default function WelcomePage() {
                 <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
               </div>
               <p>
-                For a long time, <strong>I believed that technology was for "special people."</strong>
+                For a long time, <strong>I believed that technology was for &quot;special people.&quot;</strong>
               </p>
               <p>
-                I admired it. I talked about it. I followed trends and ideas. But I didn't truly build anything, because deep down, I believed I didn't belong. I told myself I wasn't technical enough, not smart enough, not the "type" of person who could succeed in this space. So I stayed at a distance — interested, but inactive.
+                I admired it. I talked about it. I followed trends and ideas. But I didn&apos;t truly build anything, because deep down, I believed I didn&apos;t belong. I told myself I wasn&apos;t technical enough, not smart enough, not the &quot;type&quot; of person who could succeed in this space. So I stayed at a distance — interested, but inactive.
               </p>
               <p>
                 <strong>My university years changed that.</strong>
@@ -164,7 +164,7 @@ export default function WelcomePage() {
               </p>
               <div className="relative my-6 pl-5 pr-5 py-4 border-l-4 border-primary/70 bg-primary/5 dark:bg-primary/10 rounded-r-lg">
                 <p className="mb-0">
-                  I'm not here to say I'm a tech leader. I'm here because I want people like my past self to reach clarity faster, with better guidance, and with fewer unnecessary doubts.
+                  I&apos;m not here to say I&apos;m a tech leader. I&apos;m here because I want people like my past self to reach clarity faster, with better guidance, and with fewer unnecessary doubts.
                 </p>
               </div>
               <div className="py-6 flex items-center gap-4">
@@ -189,10 +189,10 @@ export default function WelcomePage() {
                 <div className="flex-1 h-px bg-slate-300 dark:bg-white/10"></div>
               </div>
               <p>
-                As we work toward our mission of <strong>empowering the next generation of tech youth</strong>, our goal doesn't exclude the members; we want to help you grow, create, and eventually become the roots of a strong, future-facing tech community.
+                As we work toward our mission of <strong>empowering the next generation of tech youth</strong>, our goal doesn&apos;t exclude the members; we want to help you grow, create, and eventually become the roots of a strong, future-facing tech community.
               </p>
               <p>
-                It's a privilege if you already know what you love doing at this stage of your life. And if you don't, Project X Vietnam is meant to be a <strong>safe space to explore</strong> — to try new roles, take on new perspectives, and look at your work from different angles. Through experience and reflection, the path ahead will gradually become clearer.
+                It&apos;s a privilege if you already know what you love doing at this stage of your life. And if you don&apos;t, Project X Vietnam is meant to be a <strong>safe space to explore</strong> — to try new roles, take on new perspectives, and look at your work from different angles. Through experience and reflection, the path ahead will gradually become clearer.
               </p>
               <p>
                 So I encourage you to embrace your time at Project X Vietnam as an opportunity — to try, to meet new people, to reflect often, and most importantly, to <strong>stay curious and keep learning</strong>. Keep creating dots along the way. Trust that one day, those dots will connect.
@@ -204,7 +204,7 @@ export default function WelcomePage() {
                 So, as Steve once said:
               </p>
               <p className="text-center text-xl md:text-2xl font-semibold italic">
-                "Stay hungry. Stay foolish."
+                &quot;Stay hungry. Stay foolish.&quot;
               </p>
               <p className="text-center text-xl md:text-2xl font-bold mt-8">
                 Welcome to Project X Vietnam.
@@ -291,7 +291,7 @@ export default function WelcomePage() {
         >
           <h2 className="section-label mb-4 text-[#0E56FA]">Member Journey</h2>
           <h3 className={`heading-section ${isDark ? "text-white" : "text-pxv-dark"}`}>
-            How You'll Grow With Us
+            How You&apos;ll Grow With Us
           </h3>
         </motion.div>
 
@@ -481,7 +481,7 @@ export default function WelcomePage() {
             viewport={{ once: true, amount: 0.5 }}
             className="text-lg md:text-xl text-blue-100/80 mb-10 max-w-xl mx-auto"
           >
-            You're now part of something extraordinary. Let's get you set up and ready to make an impact.
+            You&apos;re now part of something extraordinary. Let&apos;s get you set up and ready to make an impact.
           </motion.p>
           
           {/* CTA Buttons */}
@@ -496,13 +496,13 @@ export default function WelcomePage() {
               onClick={openMemberHubPopup}
               className="px-10 py-4 text-lg font-bold text-[#0E56FA] bg-white rounded-full shadow-xl hover:shadow-white/20 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
             >
-              I'm ready
+              I&apos;m ready
             </button>
             <button
               onClick={openMemberHubPopup}
               className="px-10 py-4 text-lg font-bold text-white border-2 border-white/80 rounded-full hover:bg-white/10 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 transition-all duration-300"
             >
-              I'm super ready
+              I&apos;m super ready
             </button>
           </motion.div>
         </div>

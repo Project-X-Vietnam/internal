@@ -82,7 +82,7 @@ Or from the repo root: `pnpm --dir internal dev` (this is what `.claude/launch.j
 
 ### CI
 
-`.github/workflows/ci.yml` runs `pnpm install --frozen-lockfile` → `typecheck` → `lint` → `smoke` on every push to `main`/`dev` and every PR. No database is involved (`prisma generate` needs none). **Lint is currently reported but not enforced** (`continue-on-error`) because of a pre-existing backlog of ~60 errors, almost all in `app/legacy/*` (unescaped entities) and a handful of React-compiler rules in `components/`. Clear them, then remove `continue-on-error`.
+`.github/workflows/ci.yml` runs `pnpm install --frozen-lockfile` → `typecheck` → `lint` → `smoke` on every push to `main`/`dev` and every PR. No database is involved (`prisma generate` needs none). All three steps are blocking: a lint error fails the PR, so keep `pnpm lint` at zero errors. Warnings don't fail it — the few that remain are `<img>` tags on arbitrary image URLs, which `next/image` would need `remotePatterns` for.
 
 Toolchain is pinned in `internal/package.json`: `"packageManager": "pnpm@10.x"` (read by Vercel, CI and corepack) and `"engines": { "node": ">=22" }`. `.nvmrc` at the root says the same.
 

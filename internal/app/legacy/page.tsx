@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import IntroAnimation from "@/components/IntroAnimation";
@@ -74,7 +74,7 @@ const WelcomeMessage = ({ onComplete }: { onComplete: () => void }) => {
           className="text-xl md:text-xl text-muted-foreground font-medium"
           variants={subtitleVariants}
         >
-          We're genuinely glad you're here
+          We&apos;re genuinely glad you&apos;re here
         </motion.p>
       </div>
     </motion.div>
@@ -232,9 +232,29 @@ const InteractiveQuestion = ({ onComplete }: { onComplete: () => void }) => {
   );
 };
 
+const DARK_QUERY = "(prefers-color-scheme: dark)";
+
+// Theme preference lives outside React (localStorage + the OS media query),
+// so it is read as an external store. The server snapshot is `false`, matching
+// the light-first markup the page always hydrated with.
+function subscribeTheme(onChange: () => void) {
+  const query = window.matchMedia(DARK_QUERY);
+  query.addEventListener("change", onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    query.removeEventListener("change", onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function readIsDark() {
+  const savedTheme = localStorage.getItem("theme");
+  return savedTheme === "dark" || (!savedTheme && window.matchMedia(DARK_QUERY).matches);
+}
+
 export default function Home() {
   const router = useRouter();
-  const [isDark, setIsDark] = useState(false);
+  const isDark = useSyncExternalStore(subscribeTheme, readIsDark, () => false);
   const [showIntro, setShowIntro] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showInteractiveQuestion, setShowInteractiveQuestion] = useState(false);
@@ -246,15 +266,6 @@ export default function Home() {
       router.replace("/welcome");
     }
   }, [router]);
-
-  // Theme detection
-  useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDark(true);
-    }
-  }, []);
 
   // Handle intro completion
   const handleIntroComplete = useCallback(() => {

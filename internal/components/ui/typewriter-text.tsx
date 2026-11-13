@@ -78,6 +78,7 @@ export function Typewriter({
     delay,
     displayText,
     text,
+    textArray.length,
     onFinished,
     isFinished
   ]);

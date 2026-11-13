@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bookmark, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { fireConfetti } from "@/lib/confetti.utils";
 
 // Define the props for the component

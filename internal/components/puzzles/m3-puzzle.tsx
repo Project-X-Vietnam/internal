@@ -28,6 +28,33 @@ export function buildM3CopyContext() {
   ].join("\n");
 }
 
+function seedIndexedDB() {
+  return new Promise<void>((resolve) => {
+    const req = indexedDB.open("oracle-labs-internal", 1);
+    req.onupgradeneeded = () => {
+      const idb = req.result;
+      if (!idb.objectStoreNames.contains("vault")) {
+        idb.createObjectStore("vault");
+      }
+    };
+    req.onsuccess = () => {
+      const idb = req.result;
+      const tx = idb.transaction("vault", "readwrite");
+      const store = tx.objectStore("vault");
+      store.put("theia.reveal", "oracle-vault-key");
+      store.put(
+        "Hint 4: This value is the console function name.",
+        "oracle-vault-note"
+      );
+      tx.oncomplete = () => {
+        idb.close();
+        resolve();
+      };
+    };
+    req.onerror = () => resolve();
+  });
+}
+
 export function M3Puzzle({ onSolve }: Props) {
   const [findings, setFindings] = useState({
     codeword: "",
@@ -40,33 +67,6 @@ export function M3Puzzle({ onSolve }: Props) {
   useEffect(() => {
     seedIndexedDB().then(() => setDbSeeded(true));
   }, []);
-
-  async function seedIndexedDB() {
-    return new Promise<void>((resolve) => {
-      const req = indexedDB.open("oracle-labs-internal", 1);
-      req.onupgradeneeded = () => {
-        const idb = req.result;
-        if (!idb.objectStoreNames.contains("vault")) {
-          idb.createObjectStore("vault");
-        }
-      };
-      req.onsuccess = () => {
-        const idb = req.result;
-        const tx = idb.transaction("vault", "readwrite");
-        const store = tx.objectStore("vault");
-        store.put("theia.reveal", "oracle-vault-key");
-        store.put(
-          "Hint 4: This value is the console function name.",
-          "oracle-vault-note"
-        );
-        tx.oncomplete = () => {
-          idb.close();
-          resolve();
-        };
-      };
-      req.onerror = () => resolve();
-    });
-  }
 
   useEffect(() => {
     if (!dbSeeded) return;

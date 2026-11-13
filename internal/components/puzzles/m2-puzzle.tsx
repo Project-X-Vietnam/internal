@@ -1316,6 +1316,10 @@ export function M2Puzzle({ onSolve, teamName }: Props) {
       const draft = JSON.parse(rawDraft) as Partial<M2Draft>;
       if (draft.version !== DRAFT_VERSION) return;
 
+      // The draft lives in localStorage, which the server render cannot see, so
+      // restoring it has to wait until after hydration — a lazy initializer
+      // would mismatch the server HTML. The four setters batch into one render.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setWorkbench(mergeWorkbench(draft.workbench));
       setEvidence(mergeEvidence(draft.evidence));
       setDocsServiceId(isServiceId(draft.docsServiceId ?? null) ? draft.docsServiceId! : null);
