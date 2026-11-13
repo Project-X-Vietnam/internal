@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# internal — the app
 
-## Getting Started
-
-First, run the development server:
+The Next.js 16 / Prisma 7 app behind the PJX internal platform. All commands run
+from this directory.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env   # points at the local DB; add OAuth values. Never commit it — the repo is public
+pnpm install           # runs `prisma generate` via postinstall
+pnpm db:up             # local Postgres 17 in Docker on 127.0.0.1:54329
+pnpm db:reset          # migrate + seed
+pnpm dev               # http://localhost:3010
 ```
 
-Open [http://localhost:3010](http://localhost:3010) with your browser to see the result.
+| Command | What it does |
+|---|---|
+| `pnpm typecheck` | `tsc --noEmit` — the build does not typecheck for you |
+| `pnpm lint` | ESLint (Next core-web-vitals + TypeScript rules) |
+| `pnpm smoke` | Checks THEIA's M1 seed for spoiler leaks and schema drift |
+| `pnpm build:local` | `next build` with no database side effects |
+| `pnpm build` | What Vercel runs: generate → migrate + seed → build. Points at `DATABASE_URL`. |
+| `pnpm db:up` / `db:down` / `db:nuke` | Start / stop / delete the local Docker Postgres |
+| `pnpm db:reset` / `db:migrate` / `db:studio` | Reset, create a migration, browse — all guarded to local hosts |
+| `pnpm db:deploy` / `pnpm db:seed` | Migrations + idempotent seed, on their own (guarded) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Writing scripts refuse a remote database host unless `ALLOW_REMOTE_DB=1` is set
+(Vercel and CI are exempt). Production is inspected through the read-only role in
+`scripts/sql/readonly-role.sql`, never through a developer `.env`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Architecture, routes, data model and the THEIA spoiler-file rules are in
+[../AGENTS.md](../AGENTS.md). `BRIEF.md` and `DESIGN_SYSTEM.md` here are safe to read.

@@ -1,9 +1,7 @@
-import type { Config } from "tailwindcss";
-
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
-const plugin = require("tailwindcss/plugin");
+import type { Config, PluginAPI } from "tailwindcss/types/config";
+import plugin from "tailwindcss/plugin";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 /**
  * Hover variants that only apply to a real hover-capable pointer.
@@ -12,14 +10,14 @@ const plugin = require("tailwindcss/plugin");
  * whatever was last tapped until something else is tapped — which is what would
  * otherwise leave the sidebar's hover-revealed labels stuck open after a tap.
  */
-const pointerHoverVariants = plugin(({ addVariant }: any) => {
+const pointerHoverVariants = plugin(({ addVariant }: PluginAPI) => {
   addVariant("pointer-hover", "@media (hover: hover) { &:hover }");
   addVariant("group-pointer-hover", "@media (hover: hover) { :merge(.group):hover & }");
 });
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
-function addVariablesForColors({ addBase, theme }: any) {
-  const allColors = flattenColorPalette(theme("colors"));
+function addVariablesForColors({ addBase, theme }: PluginAPI) {
+  const allColors = flattenColorPalette(theme<Record<string, unknown>>("colors"));
   const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
@@ -204,6 +202,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors, pointerHoverVariants],
+  plugins: [tailwindcssAnimate, addVariablesForColors, pointerHoverVariants],
 };
 export default config;

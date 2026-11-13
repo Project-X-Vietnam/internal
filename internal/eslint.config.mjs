@@ -7,11 +7,14 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
+    // Build output. `.next*` also covers the alternate dist dirs that
+    // NEXT_DIST_DIR selects (see next.config.ts), e.g. `.next-network`.
+    ".next*/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated Prisma client — not ours to lint.
+    "lib/generated/**",
   ]),
 ]);
 

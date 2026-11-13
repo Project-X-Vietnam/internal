@@ -1,0 +1,31 @@
+# Local Postgres for development — one database per developer, on your own
+# machine, so nothing you do while building ever touches the hosted database.
+#
+#   pnpm db:up      start it (first run pulls the image)
+#   pnpm db:reset   drop + migrate + seed, back to a known state
+#   pnpm db:down    stop it (data persists in the named volume)
+#   pnpm db:nuke    stop it and delete the volume
+#
+# Port 54329 rather than 5432 so it never collides with a Homebrew or other
+# container Postgres. `.env.example` already points at it.
+services:
+  db:
+    image: postgres:17-alpine # Supabase runs 17; keep parity
+    container_name: pjx-internal-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pjx
+      POSTGRES_PASSWORD: pjx
+      POSTGRES_DB: pjx_dev
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - pjx-internal-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pjx -d pjx_dev"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  pjx-internal-pgdata:

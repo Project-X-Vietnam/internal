@@ -1,7 +1,12 @@
 import { execFileSync } from "node:child_process";
+import { assertSafeDatabaseTarget, prismaBin } from "./lib/db-env.mjs";
+
+// Runs on every `pnpm build`. Locally that means "migrate + seed whatever my
+// .env points at", which is exactly the mistake the guard exists to catch.
+assertSafeDatabaseTarget("deploy-db (migrate + seed)");
 
 function runPrisma(args) {
-  return execFileSync("prisma", args, {
+  return execFileSync(prismaBin(), args, {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
   });

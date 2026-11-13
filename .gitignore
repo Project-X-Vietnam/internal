@@ -8,3 +8,4 @@ out/
 # untracked local tooling / caches
 .agent/
 .pnpm-store/
+.claude/settings.local.json

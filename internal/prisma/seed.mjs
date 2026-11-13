@@ -1,4 +1,4 @@
-import "dotenv/config";
+import { assertSafeDatabaseTarget, connectionString } from "../scripts/lib/db-env.mjs";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -76,11 +76,7 @@ const documents = [
 
 const contentDir = join(dirname(fileURLToPath(import.meta.url)), "content");
 
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL or DIRECT_URL must be configured before seeding.");
-}
+assertSafeDatabaseTarget("seed");
 
 const pool = new Pool({ connectionString });
 

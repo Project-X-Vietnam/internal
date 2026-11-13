@@ -1,4 +1,4 @@
-import "dotenv/config";
+import { assertSafeDatabaseTarget, connectionString } from "./lib/db-env.mjs";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import pg from "pg";
@@ -46,8 +46,7 @@ if (!dataPath) {
 
 const data = JSON.parse(readFileSync(dataPath, "utf8"));
 
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!connectionString) throw new Error("DATABASE_URL or DIRECT_URL must be configured.");
+assertSafeDatabaseTarget(dryRun ? "import-network --dry-run" : "import-network");
 
 const ROLES = new Set([
   "TEAM",

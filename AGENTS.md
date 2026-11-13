@@ -38,45 +38,53 @@ THEIA is **an Artifact, not the platform.** It has served its purpose as an even
 
 ## Repo layout — the nesting quirk
 
-The Next.js app is **one level down**, at `internal/` inside the repo root:
+The Next.js app is **one level down**, at `internal/` inside the repo root. The root holds only docs, CI and editor/agent config — there is no root `package.json`, and nothing at the root is read by any build.
 
 ```
-internal/                    ← repo root, no package.json here
-├── AGENTS.md                ← this file
-├── PATCH_NOTES.md           Commit hygiene rules — read them
-├── tailwind.config.js       ⚠ stray, orphaned (no root package.json to use it)
-├── postcss.config.js        ⚠ stray, orphaned
-├── components.json          ⚠ stray, orphaned
-├── changes_non_deps.patch   Salvage artifact from a past bad commit
-└── internal/                ← THE ACTUAL APP — work here
-    ├── package.json
-    ├── app/
-    ├── components/
-    ├── lib/
-    ├── prisma/
-    └── tailwind.config.ts   the real one
+internal/                      ← repo root
+├── AGENTS.md                  ← this file (CLAUDE.md is an alias)
+├── README.md                  Quickstart
+├── .github/workflows/ci.yml   typecheck · lint · smoke on push / PR
+├── .claude/launch.json        Dev-server presets for the Claude desktop app
+├── .nvmrc                     Node 22
+└── internal/                  ← THE ACTUAL APP — every pnpm command runs here
+    ├── package.json           pins pnpm via "packageManager"
+    ├── app/  components/  lib/  prisma/  scripts/  public/  types/
+    ├── docker-compose.yml     local Postgres for development (pnpm db:up)
+    ├── next.config.ts  tailwind.config.ts  eslint.config.mjs  tsconfig.json
+    ├── BRIEF.md  DESIGN_SYSTEM.md
+    └── ANSWER_KEY.md  MILESTONES.md  STORY_PLOT.md  PJX_AI_…_Plot.md   ← spoilers, see Guardrails
 ```
 
-The root-level `tailwind.config.js`, `postcss.config.js` and `components.json` are leftovers from an earlier flat layout. No build reads them. Don't edit them expecting an effect; the live config is `internal/tailwind.config.ts`.
+The earlier flat-layout leftovers (root `tailwind.config.js`, `postcss.config.js`, `components.json`, npm and pnpm lockfiles) and the salvage artifacts from the `node_modules` incident (`changes_non_deps.patch`, `SALVAGE_NON_DEPS.md`, `PATCH_NOTES.md`) were removed in the 2026-11 repo cleanup. They are still in git history if ever needed.
+
+Keep it that way: **no new top-level files** unless they are repo-wide (docs, CI, agent config). App code and config belong in `internal/`.
 
 ## Commands
 
 All commands run from `internal/internal/`:
 
 ```bash
-pnpm dev          # prisma generate && next dev
-pnpm build        # prisma generate && deploy-db && next build
+pnpm dev          # prisma generate && next dev -p 3010
+pnpm build        # prisma generate && deploy-db && next build  ← what Vercel runs
+pnpm build:local  # prisma generate && next build — no database side effects
 pnpm typecheck    # tsc --noEmit — run this, the build does not
-pnpm lint         # ⚠ BROKEN: `next lint` was removed in Next 16, and eslint
-                  #   is not in devDependencies. Needs fixing before it runs.
-pnpm db:deploy    # node scripts/deploy-db.mjs
-pnpm db:seed      # node prisma/seed.mjs
-pnpm smoke        # node scripts/smoke.mjs
+pnpm lint         # eslint . (flat config, Next core-web-vitals + TS rules)
+pnpm smoke        # node scripts/smoke.mjs — THEIA M1 seed spoiler/schema check
+pnpm db:up / db:reset / db:migrate / db:studio / db:down / db:nuke   # local Docker Postgres — see "Databases"
+pnpm db:deploy    # node scripts/deploy-db.mjs — migrate deploy, then seed (guarded)
+pnpm db:seed      # node prisma/seed.mjs (guarded)
 ```
 
 Or from the repo root: `pnpm --dir internal dev` (this is what `.claude/launch.json` does).
 
-`pnpm build` runs migrations against whatever `DATABASE_URL` points at. Be sure that's not production before you run it.
+`pnpm build` runs migrations **and the seed** against whatever `DATABASE_URL` points at. Locally the production guard (see "Databases") stops it from reaching a remote host; use `pnpm build:local` to check that the app compiles.
+
+### CI
+
+`.github/workflows/ci.yml` runs `pnpm install --frozen-lockfile` → `typecheck` → `lint` → `smoke` on every push to `main`/`dev` and every PR. No database is involved (`prisma generate` needs none). **Lint is currently reported but not enforced** (`continue-on-error`) because of a pre-existing backlog of ~60 errors, almost all in `app/legacy/*` (unescaped entities) and a handful of React-compiler rules in `components/`. Clear them, then remove `continue-on-error`.
+
+Toolchain is pinned in `internal/package.json`: `"packageManager": "pnpm@10.x"` (read by Vercel, CI and corepack) and `"engines": { "node": ">=22" }`. `.nvmrc` at the root says the same.
 
 ## Stack
 
@@ -87,22 +95,47 @@ Or from the repo root: `pnpm --dir internal dev` (this is what `.claude/launch.j
 | Prisma | 7.x | client generated to `lib/generated/prisma`, **gitignored** |
 | PostgreSQL | — | via `pg` + `@prisma/adapter-pg` |
 | Tailwind CSS | 3.4.x | |
-| Framer Motion / `motion` | 12.x | |
-| three.js | 0.182 | 3D/shader backgrounds |
+| Framer Motion | 12.x | Import from `framer-motion`, not `motion` — the `motion` alias package was dropped to avoid shipping two copies |
 | TypeScript | 5.x | |
 
-`prisma generate` must run before anything compiles — the `dev`, `build`, and `postinstall` scripts all do it. A fresh clone that skips install will fail with missing `@/lib/generated/prisma`.
+`prisma generate` must run before anything compiles — the `dev`, `build`, and `postinstall` scripts all do it. A fresh clone that skips install will fail with missing `@/lib/generated/prisma`. The generated client imports `@prisma/client/runtime` at runtime, so `@prisma/client` is a regular dependency, not a dev one.
 
 ### Environment
 
 ```
-DATABASE_URL     Postgres connection (pooled)
-DIRECT_URL       Direct connection — lib/db.ts prefers this
-FACILITATOR_PIN  Gate for the THEIA facilitator console
-SESSION_SECRET   HMAC key for signing session cookies; falls back to FACILITATOR_PIN
+DATABASE_URL            Postgres connection (pooled)
+DIRECT_URL              Direct connection — lib/db.ts and migrations prefer this
+AUTH_SECRET             Auth.js signing key (platform identity)
+GOOGLE_CLIENT_ID        Google OAuth client for sign-in
+GOOGLE_CLIENT_SECRET
+BOOTSTRAP_ADMIN_EMAILS  Comma-separated; auto-approved as ADMIN on first sign-in
+FACILITATOR_PIN         Gate for the THEIA facilitator console
+SESSION_SECRET          HMAC key for THEIA's facilitator cookie; falls back to FACILITATOR_PIN
 ```
 
-`.env*` is gitignored. Copy `internal/.env.example` (tracked via a `!.env.example` negation) to `.env` and fill it in — never commit real values.
+`.env*` is gitignored. Copy `internal/.env.example` (tracked via a `!.env.example` negation) to `.env` and fill it in — never commit real values. `.env.local` overrides `.env` everywhere (Next.js, Prisma CLI and the scripts all load them in that order), so keep one file unless you know why you need two.
+
+### Databases — local by default, production by exception
+
+There are three ways to reach a database, and the default for every developer is the first:
+
+| | What | How |
+|---|---|---|
+| **Local** (default) | Your own Postgres 17 in Docker, from `internal/docker-compose.yml`, on `127.0.0.1:54329` | `pnpm db:up` → `pnpm db:reset` (migrate + seed). `.env.example` already points here. Break it freely; `pnpm db:nuke` deletes it. |
+| **Read-only production** | The role `pjx_readonly` on the hosted DB — `SELECT` only, server-enforced read-only transactions, 30s statement cap | Owner runs `scripts/sql/readonly-role.sql` once; the connection string lives in the team password manager, **never** in a `.env`. Use it with `psql` or a GUI to look at real data. |
+| **Read-write production** | The owner connection string | Vercel only (`pnpm build` runs migrations + seed there). Locally, every writing script refuses a non-local host unless `ALLOW_REMOTE_DB=1` is set. |
+
+**The guard.** `scripts/lib/db-env.mjs` is imported by `deploy-db.mjs`, `prisma/seed.mjs`, `import-network.mjs` and the `db:*` scripts (via `scripts/prisma-guarded.mjs`). It exits 1 with an explanation if the database host is not local, unless `VERCEL`/`CI` is set (deployments) or `ALLOW_REMOTE_DB=1` (you, on purpose, visibly in your shell history). Plain `pnpm exec prisma …` bypasses it — don't do that against production; use the opt-in so intent is explicit. New scripts that open a connection must import the guard.
+
+**Preview deployments.** Vercel Preview builds also run `pnpm build`, which migrates and seeds whatever `DATABASE_URL` the Preview environment holds. Scope the production connection string to the Production environment only; give Preview a separate (staging) Supabase project or leave it unset so preview builds fail loudly rather than migrating prod from a feature branch.
+
+```
+pnpm db:up        # start local Postgres (Docker)
+pnpm db:reset     # drop, migrate, seed — known-good state
+pnpm db:migrate   # prisma migrate dev (new migration from schema changes)
+pnpm db:studio    # Prisma Studio against the local DB
+pnpm db:down      # stop; data kept     pnpm db:nuke  # stop; data deleted
+```
 
 ## Data model
 
@@ -119,7 +152,9 @@ THEIA — four models:
 
 Knowledge hub: **`Resource`** (a `DOC` whose markdown `body` lives here, or a `LINK` pointing at Lark/Drive/Figma), **`ResourceCollection`** (the shelves it sits on). `Resource.byline` is free text rather than a `Member` relation — attribution has to outlive the account, and seeded rows must not create people.
 
-Migrations: `20260724201333_init`, `20260824120000_add_platform_members`, `20260825120000_add_resource_hub`.
+Network memory: **`Person`**, **`Organization`**, **`Program`**/editions, **`Engagement`** (a person's role in a given year/program) and admin-curated **`Connection`** rows — see `lib/network.ts` and `scripts/import-network.mjs` for the shape. `Member` (a signed-in account) and `Person` (someone in the network) are distinct on purpose.
+
+Migrations live in `prisma/migrations/` — `ls` it rather than trusting a list here; the newest at time of writing is `20260901090000_add_network_management`.
 
 `prisma/seed.mjs` seeds THEIA teams, platform **departments**, hub **collections**, and one hub document — the President's welcome letter in `prisma/content/welcome-letter.md`, whose text was already committed here as the `/legacy/welcome` page. This repo is public — never seed real people (`Member` rows are created solely by the Google sign-in flow) and never seed internal-only material into `Resource`; write that in the admin UI, where it stays in Postgres.
 
@@ -198,19 +233,20 @@ They are committed, so nothing mechanically stops you from opening them. The rul
 
 ### Commit hygiene
 
-`PATCH_NOTES.md` exists because **`node_modules/` was committed to `main`** — 1,444 files. They have since been untracked (`git rm -r --cached`), along with the 201-file `.agent/` starter kit, taking the repo from 1,784 tracked files to ~140. The blobs remain in git history; only a history rewrite would remove them. Its rules are repo policy:
+**`node_modules/` was once committed to `main`** — 1,444 files. They have since been untracked, along with the `.agent/` starter kit; the blobs remain in git history and only a history rewrite would remove them. The rules that came out of it are repo policy:
 
 - Run `git status` before every commit.
 - **If thousands of files appear, stop** and fix `.gitignore` first.
-- Never commit `node_modules/`, `.next/`, `dist/`, `build/`, `out/`, `.DS_Store`, or media over 50MB.
+- Never commit `node_modules/`, `.next*/`, `dist/`, `build/`, `out/`, `.DS_Store`, lockfiles other than `internal/pnpm-lock.yaml`, or media over 50MB.
+- If something goes wrong, salvage with `git diff --name-only` + `git diff > fix.patch` onto a fresh branch — never try to push the bad tree.
 
-`changes_non_deps.patch` and `SALVAGE_NON_DEPS.md` are the recovery artifacts from that incident. Leave them; they're history, not active work.
+pnpm is the only package manager. There is one lockfile, `internal/pnpm-lock.yaml`; a `package-lock.json` appearing anywhere means someone ran `npm install` — delete it, don't commit it.
 
-Also note: `internal/dev.db` (a 61KB SQLite file) sits in the working tree and is gitignored. The app uses Postgres — that file is a leftover.
+Local leftovers you may see in a working tree that are gitignored and safe to delete: `internal/dev.db` (SQLite from before Postgres), `internal/.env.*.bak`, `.pnpm-store/` at either level (a stray store; the real one is `~/Library/pnpm/store`), and `internal/.claude/`.
 
 ### Working state
 
-The repo is usually mid-flight. At time of writing there are uncommitted changes across the mock API routes and `ANSWER_KEY.md` on `codex/simplify-m2-case-note-scope`. Check `git status` before assuming a clean tree, and don't stash or revert someone else's work.
+The repo is usually mid-flight, with several feature branches open. Check `git status` and the current branch before assuming a clean tree, and don't stash or revert someone else's work.
 
 ## Design system
 
@@ -224,14 +260,14 @@ Note that THEIA's visual language is deliberately off-brand — dark, cinematic,
 
 ## Building a new platform module
 
-When the first real module lands (team directory or knowledge hub), the expectations are:
+The directory, network memory and knowledge hub set the pattern. For the next module:
 
 1. **Build alongside THEIA, not inside it.** New route group, new Prisma models. Don't extend `Team`/`Progress` — those are game models that happen to use the word "team".
-2. **Follow `PJX_UI_STYLE_GUIDE.md`**, not THEIA's aesthetic.
-3. **Ask about identity before implementing it.** How team members sign in is an open decision, not a detail to improvise.
+2. **Follow `PJX_UI_STYLE_GUIDE.md`**, not THEIA's aesthetic. Shared platform chrome is in `components/platform/`; `components/ui/` is mostly THEIA/legacy decoration, not a primitive library.
+3. **Reuse the identity layer.** Google sign-in + admin approval queue is decided; gate pages with `lib/auth-guards.ts`, never with a new session scheme.
 4. **Keep it lightweight.** The line between "knowledge hub" and "we accidentally built an ERP" is the point of this platform. Fewer, sharper surfaces beat feature coverage.
 5. **Add a migration**, don't hand-edit the database.
 
 ## Other agent files in this repo
 
-`CLAUDE.md` is an alias of this file. `.agent/` contains a generic third-party starter kit (20 personas, ~39 skills, 11 workflows) copied in wholesale — **it is not PJX policy** and nothing in it references this project. Where it conflicts with this file, this file wins.
+`CLAUDE.md` is an alias of this file. A gitignored `.agent/` directory (a generic third-party starter kit — 20 personas, ~39 skills, 11 workflows) may exist in older working trees; it is not tracked, **it is not PJX policy**, and nothing in it references this project. Delete it freely. Where anything in it conflicts with this file, this file wins.
